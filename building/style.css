@@ -1,0 +1,287 @@
+/* =================================================================
+   Vitalqua — building page
+   Shares the landing's design tokens, header and footer so it feels
+   like one more section of the same site.
+   ================================================================= */
+:root {
+  --bg:        #F6F8FB;
+  --bg-soft:   #ECF1F5;
+  --surface:   #FFFFFF;
+  --navy:      #0F1A2E;
+  --navy-dp:   #07101E;
+
+  --cy-xlt:    #D6EEF6;
+  --cy-lt:     #A3D0E3;
+  --cy:        #4FB3D9;
+  --cy-dk:     #2A85B3;
+  --cy-xdk:    #1B5F85;
+  --sea:       #0F3A56;
+
+  --ink:       #0F1A2E;
+  --ink-soft:  #3F4F6B;
+  --muted:     #6B7890;
+  --faint:     #A3B5CD;
+
+  --radius-sm: 10px;
+  --radius:    16px;
+  --radius-lg: 24px;
+
+  --shadow-sm: 0 1px 2px rgba(15,26,46,.05), 0 4px 14px rgba(15,26,46,.04);
+  --shadow-md: 0 4px 16px rgba(15,26,46,.08), 0 20px 40px rgba(15,26,46,.06);
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.58;
+  transition: background-color 1.2s var(--ease),
+              color 1.2s var(--ease);
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ---------- primitives ---------- */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(18px, 5vw, 48px);
+}
+
+/* =================================================================
+   Header — identical to landing
+   ================================================================= */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 14px 0;
+  background: rgba(246, 248, 251, 0);
+  backdrop-filter: blur(0);
+  border-bottom: 1px solid transparent;
+  transition: background 260ms var(--ease),
+              backdrop-filter 260ms var(--ease),
+              border-color 260ms var(--ease),
+              padding 260ms var(--ease),
+              color 1.2s var(--ease);
+}
+.site-header.scrolled {
+  background: rgba(246, 248, 251, 0.88);
+  backdrop-filter: blur(14px) saturate(1.15);
+  border-bottom-color: rgba(15, 26, 46, .06);
+  padding: 10px 0;
+}
+.nav {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.logo {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+  transition: color 1.2s var(--ease);
+}
+.logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
+.nav-links {
+  display: flex; gap: 26px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: color 1.2s var(--ease);
+}
+.nav-links a {
+  position: relative;
+  transition: color 180ms ease;
+}
+.nav-links a::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -6px;
+  height: 2px;
+  background: var(--cy-dk);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 240ms var(--ease);
+}
+.nav-links a:hover { color: var(--navy); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  transition: background 180ms ease, transform 180ms var(--ease);
+}
+.nav-cta:hover { background: var(--cy-dk); transform: translateY(-1px); }
+
+@media (max-width: 760px) { .nav-links { display: none; } }
+
+/* =================================================================
+   Construction section — the "under construction" content
+   ================================================================= */
+.construction {
+  position: relative;
+  min-height: 100vh;
+  padding: clamp(110px, 14vh, 150px) 0 clamp(70px, 10vw, 110px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* The drop animation sits behind the text — full-section background */
+#scene {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+.tri {
+  shape-rendering: geometricPrecision;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+
+.construction-content {
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+}
+
+.construction .eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cy-dk);
+  margin-bottom: 18px;
+  transition: color 1.2s var(--ease);
+}
+.construction .eyebrow::before {
+  content: ""; width: 22px; height: 1px;
+  background: currentColor;
+}
+
+.construction h1 {
+  font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.05;
+  color: var(--navy);
+  margin-bottom: 20px;
+  transition: color 1.2s var(--ease);
+  /* soft halo so text stays readable when the bg tone shifts */
+  text-shadow:
+    0 0 22px var(--halo, rgba(246, 248, 251, 0.9)),
+    0 0 40px var(--halo, rgba(246, 248, 251, 0.6));
+}
+.construction .lede {
+  font-size: clamp(1rem, 1.7vw, 1.18rem);
+  color: var(--ink-soft);
+  max-width: 620px;
+  line-height: 1.65;
+  margin-bottom: 32px;
+  transition: color 1.2s var(--ease);
+  text-shadow: 0 0 20px var(--halo, rgba(246, 248, 251, 0.85));
+}
+
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
+  transition: transform 180ms var(--ease),
+              background 180ms ease,
+              box-shadow 180ms ease,
+              color 180ms ease,
+              border-color 180ms ease;
+}
+.btn-primary {
+  background: var(--navy);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+  background: var(--cy-dk);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--navy);
+  border: 1px solid rgba(15, 26, 46, 0.15);
+  transition: color 1.2s var(--ease),
+              border-color 180ms ease,
+              background 180ms ease;
+}
+.btn-ghost:hover {
+  border-color: var(--cy-dk);
+  color: var(--cy-dk);
+}
+
+/* =================================================================
+   Footer — identical to landing
+   ================================================================= */
+.site-footer {
+  background: var(--navy-dp);
+  color: var(--faint);
+  padding: 70px 0 32px;
+  position: relative;
+  z-index: 5;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 36px;
+  margin-bottom: 48px;
+}
+@media (max-width: 760px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; } }
+@media (max-width: 440px) { .footer-grid { grid-template-columns: 1fr; } }
+
+.footer-brand .logo { color: #fff; }
+.footer-brand p {
+  margin-top: 14px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--faint);
+  max-width: 320px;
+}
+.footer-col h5 {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cy-lt);
+  margin-bottom: 16px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col a {
+  color: var(--faint);
+  font-size: 0.9rem;
+  transition: color 180ms ease;
+}
+.footer-col a:hover { color: #fff; }
+.footer-bottom {
+  display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  font-size: 0.78rem;
+  color: var(--muted);
+}

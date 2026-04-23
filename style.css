@@ -1,37 +1,60 @@
 :root {
-  --bg: #FCE7B9;
-  --halo: rgba(252, 231, 185, 0.95);
-  --text-primary: #1F1910;
-  --text-secondary: #4A3A22;
+  --app-width: 860px;
+  --water-blue: #1E88E5;
+  --clean: #00E5FF;
+  --raw: #a07f67;
+  /* Page background + matching text halo + text tones.
+     Per-scene values are set from JS so every slide can set its
+     own mood (e.g. dark navy night with light text). */
+  --bg: #F8FAFC;
+  --halo: rgba(248, 250, 252, 0.95);
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --text-label: #94A3B8;
+  --panel-bg: rgba(248, 250, 252, 0.82);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
-html, body {
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+body, html {
+  margin: 0; padding: 0;
   background: var(--bg);
-  color: var(--text-primary);
-  transition:
-    background-color 1.6s cubic-bezier(.55, .15, .35, 1),
-    color 1.6s cubic-bezier(.55, .15, .35, 1);
-  -webkit-font-smoothing: antialiased;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #0F172A;
+  display: flex; justify-content: center;
+  overflow: hidden;
+  transition: background-color 1.2s cubic-bezier(.55, .15, .35, 1);
 }
 
 /* =========================================
-   SVG background layer — full viewport
+   APP FRAME — positioning context only.
+   SVG is a full-page layer beneath everything;
+   text cards + UI overlay it.
+   ========================================= */
+.app-frame {
+  width: 100%;
+  /* no hard max-width on desktop full-screen — the SVG background
+     needs room to breathe; text columns have their own max-width */
+  max-width: 100%;
+  height: 100vh;
+  position: relative;
+  background: transparent;
+}
+
+/* =========================================
+   SVG SCENE — full-page background layer
    ========================================= */
 #scene {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: transparent;
   overflow: visible;
+  pointer-events: none;
 }
+
 .tri {
   shape-rendering: geometricPrecision;
   stroke-width: 1;
@@ -40,49 +63,125 @@ html, body {
 }
 
 /* =========================================
-   Centered brand stage
+   SCROLL ZONE — full-viewport scroll surface
+   overlaying the SVG
    ========================================= */
-.stage {
+.scroll-zone {
   position: relative;
-  z-index: 5;
-  width: 100%;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 28px;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  z-index: 5;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%);
 }
+.scroll-zone::-webkit-scrollbar { display: none; }
 
-.brand {
+.step-list { padding: 40vh 0; }
+
+.step {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center;
-  max-width: 720px;
+  padding: 20px clamp(24px, 8vw, 80px);
+  position: relative;
+  margin-bottom: 60px;
+  scroll-snap-align: center;
+  opacity: 0.25; transform: scale(0.95);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.title {
-  font-size: clamp(3rem, 10vw, 6.5rem);
-  font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: 0.95;
-  margin-bottom: clamp(18px, 2.5vw, 28px);
-  text-shadow: 0 0 28px var(--halo), 0 0 64px var(--halo);
-  transition:
-    color 1.6s cubic-bezier(.55, .15, .35, 1),
-    text-shadow 1.6s cubic-bezier(.55, .15, .35, 1);
-  display: flex;
-  gap: 0.3em;
-  justify-content: center;
-  flex-wrap: wrap;
+/* Scenes 1-7: reserve the upper half of the viewport for the illustration.
+   The step becomes ~70vh tall with its text content pinned to the bottom.
+   When scroll-snap centres the step, its vertical middle lands at viewport
+   centre — so the content (flex-end) sits in the lower third and the upper
+   ~45vh stays clear for the SVG scene to breathe. */
+.step:not([data-step="0"]) {
+  min-height: 70vh;
+  justify-content: flex-end;
+  padding-bottom: 6vh;
 }
-.title .word { display: inline-block; }
 
-.subtitle {
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  text-shadow: 0 0 18px var(--halo);
-  transition:
-    color 1.6s cubic-bezier(.55, .15, .35, 1),
-    text-shadow 1.6s cubic-bezier(.55, .15, .35, 1);
+/* The intro (step 0) fades out completely (not just to 25%) and faster,
+   so it gets out of the way quickly when the user scrolls to step 1. */
+.step[data-step="0"] {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+.step.active { opacity: 1; transform: scale(1); }
+
+.step-num {
+  font-size: clamp(0.75rem, 2vw, 0.85rem); font-weight: 900; color: var(--step-color);
+  border: 2px solid var(--step-color); background: var(--panel-bg);
+  backdrop-filter: blur(4px);
+  width: clamp(28px, 6vw, 36px); height: clamp(28px, 6vw, 36px);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; margin-bottom: 14px; z-index: 2;
+  transition: background 1.2s cubic-bezier(.55, .15, .35, 1);
+}
+
+.step-title {
+  font-size: clamp(1.4rem, 5vw, 2.1rem);
+  font-weight: 800; margin: 0 0 12px; color: var(--text-primary);
+  /* soft halo lifts the text off the triangles behind.
+     --halo tracks the page bg so it blends with whatever tint is active. */
+  text-shadow: 0 0 14px var(--halo), 0 0 28px var(--halo);
+  transition:
+    color 1.2s cubic-bezier(.55, .15, .35, 1),
+    text-shadow 1.2s cubic-bezier(.55, .15, .35, 1);
+}
+
+.step-desc p {
+  font-size: clamp(0.95rem, 3vw, 1.15rem);
+  line-height: 1.6; color: var(--text-secondary); max-width: 520px; margin: 0;
+  text-shadow: 0 0 12px var(--halo), 0 0 24px var(--halo);
+  transition:
+    color 1.2s cubic-bezier(.55, .15, .35, 1),
+    text-shadow 1.2s cubic-bezier(.55, .15, .35, 1);
+}
+.highlight { color: var(--water-blue); font-weight: 700; }
+
+.connector {
+  position: absolute; bottom: -60px;
+  width: 2px; height: 60px;
+  background: repeating-linear-gradient(to bottom, #CBD5E1 0, #CBD5E1 6px, transparent 6px, transparent 12px);
+}
+
+/* =========================================
+   FOOTER INDICATORS — absolute bottom
+   ========================================= */
+.fixed-indicators {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%;
+  height: clamp(58px, 9vh, 72px);
+  display: flex; justify-content: space-evenly; align-items: center;
+  background: transparent;
+  z-index: 10;
+}
+
+.indicator {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--panel-bg);
+  backdrop-filter: blur(6px);
+  padding: 4px 10px;
+  border-radius: 8px;
+  transition: background 1.2s cubic-bezier(.55, .15, .35, 1);
+}
+
+.ind-label {
+  font-size: clamp(0.5rem, 1.5vw, 0.65rem);
+  font-weight: 800; color: var(--text-label);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;
+  transition: color 1.2s cubic-bezier(.55, .15, .35, 1);
+}
+
+.ind-value {
+  font-size: clamp(1rem, 3.5vw, 1.35rem);
+  font-weight: 800; color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s ease;
+}
+.ind-value.ind-changed { color: var(--water-blue); }

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vitalqua — QR</title>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --ink: #0F172A;
+      --muted: #64748B;
+      --accent: #2A85B3;
+      --accent-dk: #0F3A56;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    main {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      padding: 40px 24px;
+    }
+    .card {
+      background: #fff;
+      padding: clamp(18px, 3.5vw, 32px);
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.10),
+                  0 6px 18px rgba(15, 23, 42, 0.05);
+    }
+    svg#qr {
+      display: block;
+      width: clamp(260px, 52vw, 400px);
+      height: auto;
+    }
+    .url {
+      font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+      font-size: 0.82rem;
+      color: var(--muted);
+      word-break: break-all;
+      text-align: center;
+      max-width: 420px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button {
+      font: inherit;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 11px 22px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+    button:hover { background: var(--accent-dk); }
+    button:active { transform: scale(0.97); }
+    button.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    button.secondary:hover { background: rgba(42, 133, 179, 0.08); color: var(--accent); }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+</head>
+<body>
+  <main>
+    <div class="card">
+      <svg id="qr" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="url" id="url-label"></div>
+
+    <div class="actions">
+      <button onclick="downloadSVG()">Download SVG</button>
+      <button class="secondary" onclick="downloadPNG()">Download PNG</button>
+    </div>
+  </main>
+
+  <script>
+    const TARGET_URL = 'https://vitalquaproject.github.io/vitalquaproject/';
+    document.getElementById('url-label').textContent = TARGET_URL;
+
+    // H-level error correction for robustness
+    const qr = qrcode(0, 'H');
+    qr.addData(TARGET_URL);
+    qr.make();
+    const size = qr.getModuleCount();
+
+    const PAD = 2;
+    const total = size + PAD * 2;
+
+    const svg = document.getElementById('qr');
+    svg.setAttribute('viewBox', `0 0 ${total} ${total}`);
+
+    // ---- Platform blue palette, 4 height bands ----
+    // Each band = [lighter tone, darker tone]. Both tones are dark enough
+    // (luminance < 0.5) so every dark module reads as "dark" to scanners,
+    // while the eye sees a subtle vertical progression from light-blue at
+    // the top to deep navy at the bottom. No SVG gradient — pure solids.
+    const BANDS = [
+      ['#2F8AB5', '#1F6E95'],
+      ['#1F6E95', '#195F85'],
+      ['#195F85', '#134E72'],
+      ['#134E72', '#0F3A56']
+    ];
+    function bandFor(r) {
+      const t = Math.min(0.9999, r / size);
+      return BANDS[Math.floor(t * BANDS.length)];
+    }
+
+    // ---- Helpers ----
+    function el(name, attrs) {
+      const n = document.createElementNS('http://www.w3.org/2000/svg', name);
+      for (const k in attrs) n.setAttribute(k, attrs[k]);
+      return n;
+    }
+
+    function inFinder(r, c) {
+      return (r < 7 && c < 7) ||
+             (r < 7 && c >= size - 7) ||
+             (r >= size - 7 && c < 7);
+    }
+
+    // Finder pattern: classic 7×7 concentric squares.
+    // Kept as solid squares because scanners need the 1:1:3:1:1 ratio.
+    // Coloured in the deepest navy from the palette so they anchor the QR
+    // visually as "the darker squares at the corners".
+    function drawFinder(x, y) {
+      svg.appendChild(el('rect', {
+        x, y, width: 7, height: 7, fill: '#0F3A56',
+        'shape-rendering': 'crispEdges'
+      }));
+      svg.appendChild(el('rect', {
+        x: x + 1, y: y + 1, width: 5, height: 5, fill: '#FFFFFF',
+        'shape-rendering': 'crispEdges'
+      }));
+      svg.appendChild(el('rect', {
+        x: x + 2, y: y + 2, width: 3, height: 3, fill: '#0F3A56',
+        'shape-rendering': 'crispEdges'
+      }));
+    }
+
+    function render() {
+      svg.innerHTML = '';
+
+      // White background (covers QR + quiet zone)
+      svg.appendChild(el('rect', {
+        x: 0, y: 0, width: total, height: total, fill: '#FFFFFF'
+      }));
+
+      // Data modules: each dark module is split into 2 triangles.
+      // The diagonal alternates by (r+c) parity for visual texture.
+      // Both triangles take solid colours from the row's Y band.
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (!qr.isDark(r, c)) continue;
+          if (inFinder(r, c)) continue;   // finders drawn separately
+
+          const x = c + PAD;
+          const y = r + PAD;
+          const [lighter, darker] = bandFor(r);
+
+          const diagDown = (r + c) % 2 === 0;   // flip direction per-module
+          let p1, p2;
+          if (diagDown) {
+            // "\" diagonal: upper-left + lower-right halves
+            p1 = `${x},${y} ${x+1},${y} ${x},${y+1}`;
+            p2 = `${x+1},${y} ${x+1},${y+1} ${x},${y+1}`;
+          } else {
+            // "/" diagonal: upper-right + lower-left halves
+            p1 = `${x},${y} ${x+1},${y} ${x+1},${y+1}`;
+            p2 = `${x},${y} ${x+1},${y+1} ${x},${y+1}`;
+          }
+          // Lighter tone on the upper triangle, darker on the lower
+          svg.appendChild(el('polygon', { points: p1, fill: lighter }));
+          svg.appendChild(el('polygon', { points: p2, fill: darker  }));
+        }
+      }
+
+      // Three finder patterns (top-left, top-right, bottom-left)
+      drawFinder(PAD,               PAD);
+      drawFinder(size - 7 + PAD,    PAD);
+      drawFinder(PAD,               size - 7 + PAD);
+    }
+
+    function downloadSVG() {
+      const clone = svg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      const s = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+                new XMLSerializer().serializeToString(clone);
+      const blob = new Blob([s], { type: 'image/svg+xml;charset=utf-8' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'vitalqua-qr.svg'; a.click();
+      setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+    }
+
+    function downloadPNG() {
+      const clone = svg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      const svgStr = new XMLSerializer().serializeToString(clone);
+      const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = window.URL.createObjectURL(svgBlob);
+      const img = new Image();
+      img.onload = () => {
+        const OUT = 1400;
+        const canvas = document.createElement('canvas');
+        canvas.width = OUT; canvas.height = OUT;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, OUT, OUT);
+        canvas.toBlob(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = 'vitalqua-qr.png'; a.click();
+          setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+        }, 'image/png');
+        window.URL.revokeObjectURL(svgUrl);
+      };
+      img.src = svgUrl;
+    }
+
+    render();
+  </script>
+</body>
+</html>

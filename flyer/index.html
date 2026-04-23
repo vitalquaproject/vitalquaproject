@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vitalqua Project — Flyer</title>
+  <meta name="description" content="Clean water for 500 students — one-page project summary." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="../img/logo.svg" />
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+
+  <style>
+    /* =============================================================
+       Vitalqua flyer — A4 portrait. Same design tokens and component
+       language as the landing page. Open → Ctrl/Cmd+P → Save as PDF.
+       ============================================================= */
+    :root {
+      --bg:        #F6F8FB;
+      --bg-soft:   #ECF1F5;
+      --surface:   #FFFFFF;
+      --navy:      #0F1A2E;
+      --navy-dp:   #07101E;
+      --cy-xlt:    #D6EEF6;
+      --cy-lt:     #A3D0E3;
+      --cy:        #4FB3D9;
+      --cy-dk:     #2A85B3;
+      --cy-xdk:    #1B5F85;
+      --sea:       #0F3A56;
+      --ink:       #0F1A2E;
+      --ink-soft:  #3F4F6B;
+      --muted:     #6B7890;
+      --faint:     #A3B5CD;
+      --amber:     #FFD34E;
+      --radius-sm: 8px;
+      --radius:    14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 2px rgba(15,26,46,.05), 0 4px 14px rgba(15,26,46,.04);
+      --shadow-md: 0 4px 16px rgba(15,26,46,.08), 0 20px 40px rgba(15,26,46,.06);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--ink);
+      background: #E6ECF2;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    /* ===== Page — exact A4 ============================================ */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 16px auto;
+      background: var(--bg);
+      position: relative;
+      box-shadow: 0 20px 50px rgba(15, 26, 46, .15);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== Shared primitives matching the landing ===================== */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cy-dk);
+    }
+    .eyebrow::before {
+      content: ''; width: 16px; height: 1.2px;
+      background: currentColor;
+    }
+    .pin-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 8pt;
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+
+    /* ===== Header ==================================================== */
+    .flyer-head {
+      padding: 4mm 12mm 3mm;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(15, 26, 46, .06);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; }
+    .brand img { width: auto; height: 32px; display: block; }
+    .brand .name {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 12pt;
+      color: var(--navy);
+      letter-spacing: -0.015em;
+    }
+
+    /* ===== Hero ====================================================== */
+    .hero {
+      position: relative;
+      padding: 3mm 12mm 4mm;
+      overflow: hidden;
+    }
+    .hero-deco {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      opacity: 0.10;
+      z-index: 0;
+      width: 100%; height: 100%;
+    }
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      grid-template-rows: auto;
+      gap: 8mm;
+      align-items: start;
+    }
+    .hero-text {
+      grid-column: 1;
+      display: flex; flex-direction: column;
+    }
+
+    .hero .eyebrow { margin-bottom: 2mm; }
+    .hero .pin-tag { margin-bottom: 2mm; }
+
+    .hero h1 {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 25pt;
+      line-height: 1.04;
+      letter-spacing: -0.028em;
+      color: var(--navy);
+      margin-bottom: 3mm;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--cy-dk);
+    }
+    .hero .lede {
+      font-size: 9pt;
+      color: var(--ink-soft);
+      line-height: 1.55;
+      max-width: 88mm;
+      margin-bottom: 4mm;
+    }
+
+    /* KPI strip — full width, landing's hero-stats compact row */
+    .kpis-strip {
+      margin: 2mm 12mm 0;
+      padding: 4mm 6mm;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4mm;
+      background: linear-gradient(90deg, var(--cy-xlt), #EAF5FA);
+      border: 1px solid rgba(42, 133, 179, .14);
+      border-radius: var(--radius);
+    }
+    .hk {
+      display: flex; flex-direction: column;
+      gap: 1mm;
+      text-align: center;
+      border-right: 1px solid rgba(42, 133, 179, .14);
+      padding-right: 4mm;
+    }
+    .kpis-strip .hk:last-child { border-right: none; }
+    .hk .n {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 16pt;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .hk .n sup { font-size: 9pt; font-weight: 700; vertical-align: super; }
+    .hk .l {
+      font-size: 6.8pt;
+      font-weight: 600;
+      color: var(--ink-soft);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .hero-photo {
+      grid-column: 2;
+      grid-row: 1;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      align-self: stretch;
+      min-height: 52mm;
+    }
+    .hero-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .hero-photo .tag {
+      position: absolute; bottom: 8px; left: 8px;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(6px);
+      color: var(--navy);
+      font-size: 6.5pt;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
+    /* ===== Two-column: Problem + Budget =============================== */
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 7mm;
+      padding: 5mm 12mm 4mm;
+    }
+    .col-head {
+      margin-bottom: 4mm;
+    }
+
+    /* Problem: impact-style 3D numbers (same recipe as landing's big3d) */
+    .problem-list {
+      display: flex; flex-direction: column;
+      gap: 3.5mm;
+    }
+    .p-card {
+      display: grid;
+      grid-template-columns: 22mm 1fr;
+      gap: 3mm;
+      padding: 3mm 4mm;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      align-items: center;
+    }
+    .p-card .big3d {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 24pt;
+      line-height: 1;
+      color: var(--cy-dk);
+      letter-spacing: -0.025em;
+    }
+    .p-card .big3d small {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 6.5pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-top: 1.5mm;
+    }
+    .p-card .t {
+      font-size: 8.5pt;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.8mm;
+      line-height: 1.2;
+    }
+    .p-card .d {
+      font-size: 7.3pt;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+
+    /* Budget: clean line items + cyan progress bars */
+    .budget {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 4mm 4.5mm 3.5mm;
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column;
+      gap: 2.2mm;
+    }
+    .bitem {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3mm;
+      align-items: baseline;
+      padding-bottom: 1.4mm;
+      border-bottom: 1px dashed rgba(15, 26, 46, .08);
+    }
+    .bitem:last-of-type { border-bottom: none; padding-bottom: 0; }
+    .bitem .label {
+      font-size: 8pt;
+      font-weight: 500;
+      color: var(--navy);
+    }
+    .bitem .val {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 9pt;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .bar {
+      grid-column: 1 / -1;
+      height: 3px;
+      background: var(--cy-xlt);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 1.4mm;
+    }
+    .bar > span {
+      display: block; height: 100%;
+      background: linear-gradient(90deg, var(--cy), var(--cy-dk));
+      border-radius: 2px;
+    }
+    .total {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3mm;
+      margin-top: 2mm;
+      padding: 3mm 3.5mm;
+      background: var(--navy);
+      color: var(--bg);
+      border-radius: var(--radius-sm);
+      align-items: baseline;
+    }
+    .total .label {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .total .val {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 13pt;
+      font-weight: 700;
+      color: var(--amber);
+    }
+
+    /* ===== Solution — 7 steps with landing's feat-card vibe ========== */
+    .solution {
+      padding: 3mm 12mm 4mm;
+    }
+    .solution .col-head { margin-bottom: 3.5mm; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2mm;
+    }
+    .step {
+      padding: 3mm 2.5mm;
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .step::before {
+      content: '';
+      position: absolute;
+      top: 50%; right: -2mm;
+      width: 2mm; height: 1px;
+      background: var(--cy-lt);
+      z-index: 0;
+    }
+    .step:last-child::before { display: none; }
+    .step .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 6mm; height: 6mm;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cy), var(--cy-dk));
+      color: #fff;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 8pt;
+      margin-bottom: 1.5mm;
+    }
+    .step .t {
+      font-size: 7.4pt;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.15;
+      letter-spacing: -0.005em;
+    }
+    .step .d {
+      font-size: 6.3pt;
+      color: var(--ink-soft);
+      margin-top: 0.8mm;
+      line-height: 1.25;
+    }
+
+    /* ===== Footer — navy-dp like the landing site-footer ============= */
+    .flyer-foot {
+      background: var(--navy-dp);
+      color: var(--faint);
+      padding: 6mm 12mm;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.35fr;
+      gap: 6mm;
+      align-items: center;
+      margin-top: auto;
+    }
+    .foot-people .h5 {
+      font-size: 6.5pt;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cy-lt);
+      margin-bottom: 2mm;
+    }
+    .foot-people .names {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 9.5pt;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.35;
+    }
+    .foot-people .meta {
+      margin-top: 2mm;
+      font-size: 6.8pt;
+      color: var(--faint);
+      line-height: 1.4;
+    }
+    .foot-logos {
+      display: flex; align-items: center; gap: 6mm;
+      justify-content: center;
+    }
+    .foot-logos img {
+      height: 6mm;
+      width: auto;
+      filter: brightness(0) invert(1);
+      opacity: 0.88;
+    }
+    .foot-qr {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4mm;
+      align-items: center;
+    }
+    .foot-qr .qr-box {
+      background: #fff;
+      padding: 1mm;
+      border-radius: 4px;
+      width: 24mm; height: 24mm;
+    }
+    .foot-qr svg { width: 100%; height: 100%; display: block; }
+    .foot-qr .cta-t {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 8pt;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      line-height: 1.15;
+    }
+    .foot-qr .cta-d {
+      margin-top: 1.5mm;
+      font-size: 7pt;
+      color: var(--faint);
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5mm;
+    }
+    .foot-qr .cta-d a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      word-break: keep-all;
+      white-space: nowrap;
+    }
+    .foot-qr .cta-d a.url {
+      color: var(--cy-lt);
+      font-weight: 500;
+      font-size: 6.5pt;
+    }
+
+    /* ===== Print ====================================================== */
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    @media print {
+      html, body { background: #FFF; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        width: 210mm;
+        height: 297mm;
+        min-height: 297mm;
+        overflow: hidden;
+        page-break-after: always;
+      }
+      .print-hint { display: none; }
+    }
+
+    /* ===== Screen-only hint =========================================== */
+    .print-hint {
+      max-width: 210mm;
+      margin: 0 auto 12px;
+      padding: 9px 16px;
+      font-size: 12px;
+      color: var(--ink-soft);
+      background: #fff;
+      border: 1px solid rgba(15, 26, 46, .08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .print-hint strong { color: var(--navy); }
+  </style>
+</head>
+<body>
+
+  <div class="print-hint">
+    <strong>Ctrl/Cmd + P</strong> → <strong>Save as PDF</strong> · Paper <strong>A4</strong> · Margins <strong>None</strong> · Background graphics <strong>On</strong>
+  </div>
+
+  <article class="page" id="page">
+
+    <!-- ===== HEADER ================================================ -->
+    <header class="flyer-head">
+      <div class="brand">
+        <img src="../img/logo.svg" alt="" />
+        <span class="name">Vitalqua Project</span>
+      </div>
+      <div class="eyebrow">Loita Ward · Narok County · Kenya</div>
+    </header>
+
+    <!-- ===== HERO ================================================== -->
+    <section class="hero">
+      <!-- Triangle wobble decoration (same language as landing hero) -->
+      <svg class="hero-deco" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <polygon points="8,12 18,8 14,22"   fill="#2A85B3"/>
+        <polygon points="82,16 94,12 88,28" fill="#4FB3D9"/>
+        <polygon points="24,72 34,68 30,82" fill="#2A85B3"/>
+        <polygon points="68,84 80,80 74,94" fill="#4FB3D9"/>
+      </svg>
+
+      <div class="hero-grid">
+        <div class="hero-text">
+          <div class="pin-tag">
+            <span aria-hidden="true">📍</span>
+            Narok County, Kenya
+          </div>
+          <h1>Clean water,<br/>for <em>500 students.</em></h1>
+          <p class="lede">
+            An autonomous, solar-powered water-purification plant for a school in
+            rural Kenya. Off-grid. Zero operating cost. Built to last 20 years.
+          </p>
+        </div>
+
+        <div class="hero-photo">
+          <img src="../img/PHOTO-2026-04-23-13-09-11.jpg" alt="Community water tank on the Kenyan plain." />
+          <span class="tag">Today</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== KPI STRIP — full-width below hero ==================== -->
+    <section class="kpis-strip">
+      <div class="hk">
+        <div class="n">500</div>
+        <div class="l">Students</div>
+      </div>
+      <div class="hk">
+        <div class="n">5<sup>m³</sup></div>
+        <div class="l">Daily supply</div>
+      </div>
+      <div class="hk">
+        <div class="n">2 km</div>
+        <div class="l">Pipeline</div>
+      </div>
+      <div class="hk">
+        <div class="n">0 €</div>
+        <div class="l">OpEx · autonomous</div>
+      </div>
+    </section>
+
+    <!-- ===== PROBLEM + BUDGET ===================================== -->
+    <section class="cols">
+      <div>
+        <div class="col-head eyebrow">The problem</div>
+        <div class="problem-list">
+          <article class="p-card">
+            <div class="big3d">
+              159
+              <small>E.Coli MPN/100 ml</small>
+            </div>
+            <div>
+              <div class="t">Severe fecal contamination</div>
+              <div class="d">WHO safe limit: 0. Lab-confirmed source of waterborne disease among children drinking from the pond.</div>
+            </div>
+          </article>
+
+          <article class="p-card">
+            <div class="big3d">
+              109
+              <small>NTU Turbidity</small>
+            </div>
+            <div>
+              <div class="t">4× above legal limit (25 NTU)</div>
+              <div class="d">Surface pond shared with Maasai livestock; solids and pathogens stay in suspension year-round.</div>
+            </div>
+          </article>
+
+          <article class="p-card">
+            <div class="big3d">
+              4<small>km Daily Walk</small>
+            </div>
+            <div>
+              <div class="t">Hours of school lost to water</div>
+              <div class="d">No electrical grid within 6 hours of the site. Students carry jerrycans instead of attending class.</div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div>
+        <div class="col-head eyebrow">Budget breakdown</div>
+        <div class="budget">
+          <div class="bitem">
+            <span class="label">Solar-powered pumping system</span>
+            <span class="val">2,150 €</span>
+            <div class="bar"><span style="width:38%"></span></div>
+          </div>
+          <div class="bitem">
+            <span class="label">Transmission line</span>
+            <span class="val">2,970 €</span>
+            <div class="bar"><span style="width:52%"></span></div>
+          </div>
+          <div class="bitem">
+            <span class="label">Storage tanks (3 × 5,000 L)</span>
+            <span class="val">1,780 €</span>
+            <div class="bar"><span style="width:31%"></span></div>
+          </div>
+          <div class="bitem">
+            <span class="label">Pretreatment (aeration + settling + URF)</span>
+            <span class="val">3,100 €</span>
+            <div class="bar"><span style="width:55%"></span></div>
+          </div>
+          <div class="bitem">
+            <span class="label">Disinfection (slow sand filter + biochar)</span>
+            <span class="val">3,960 €</span>
+            <div class="bar"><span style="width:70%"></span></div>
+          </div>
+          <div class="bitem">
+            <span class="label">Civil works &amp; logistics</span>
+            <span class="val">5,680 €</span>
+            <div class="bar"><span style="width:100%"></span></div>
+          </div>
+          <div class="total">
+            <span class="label">Total · incl. 15% margin</span>
+            <span class="val">22,500 €</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SOLUTION ============================================= -->
+    <section class="solution">
+      <div class="col-head eyebrow">The solution · seven stages</div>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <div class="t">Solar pumping</div>
+          <div class="d">Off-grid raw-water extraction</div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div class="t">2 km piping</div>
+          <div class="d">HDPE, 25 m elevation gain</div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div class="t">Settling tank</div>
+          <div class="d">Removes coarse particles</div>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <div class="t">Roughing filter</div>
+          <div class="d">Gravel-bed adsorption</div>
+        </div>
+        <div class="step">
+          <div class="num">5</div>
+          <div class="t">Slow sand filter</div>
+          <div class="d">Biological disinfection</div>
+        </div>
+        <div class="step">
+          <div class="num">6</div>
+          <div class="t">Biochar adsorption</div>
+          <div class="d">Taste &amp; odour polishing</div>
+        </div>
+        <div class="step">
+          <div class="num">7</div>
+          <div class="t">Clean-water tank</div>
+          <div class="d">Served to 500 students</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER =============================================== -->
+    <footer class="flyer-foot">
+      <div class="foot-people">
+        <div class="h5">Engineering &amp; ESG</div>
+        <div class="names">Lluís Pujol López<br/>Ernest Pola Romeo</div>
+        <div class="meta">Construction: August 2026<br/>100% transparent · all funds to the field</div>
+      </div>
+
+      <div class="foot-logos">
+        <img src="../img/ub.png" alt="Universitat de Barcelona" />
+        <img src="../img/adesci.png" alt="ADESCI" />
+        <img src="../img/upc.png" alt="Universitat Politècnica de Catalunya" />
+      </div>
+
+      <div class="foot-qr">
+        <div class="qr-box">
+          <svg id="qr" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div>
+          <div class="cta-t">Visit<br/>website</div>
+          <div class="cta-d">
+            <a href="mailto:vitalquaproject@gmail.com">vitalquaproject@gmail.com</a>
+            <a href="https://vitalquaproject.github.io/vitalquaproject" class="url">vitalquaproject.github.io/vitalquaproject</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </article>
+
+  <script>
+    // QR → live site, same URL as /qr/
+    const URL_TARGET = 'https://vitalquaproject.github.io/vitalquaproject/';
+    const qr = qrcode(0, 'H');
+    qr.addData(URL_TARGET);
+    qr.make();
+    const size = qr.getModuleCount();
+    const PAD = 2;
+    const total = size + PAD * 2;
+
+    const svg = document.getElementById('qr');
+    svg.setAttribute('viewBox', `0 0 ${total} ${total}`);
+
+    const NS = 'http://www.w3.org/2000/svg';
+    function el(n, a) {
+      const e = document.createElementNS(NS, n);
+      for (const k in a) e.setAttribute(k, a[k]);
+      return e;
+    }
+    svg.appendChild(el('rect', { x: 0, y: 0, width: total, height: total, fill: '#FFFFFF' }));
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (!qr.isDark(r, c)) continue;
+        svg.appendChild(el('rect', {
+          x: c + PAD, y: r + PAD, width: 1, height: 1,
+          fill: '#0F3A56',
+          'shape-rendering': 'crispEdges'
+        }));
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Vitalqua Project logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" role="img" aria-label="Vitalqua Project logo">
   <title>Vitalqua Project</title>
   <!--
-    A standard water-drop silhouette with eight triangular sun rays
-    radiating around it — matching the sun icon in the landing hero.
+    Faceted water drop — 8 triangles (2 tip + 6-wedge fan body).
+    More elongated/oval proportions (R=10, H=18, ratio 1.4:1).
   -->
+  <style>polygon { stroke-width: .4; }</style>
 
-  <!-- Sun rays — 8 triangular rays, 45° apart, amber -->
-  <g fill="#FFD34E">
-    <polygon points="24,2 22.2,8 25.8,8"/>
-    <polygon points="24,2 22.2,8 25.8,8" transform="rotate(45 24 24)"/>
-    <polygon points="24,2 22.2,8 25.8,8" transform="rotate(90 24 24)"/>
-    <polygon points="24,2 22.2,8 25.8,8" transform="rotate(135 24 24)"/>
-    <polygon points="24,2 22.2,8 25.8,8" transform="rotate(180 24 24)"/>
-    <polygon points="24,2 22.2,8 25.8,8" transform="rotate(225 24 24)"/>
-    <polygon points="24,2 22.2,8 25.8,8" transform="rotate(270 24 24)"/>
-    <polygon points="24,2 22.2,8 25.8,8" transform="rotate(315 24 24)"/>
-  </g>
-
-  <!-- Water drop — classic teardrop centred within the ring of rays -->
-  <path d="M24,8 C32,18 36,26 36,30 C36,36 31,40 24,40 C17,40 12,36 12,30 C12,26 16,18 24,8 Z"
-        fill="#2A85B3"/>
+  <!-- Water drop · cx=16, cy=22, R=10, H=18 -->
+  <!-- Tip (2 triangles) -->
+  <polygon points="16,4 6,22 16,22"             fill="#4FB3D9" stroke="#4FB3D9"/>
+  <polygon points="16,4 16,22 26,22"             fill="#D6EEF6" stroke="#D6EEF6"/>
+  <!-- Body fan — 6 wedges spanning the rounded lower half -->
+  <polygon points="16,22 26,22 24.66,27"        fill="#D6EEF6" stroke="#D6EEF6"/>
+  <polygon points="16,22 24.66,27 21,30.66"     fill="#A3D0E3" stroke="#A3D0E3"/>
+  <polygon points="16,22 21,30.66 16,32"        fill="#A3D0E3" stroke="#A3D0E3"/>
+  <polygon points="16,22 16,32 11,30.66"        fill="#4FB3D9" stroke="#4FB3D9"/>
+  <polygon points="16,22 11,30.66 7.34,27"      fill="#2A85B3" stroke="#2A85B3"/>
+  <polygon points="16,22 7.34,27 6,22"          fill="#2A85B3" stroke="#2A85B3"/>
 </svg>

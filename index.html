@@ -825,6 +825,25 @@
     }
 
     /* =================================================================
+       Cursor-orbit triangles — discrete particles following the mouse
+       ================================================================= */
+    .cursor-orbit {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 50;
+      overflow: visible;
+    }
+    @media (hover: none), (pointer: coarse) {
+      .cursor-orbit { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cursor-orbit { display: none; }
+    }
+
+    /* =================================================================
        Reveal on scroll
        ================================================================= */
     .reveal {
@@ -836,6 +855,11 @@
   </style>
 </head>
 <body>
+
+  <!-- =================================================================
+       CURSOR-ORBIT — discrete triangle particles that follow the mouse
+       ================================================================= -->
+  <svg class="cursor-orbit" id="cursorOrbit" aria-hidden="true"></svg>
 
   <!-- =================================================================
        HEADER
@@ -852,7 +876,7 @@
         <a href="#impact">Impact</a>
         <a href="#partner">Partner</a>
       </nav>
-      <a href="building/" class="nav-cta">See the process</a>
+      <a href="process.html" class="nav-cta">See the process</a>
     </div>
   </header>
 
@@ -1100,7 +1124,7 @@
       <div class="eyebrow" style="justify-content: center;">The seven stages</div>
       <h2>From the pond to the classroom.</h2>
       <p>Follow a drop of water through the seven-stage journey — from the solar pump at the source to a clean glass at school.</p>
-      <a href="building/" class="btn btn-primary">See the process</a>
+      <a href="process.html" class="btn btn-primary">See the process</a>
     </div>
   </section>
 
@@ -1132,7 +1156,7 @@
           <h5>Partner</h5>
           <ul>
             <li><a href="#partner">About ADESCI</a></li>
-            <li><a href="building/">Full process</a></li>
+            <li><a href="process.html">Full process</a></li>
           </ul>
         </div>
 
@@ -1199,6 +1223,100 @@
         requestAnimationFrame(animate);
       }
       requestAnimationFrame(animate);
+    })();
+
+    // Cursor-orbit triangles — discrete particles orbiting the mouse
+    (function () {
+      const svg = document.getElementById('cursorOrbit');
+      if (!svg) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (window.matchMedia('(hover: none)').matches) return;
+
+      const NS = 'http://www.w3.org/2000/svg';
+      // Blue-only palette — full spectrum from light cyan to deep navy blue.
+      const palette = [
+        '#D6EEF6', '#A3D0E3', '#7FBFD6', '#5FAFC7',
+        '#4FB3D9', '#2A85B3', '#1B5F85', '#0F3A56',
+        '#3A8FC7'
+      ];
+
+      // Orbit radii roughly 2x previous → particles swirl in a wider halo.
+      const particles = [
+        { r:  60, sp:  1.6, ph: 0.0,         s: 4.2, rot: 0.6, ease: 0.22 },
+        { r:  95, sp: -1.1, ph: Math.PI*0.7, s: 3.4, rot: 1.3, ease: 0.14 },
+        { r: 140, sp:  0.9, ph: Math.PI*1.3, s: 5.4, rot: 2.0, ease: 0.09 },
+        { r: 185, sp: -0.7, ph: Math.PI*0.2, s: 3.8, rot: 0.2, ease: 0.06 },
+        { r:  80, sp:  1.3, ph: Math.PI*1.8, s: 2.8, rot: 1.9, ease: 0.18 },
+        { r: 235, sp: -0.5, ph: Math.PI*1.1, s: 4.6, rot: 0.9, ease: 0.04 },
+        { r:  45, sp:  2.0, ph: Math.PI*0.4, s: 2.4, rot: 2.6, ease: 0.28 },
+        { r: 160, sp:  0.6, ph: Math.PI*1.5, s: 3.2, rot: 0.4, ease: 0.07 },
+        { r: 115, sp: -1.4, ph: Math.PI*0.9, s: 3.0, rot: 2.2, ease: 0.12 }
+      ];
+
+      particles.forEach((p, i) => {
+        const el = document.createElementNS(NS, 'polygon');
+        el.setAttribute('fill', palette[i % palette.length]);
+        // Slightly higher opacity overall, more contrast between particles.
+        el.setAttribute('opacity', (0.42 + (i % 4) * 0.09).toFixed(2));
+        svg.appendChild(el);
+        p.el = el;
+        // Independent smoothed position per particle (starts at center).
+        p.px = window.innerWidth  * 0.5;
+        p.py = window.innerHeight * 0.5;
+      });
+
+      let mx = window.innerWidth  * 0.5;
+      let my = window.innerHeight * 0.5;
+      let prevMx = mx, prevMy = my;   // last frame mouse — for velocity
+      let vx = 0, vy = 0;             // smoothed mouse velocity
+      let active = false;
+
+      window.addEventListener('pointermove', (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        active = true;
+      }, { passive: true });
+
+      window.addEventListener('pointerleave', () => { active = false; });
+
+      function triPoints(cx, cy, s, rot) {
+        const pts = [];
+        for (let k = 0; k < 3; k++) {
+          const a = rot + k * (Math.PI * 2 / 3);
+          pts.push(`${(cx + Math.cos(a) * s).toFixed(2)},${(cy + Math.sin(a) * s).toFixed(2)}`);
+        }
+        return pts.join(' ');
+      }
+
+      function tick(now) {
+        // Mouse velocity (smoothed) — used to throw particles behind the cursor.
+        const dx = mx - prevMx;
+        const dy = my - prevMy;
+        vx += (dx - vx) * 0.25;
+        vy += (dy - vy) * 0.25;
+        prevMx = mx; prevMy = my;
+
+        const t = now / 1000;
+        for (const p of particles) {
+          // Each particle aims slightly BEHIND the cursor, scaled by its lag —
+          // slower particles get thrown further, giving a lively drag effect.
+          const inertia = (1 - p.ease) * 6;
+          const tx = mx - vx * inertia;
+          const ty = my - vy * inertia;
+
+          p.px += (tx - p.px) * p.ease;
+          p.py += (ty - p.py) * p.ease;
+
+          const ang = p.ph + t * p.sp;
+          const cx = p.px + Math.cos(ang) * p.r;
+          const cy = p.py + Math.sin(ang) * p.r;
+          const spin = p.rot + t * p.sp * 1.4;
+          p.el.setAttribute('points', triPoints(cx, cy, p.s, spin));
+          p.el.style.display = active ? '' : 'none';
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
     })();
 
     // Reveal on scroll

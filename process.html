@@ -1,125 +1,196 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ETAP Kenya | Smooth Scrollytelling</title>
+  <title>The process — Vitalqua Project</title>
+  <meta name="description" content="Follow a drop of water through the seven-stage solar-powered purification plant that serves 500 students in rural Kenya." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="app-frame">
+  <!-- =================================================================
+       HEADER — same shell as the landing
+       ================================================================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="wrap nav">
+      <a href="index.html#top" class="logo" aria-label="Vitalqua Project">
+        <img src="img/logo.svg" alt="" width="auto" height="34" class="logo-mark" />
+        Vitalqua Project
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html#today">Today</a>
+        <a href="index.html#solution">Solution</a>
+        <a href="index.html#impact">Impact</a>
+        <a href="index.html#partner">Partner</a>
+      </nav>
+      <a href="index.html" class="nav-cta">Back to home</a>
+    </div>
+  </header>
 
-    <svg id="scene" viewBox="0 0 160 180" preserveAspectRatio="xMidYMid meet" role="img" aria-label="ETAP Kenya scene">
-      <g id="tri-field"></g>
-    </svg>
+  <!-- =================================================================
+       SCROLLYTELLING STAGE
+       Sticky SVG scene on the left, scrolling step cards on the right.
+       ================================================================= -->
+  <main class="stage">
 
-    <div class="scroll-zone" id="scroll-zone">
-      <div class="step-list">
+    <div class="scene-col">
+      <svg id="scene" viewBox="0 0 160 100" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Seven-stage water purification scene">
+        <!-- Scenes are inserted here by main.js, one <g class="scene-layer"> per step -->
+      </svg>
+
+      <!-- Contaminant indicators -->
+      <div class="indicators" aria-label="Contamination levels">
+        <div class="indicator">
+          <span class="ind-label">Turbidity</span>
+          <div class="ind-row">
+            <span id="val-turb" class="ind-value">100%</span>
+            <span id="delta-turb" class="ind-delta"></span>
+          </div>
+          <span class="ind-bar"><span class="ind-bar-fill" id="bar-turb" style="width:100%; background:#9B7828;"></span></span>
+        </div>
+        <div class="indicator">
+          <span class="ind-label">Gases</span>
+          <div class="ind-row">
+            <span id="val-gas" class="ind-value">100%</span>
+            <span id="delta-gas" class="ind-delta"></span>
+          </div>
+          <span class="ind-bar"><span class="ind-bar-fill" id="bar-gas" style="width:100%; background:#6B7890;"></span></span>
+        </div>
+        <div class="indicator">
+          <span class="ind-label">Pathogens</span>
+          <div class="ind-row">
+            <span id="val-path" class="ind-value">100%</span>
+            <span id="delta-path" class="ind-delta"></span>
+          </div>
+          <span class="ind-bar"><span class="ind-bar-fill" id="bar-path" style="width:100%; background:#27500A;"></span></span>
+        </div>
+        <div class="indicator">
+          <span class="ind-label">Organics</span>
+          <div class="ind-row">
+            <span id="val-org" class="ind-value">100%</span>
+            <span id="delta-org" class="ind-delta"></span>
+          </div>
+          <span class="ind-bar"><span class="ind-bar-fill" id="bar-org" style="width:100%; background:#2A85B3;"></span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-col">
+      <div class="steps" id="step-list">
 
         <article class="step active" data-step="0">
-          <div class="step-num" style="--step-color: #4FB3D9">0</div>
-          <h1 class="step-title">ETAP Kenya — How it works</h1>
-          <div class="step-desc">
-            <p>We'll walk you through the <span class="highlight">seven-stage journey</span> that turns raw, turbid water into crystal-clear drinking water for a Kenyan school — powered entirely by the sun, with zero operating cost. Scroll to follow the drop along the way.</p>
-          </div>
-          <div class="connector"></div>
+          <div class="step-eyebrow">Introduction</div>
+          <h1 class="step-title">How the plant works</h1>
+          <p class="step-desc">
+            Follow a single drop of water through the seven-stage journey that
+            turns raw, turbid pond water into crystal-clear drinking water —
+            powered entirely by the sun, with zero operating cost.
+          </p>
+          <p class="step-hint">Scroll to begin ↓</p>
         </article>
 
         <article class="step" data-step="1">
-          <div class="step-num" style="--step-color: #647a90">1</div>
-          <h1 class="step-title">Night Mode</h1>
-          <div class="step-desc">
-            <p>The system is completely dormant. With no energy, the flow is halted. This is the baseline of our <span class="highlight">OpEx 0 facility</span> in Kenya, quietly waiting for the first sun rays to initiate the purification cycle.</p>
-          </div>
-          <div class="connector"></div>
+          <div class="step-eyebrow">01 · Night</div>
+          <h2 class="step-title">The system rests</h2>
+          <p class="step-desc">
+            At night, the plant is dormant. No sun, no power, no flow. This is
+            the baseline of an <span class="hl">OpEx-zero facility</span> —
+            quietly waiting for the first rays.
+          </p>
         </article>
 
         <article class="step" data-step="2">
-          <div class="step-num" style="--step-color: #ffd95e">2</div>
-          <h1 class="step-title">Solar Pumping</h1>
-          <div class="step-desc">
-            <p>Solar energy hits the panels and activates the submerged pump. A steady flow of <span class="highlight">raw, turbid water</span> begins its journey from the source, powered entirely by a 100% off-grid, zero-carbon solution.</p>
-          </div>
-          <div class="connector"></div>
+          <div class="step-eyebrow">02 · Solar pumping</div>
+          <h2 class="step-title">The sun starts the flow</h2>
+          <p class="step-desc">
+            Sunlight hits the panels and wakes the submerged pump.
+            <span class="hl">Raw, turbid water</span> begins its journey from
+            the source — 100% off-grid, zero-carbon.
+          </p>
         </article>
 
         <article class="step" data-step="3">
-          <div class="step-num" style="--step-color: #1e88e5">3</div>
-          <h1 class="step-title">Buffer Tank</h1>
-          <div class="step-desc">
-            <p>The 6000L tank acts as a <span class="highlight">hydraulic buffer</span>, ensuring a perfectly stabilized flow of 208 L/h. Integrated LoRaWAN telemetry monitors the levels in real-time, autonomously managing the intake pump.</p>
-          </div>
-          <div class="connector"></div>
+          <div class="step-eyebrow">03 · Buffer tank</div>
+          <h2 class="step-title">Hydraulic buffer</h2>
+          <p class="step-desc">
+            A 6 000 L tank stabilises the flow to
+            <span class="hl">208 L/h</span>. Level telemetry manages the intake
+            pump autonomously — no human touch required.
+          </p>
         </article>
 
         <article class="step" data-step="4">
-          <div class="step-num" style="--step-color: #94a3b8">4</div>
-          <h1 class="step-title">Cascade Aeration</h1>
-          <div class="step-desc">
-            <p>Gravity forces the water down steps, maximizing the air-water interface. This natural process effectively strips away foul gases like H2S and oxidizes <span class="highlight">dissolved Iron</span> into solid, filterable particles.</p>
-          </div>
-          <div class="connector"></div>
+          <div class="step-eyebrow">04 · Cascade aeration</div>
+          <h2 class="step-title">Four steps, gravity-fed</h2>
+          <p class="step-desc">
+            Water falls down four stepped terraces. The open air-water interface
+            strips away <span class="hl">H₂S and foul gases</span> and oxidises
+            dissolved iron into filterable particles.
+          </p>
         </article>
 
         <article class="step" data-step="5">
-          <div class="step-num" style="--step-color: #7c5f4f">5</div>
-          <h1 class="step-title">Settling Tank</h1>
-          <div class="step-desc">
-            <p>By drastically slowing the water velocity to just 0.08 m/h, gravity takes over. Over 60% of the <span class="highlight">heavy mud and flocs</span> sink and remain safely trapped on the specially designed sloped floor.</p>
-          </div>
-          <div class="connector"></div>
+          <div class="step-eyebrow">05 · Settling tank</div>
+          <h2 class="step-title">Gravity takes over</h2>
+          <p class="step-desc">
+            Flow velocity drops to just 0.08 m/h. Over 60% of the
+            <span class="hl">heavy mud and flocs</span> sink to the sloped
+            floor and stay trapped there.
+          </p>
         </article>
 
         <article class="step" data-step="6">
-          <div class="step-num" style="--step-color: #54b3f3">6</div>
-          <h1 class="step-title">Roughing Filter (URF)</h1>
-          <div class="step-desc">
-            <p>The water gently rises through three specific layers of gravel. Fine clay particles stick to the rough stones through <span class="highlight">physical adsorption</span>, leaving the water visually clear and protecting downstream filters.</p>
-          </div>
-          <div class="connector"></div>
+          <div class="step-eyebrow">06 · Roughing filter · URF</div>
+          <h2 class="step-title">Three gravel layers</h2>
+          <p class="step-desc">
+            Water rises through coarse, medium and fine gravel. Fine clay
+            particles stick to the rough stones by
+            <span class="hl">physical adsorption</span> — the water comes out
+            visually clear.
+          </p>
         </article>
 
         <article class="step" data-step="7">
-          <div class="step-num" style="--step-color: #2e7d32">7</div>
-          <h1 class="step-title">Slow Sand Filter</h1>
-          <div class="step-desc">
-            <p>This is the biological engine of the system. A living, natural ecosystem called the <span class="highlight">Schmutzdecke</span> develops on the sand bed, actively predating on dangerous bacteria, viruses, and parasites.</p>
-          </div>
-          <div class="connector"></div>
+          <div class="step-eyebrow">07 · Slow sand filter</div>
+          <h2 class="step-title">The biological engine</h2>
+          <p class="step-desc">
+            A living biofilm called the <span class="hl">Schmutzdecke</span>
+            colonises the top of the sand bed. It actively predates on
+            bacteria, viruses and parasites as water trickles through.
+          </p>
         </article>
 
         <article class="step" data-step="8">
-          <div class="step-num" style="--step-color: #00E5FF">8</div>
-          <h1 class="step-title">Biochar Polishing</h1>
-          <div class="step-desc">
-            <p>The final touch of chemical innovation. Locally sourced biochar acts as a powerful sponge, capturing any remaining <span class="highlight">trace organics and odors</span>, and delivering fresh, crystal-clear water to the school.</p>
-          </div>
+          <div class="step-eyebrow">08 · Biochar polishing</div>
+          <h2 class="step-title">The final touch</h2>
+          <p class="step-desc">
+            Locally sourced biochar adsorbs any remaining
+            <span class="hl">trace organics, odours and off-tastes</span>.
+            Fresh, crystal-clear water flows to the school's tap.
+          </p>
+        </article>
+
+        <article class="step step-final" data-step="9">
+          <div class="step-eyebrow">Clean water</div>
+          <h2 class="step-title">For 500&nbsp;students.</h2>
+          <p class="step-desc">
+            Zero electricity, zero operating cost, 20-year lifespan.<br/>
+            Engineered by students, built with the community.
+          </p>
+          <a class="step-cta" href="index.html#partner">Meet our partner ADESCI →</a>
         </article>
 
       </div>
     </div>
 
-    <div class="fixed-indicators">
-      <div class="indicator">
-        <span class="ind-label">🔴 Turbidity</span>
-        <span id="val-turb" class="ind-value">100%</span>
-      </div>
-      <div class="indicator">
-        <span class="ind-label">🟡 Gases</span>
-        <span id="val-gas" class="ind-value">100%</span>
-      </div>
-      <div class="indicator">
-        <span class="ind-label">🦠 Pathogens</span>
-        <span id="val-path" class="ind-value">100%</span>
-      </div>
-      <div class="indicator">
-        <span class="ind-label">🧪 Organics</span>
-        <span id="val-org" class="ind-value">100%</span>
-      </div>
-    </div>
-
-  </div>
+  </main>
 
   <script src="main.js"></script>
 </body>

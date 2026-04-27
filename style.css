@@ -400,8 +400,13 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   border-radius: 50px;
   border: 1.5px solid rgba(212, 175, 55, 0.5);
-  background: transparent;
+  background: #0f1a2e;
   color: #ffffff !important;
+  text-decoration: none !important;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-block;
   z-index: 0;
   cursor: pointer;
 }
@@ -410,6 +415,7 @@ a { color: inherit; text-decoration: none; }
 .btn-gold-fill span {
   position: relative;
   z-index: 2;
+  color: #ffffff !important;
 }
 
 /* ── El líquid daurat (pseudoelement) ── */
@@ -422,19 +428,18 @@ a { color: inherit; text-decoration: none; }
   height: 0%;
   background: linear-gradient(
     to top,
-    #b8860b,   /* or fosc a baix */
-    #d4af37,   /* or pur al mig */
-    #f9e1a1    /* or clar a dalt */
+    #b8860b,
+    #d4af37,
+    #f9e1a1
   );
   z-index: 1;
   animation: fillWithGold 5s ease-in-out infinite;
 }
 
-/* ── Keyframes: omple de baix a dalt, pausa, buida ── */
+/* ── Keyframes ── */
 @keyframes fillWithGold {
-  0%   { height: 0%;   box-shadow: none; }
+  0%   { height: 0%; }
   60%  { height: 100%; }
-  80%  { height: 100%; box-shadow: 0 0 18px 4px rgba(212, 175, 55, 0.6); }
-  95%  { height: 100%; box-shadow: 0 0 24px 6px rgba(249, 225, 161, 0.8); }
-  100% { height: 0%;   box-shadow: none; }
+  80%  { height: 100%; }
+  100% { height: 0%; }
 }

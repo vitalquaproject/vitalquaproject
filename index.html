@@ -916,6 +916,13 @@
   <!-- =================================================================
        TODAY — the current situation
        ================================================================= -->
+<style>
+  @media (max-width: 768px) {
+    .water-text  { order: 1; }
+    .water-image { order: 2; }
+  }
+</style>
+
 <section style="
   display: flex; 
   gap: 3rem; 
@@ -929,12 +936,12 @@
 ">
 
   <!-- COLUMNA IZQUIERDA: Imagen -->
-  <div style="flex: 1; min-width: min(100%, 400px);">
+  <div class="water-image" style="flex: 1; min-width: min(100%, 400px);">
     <img 
       src="img/PHOTO-2026-04-23-13-09-19.jpg" 
       alt="Current water point"
       style="
-        width: 100%;  
+        width: 100%; 
         object-fit: cover; 
         border-radius: 12px; 
         display: block;
@@ -945,7 +952,7 @@
   </div>
 
   <!-- COLUMNA DERECHA: Texto -->
-  <div style="
+  <div class="water-text" style="
     flex: 1; 
     min-width: min(100%, 400px);
     display: flex; 

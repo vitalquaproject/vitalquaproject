@@ -852,6 +852,49 @@
       transition: opacity 800ms var(--ease), transform 800ms var(--ease);
     }
     .reveal.in { opacity: 1; transform: translateY(0); }
+
+/* =================================================================
+       Prova boto ernest
+       ================================================================= */
+                    .nav-cta--gold {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.nav-cta--gold::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to top, #b8860b, #d4af37, #f9e1a1);
+  z-index: 0;
+  animation: fillWithGold 5s ease-in-out infinite;
+}
+
+.nav-cta--gold span {
+  position: relative;
+  z-index: 1;
+  color: #ffffff !important;
+  display: inline-block;
+}
+
+.nav-cta--gold:hover {
+  background: var(--navy) !important;
+}
+
+@keyframes fillWithGold {
+  0%   { height: 0%;   }
+  60%  { height: 100%; }
+  80%  { height: 100%; }
+  100% { height: 0%;   }
+}
+
+    /* =================================================================
+       prova ernest
+       ================================================================= */
   </style>
 </head>
 <body>

@@ -393,3 +393,48 @@ a { color: inherit; text-decoration: none; }
   .steps { padding: 5vh 14px 55vh; gap: 8vh; }
   .step { min-height: 28vh; }
 }
+
+/* ── Botó càpsula base ── */
+.btn-gold-fill {
+  position: relative;
+  overflow: hidden;
+  border-radius: 50px;
+  border: 1.5px solid rgba(212, 175, 55, 0.5);
+  background: transparent;
+  color: #ffffff !important;
+  z-index: 0;
+  cursor: pointer;
+}
+
+/* ── El text sempre per sobre del líquid ── */
+.btn-gold-fill span {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── El líquid daurat (pseudoelement) ── */
+.btn-gold-fill::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(
+    to top,
+    #b8860b,   /* or fosc a baix */
+    #d4af37,   /* or pur al mig */
+    #f9e1a1    /* or clar a dalt */
+  );
+  z-index: 1;
+  animation: fillWithGold 5s ease-in-out infinite;
+}
+
+/* ── Keyframes: omple de baix a dalt, pausa, buida ── */
+@keyframes fillWithGold {
+  0%   { height: 0%;   box-shadow: none; }
+  60%  { height: 100%; }
+  80%  { height: 100%; box-shadow: 0 0 18px 4px rgba(212, 175, 55, 0.6); }
+  95%  { height: 100%; box-shadow: 0 0 24px 6px rgba(249, 225, 161, 0.8); }
+  100% { height: 0%;   box-shadow: none; }
+}

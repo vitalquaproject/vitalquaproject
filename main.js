@@ -1200,9 +1200,9 @@ const LEVELS = [
   { turb:100, gas:100, path:100, org:100 }, // 2 Solar pumping
   { turb:100, gas:100, path:100, org:100 }, // 3 Buffer tank
   { turb:100, gas:10,  path:100, org:100 }, // 4 Cascade aeration
-  { turb:20,  gas:10,  path:100, org:100 }, // 5 Settling tank
-  { turb:0,   gas:5,   path:90,  org:100 }, // 6 URF
-  { turb:0,   gas:0,   path:0,   org:80  }, // 7 Slow sand filter
+  { turb:40,  gas:10,  path:100, org:100 }, // 5 Settling tank
+  { turb:5,   gas:5,   path:90,  org:100 }, // 6 URF
+  { turb:0,   gas:0,   path:1,   org:70  }, // 7 Slow sand filter
   { turb:0,   gas:0,   path:0,   org:0   }, // 8 Biochar
   { turb:0,   gas:0,   path:0,   org:0   }  // 9 Finished glass
 ];

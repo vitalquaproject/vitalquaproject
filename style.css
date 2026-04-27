@@ -397,6 +397,7 @@ a { color: inherit; text-decoration: none; }
 .nav-cta--gold {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .nav-cta--gold::before {
@@ -407,15 +408,15 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   height: 0%;
   background: linear-gradient(to top, #b8860b, #d4af37, #f9e1a1);
-  z-index: 1;
+  z-index: 0;
   animation: fillWithGold 5s ease-in-out infinite;
 }
 
 .nav-cta--gold span {
   position: relative;
-  z-index: 2;
-  color: #ffffff;
-  mix-blend-mode: normal;
+  z-index: 1;
+  color: #ffffff !important;
+  display: inline-block;
 }
 
 @keyframes fillWithGold {

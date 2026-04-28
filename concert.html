@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Concierto Benéfico — Vitalqua Project</title>
+  <meta name="description" content="Únete al concierto benéfico del Vitalqua Project. Recaudamos fondos para llevar agua limpia a una escuela de 500 alumnos en Kenia." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
+
+  <style>
+    /* ================================================================
+       Vitalqua — concert.html
+       Palette mirrors the main site: navy / cyan / sand accent.
+       ================================================================ */
+    :root {
+      --bg:        #F6F8FB;
+      --bg-soft:   #ECF1F5;
+      --surface:   #FFFFFF;
+      --navy:      #0F1A2E;
+      --navy-dp:   #07101E;
+
+      --cy-xlt:    #D6EEF6;
+      --cy-lt:     #A3D0E3;
+      --cy:        #4FB3D9;
+      --cy-dk:     #2A85B3;
+      --cy-xdk:    #1B5F85;
+
+      --ink:       #0F1A2E;
+      --ink-soft:  #3F4F6B;
+      --muted:     #6B7890;
+      --faint:     #A3B5CD;
+
+      --sand:      #C89464;
+      --sand-lt:   #F2EDE0;
+
+      --success:   #1B7A5C;
+      --success-lt:#D1F0E6;
+
+      --radius-sm: 10px;
+      --radius:    16px;
+      --radius-lg: 24px;
+
+      --shadow-sm: 0 1px 2px rgba(15,26,46,.05), 0 4px 14px rgba(15,26,46,.04);
+      --shadow-md: 0 4px 16px rgba(15,26,46,.08), 0 20px 40px rgba(15,26,46,.06);
+      --shadow-lg: 0 8px 28px rgba(15,26,46,.12), 0 36px 60px rgba(15,26,46,.08);
+
+      --ease: cubic-bezier(.22,.61,.36,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.58;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+    button, input { font: inherit; }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+    }
+
+    /* ============================================================
+       HEADER — fixed, blurs on scroll
+       ============================================================ */
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 14px 0;
+      background: rgba(7, 16, 30, 0);
+      backdrop-filter: blur(0);
+      border-bottom: 1px solid transparent;
+      transition:
+        background 280ms var(--ease),
+        backdrop-filter 280ms var(--ease),
+        border-color 280ms var(--ease),
+        padding 280ms var(--ease);
+    }
+    .site-header.scrolled {
+      background: rgba(7, 16, 30, 0.88);
+      backdrop-filter: blur(16px) saturate(1.2);
+      border-bottom-color: rgba(255,255,255,.07);
+      padding: 10px 0;
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      color: #fff;
+      transition: opacity 180ms ease;
+    }
+    .logo:hover { opacity: 0.82; }
+    .logo-mark { width: auto; height: 32px; display: block; flex-shrink: 0; }
+
+    /* ============================================================
+       HERO — dark navy, animated triangles, concert details
+       ============================================================ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 130px 0 80px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(79,179,217,.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(27,95,133,.18) 0%, transparent 55%),
+        linear-gradient(160deg, #0A1628 0%, #07101E 60%, #0D1E38 100%);
+    }
+
+    /* triangle background canvas */
+    .hero-canvas {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 0;
+      overflow: visible;
+    }
+    .hero-canvas svg { width: 100%; height: 100%; display: block; }
+
+    .hero-inner {
+      position: relative; z-index: 2;
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+    }
+
+    .eyebrow-concert {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--cy-lt);
+      margin-bottom: 22px;
+    }
+    .eyebrow-concert::before,
+    .eyebrow-concert::after {
+      content: ""; flex-shrink: 0;
+      width: 24px; height: 1px;
+      background: var(--cy-lt);
+      opacity: 0.6;
+    }
+
+    .hero h1 {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: clamp(2.6rem, 7vw, 4.8rem);
+      font-weight: 700;
+      letter-spacing: -0.032em;
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 22px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      /* 5-layer cyan extrusion — matches the site's 3D number style */
+      text-shadow:
+        1px 1px 0 #7FBFD6,
+        2px 2px 0 #5FAFC7,
+        3px 3px 0 #4FB3D9,
+        4px 4px 0 #2A85B3,
+        5px 5px 0 #1B5F85;
+    }
+
+    .hero-lede {
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      color: rgba(163,181,205,.85);
+      max-width: 52ch;
+      margin: 0 auto 40px;
+      line-height: 1.65;
+    }
+
+    /* Event detail pills */
+    .event-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 44px;
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(79,179,217,.1);
+      border: 1px solid rgba(79,179,217,.22);
+      color: var(--cy-lt);
+      font-size: 0.84rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      backdrop-filter: blur(8px);
+    }
+    .pill svg { flex-shrink: 0; opacity: 0.75; }
+    .pill strong { color: #fff; font-weight: 600; }
+
+    /* Price badge */
+    .price-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      background: rgba(200,148,100,.12);
+      border: 1px solid rgba(200,148,100,.28);
+      color: #E8C48A;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .price-badge .amount {
+      font-size: 1.55rem;
+      color: #F2D49A;
+    }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: rgba(163,181,205,.45);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      z-index: 2;
+      animation: hint-bounce 2.4s ease-in-out infinite;
+    }
+    @keyframes hint-bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.45; }
+      50%       { transform: translateX(-50%) translateY(6px); opacity: 0.75; }
+    }
+    .scroll-hint svg { opacity: 0.55; }
+
+    /* ============================================================
+       FORM SECTION
+       ============================================================ */
+    .form-section {
+      background: var(--bg);
+      padding: clamp(64px, 9vw, 104px) 0 clamp(72px, 10vw, 120px);
+    }
+
+    .form-wrap {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+    }
+
+    .form-heading {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .form-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cy-dk);
+      margin-bottom: 14px;
+    }
+    .form-eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--cy-dk); }
+    .form-title {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: clamp(1.7rem, 4vw, 2.3rem);
+      font-weight: 700;
+      letter-spacing: -0.028em;
+      color: var(--navy);
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .form-sub {
+      font-size: 0.98rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    /* The card */
+    .form-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(42,133,179,.1);
+      box-shadow: var(--shadow-lg);
+      padding: clamp(28px, 5vw, 44px);
+    }
+
+    /* Fields */
+    .field { margin-bottom: 24px; }
+    .field:last-of-type { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 8px;
+    }
+    label .req {
+      color: var(--cy-dk);
+      margin-left: 2px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(15,26,46,.13);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 0.97rem;
+      line-height: 1.4;
+      outline: none;
+      transition:
+        border-color 180ms ease,
+        background 180ms ease,
+        box-shadow 180ms ease;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .input::placeholder { color: var(--faint); }
+    .input:focus {
+      border-color: var(--cy-dk);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(42,133,179,.12);
+    }
+    .input.invalid {
+      border-color: #C0392B;
+      box-shadow: 0 0 0 3px rgba(192,57,43,.1);
+    }
+
+    /* Yes / No toggle */
+    .toggle-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .toggle-group input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+      pointer-events: none;
+    }
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(15,26,46,.13);
+      background: var(--bg);
+      color: var(--ink-soft);
+      font-size: 0.93rem;
+      font-weight: 600;
+      letter-spacing: normal;
+      text-transform: none;
+      cursor: pointer;
+      transition:
+        border-color 180ms ease,
+        background 180ms ease,
+        color 180ms ease,
+        box-shadow 180ms ease;
+      user-select: none;
+    }
+    .toggle-label:hover {
+      border-color: var(--cy-lt);
+      color: var(--navy);
+    }
+    .toggle-group input[type="radio"]:checked + .toggle-label {
+      border-color: var(--cy-dk);
+      background: var(--cy-xlt);
+      color: var(--cy-xdk);
+      box-shadow: 0 0 0 3px rgba(42,133,179,.12);
+    }
+    .toggle-group input[type="radio"]:checked + .toggle-label.yes-label {
+      border-color: var(--success);
+      background: var(--success-lt);
+      color: var(--success);
+      box-shadow: 0 0 0 3px rgba(27,122,92,.1);
+    }
+
+    /* Field validation hint */
+    .field-hint {
+      display: none;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: #C0392B;
+    }
+    .field-hint.show { display: block; }
+
+    /* Divider before submit */
+    .form-divider {
+      height: 1px;
+      background: rgba(15,26,46,.07);
+      margin: 28px 0;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 15px 28px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.01em;
+      border: none;
+      cursor: pointer;
+      transition:
+        background 180ms ease,
+        transform 180ms var(--ease),
+        box-shadow 180ms ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-submit:hover {
+      background: var(--cy-dk);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-submit .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-text { opacity: 0.7; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Error message */
+    .form-error {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      background: #FEF0EE;
+      border: 1px solid rgba(192,57,43,.2);
+      color: #9B2318;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+    .form-error.show { display: flex; gap: 10px; align-items: flex-start; }
+    .form-error svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* ============================================================
+       THANK-YOU CARD
+       ============================================================ */
+    .thankyou-card {
+      display: none;
+      text-align: center;
+      padding: clamp(28px, 5vw, 48px);
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(27,122,92,.18);
+      box-shadow: var(--shadow-lg);
+    }
+    .thankyou-card.show { display: block; animation: fade-up 0.55s var(--ease) both; }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .check-circle {
+      width: 72px; height: 72px;
+      background: var(--success-lt);
+      border-radius: 50%;
+      display: grid; place-items: center;
+      margin: 0 auto 24px;
+      border: 2px solid rgba(27,122,92,.15);
+    }
+    .thankyou-card h2 {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .thankyou-card p {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      max-width: 40ch;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+    .thankyou-details {
+      margin-top: 28px;
+      padding: 18px 20px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 1px solid rgba(15,26,46,.07);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+    .thankyou-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.88rem;
+      gap: 12px;
+    }
+    .thankyou-row .tkey {
+      color: var(--muted);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .thankyou-row .tval {
+      color: var(--navy);
+      font-weight: 600;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    /* ============================================================
+       BOTTOM CTA — ghost button link
+       ============================================================ */
+    .bottom-cta {
+      text-align: center;
+      padding: clamp(52px, 7vw, 80px) 0;
+      background: var(--bg-soft);
+      border-top: 1px solid rgba(15,26,46,.06);
+    }
+    .bottom-cta p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 13px 24px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--navy);
+      border: 1.5px solid rgba(15,26,46,.18);
+      font-weight: 600;
+      font-size: 0.92rem;
+      letter-spacing: 0.01em;
+      transition:
+        border-color 180ms ease,
+        color 180ms ease,
+        transform 180ms var(--ease);
+    }
+    .btn-ghost:hover {
+      border-color: var(--cy-dk);
+      color: var(--cy-dk);
+      transform: translateX(3px);
+    }
+    .btn-ghost .arrow { transition: transform 200ms var(--ease); }
+    .btn-ghost:hover .arrow { transform: translateX(4px); }
+
+    /* ============================================================
+       FOOTER — minimal
+       ============================================================ */
+    .site-footer {
+      background: var(--navy-dp);
+      padding: 28px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-inner span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .footer-inner a {
+      font-size: 0.78rem;
+      color: var(--faint);
+      transition: color 160ms ease;
+    }
+    .footer-inner a:hover { color: #fff; }
+
+    /* ============================================================
+       REVEAL on scroll
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 520px) {
+      .hero h1 { font-size: clamp(2.1rem, 9vw, 3rem); }
+      .event-pills { gap: 8px; }
+      .pill { font-size: 0.78rem; padding: 7px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================================================================
+       HEADER
+       ================================================================ -->
+  <header class="site-header" id="siteHeader">
+    <div class="wrap nav">
+      <a href="index.html" class="logo" aria-label="Vitalqua Project — ir al inicio">
+        <img src="img/logo.svg" alt="" width="32" height="32" class="logo-mark" />
+        Vitalqua Project
+      </a>
+    </div>
+  </header>
+
+  <!-- ================================================================
+       HERO
+       ================================================================ -->
+  <section class="hero" id="top">
+
+    <!-- animated triangle background -->
+    <div class="hero-canvas" aria-hidden="true">
+      <svg id="heroBg" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+        <g id="hero-tris"></g>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+      <div class="eyebrow-concert">Concierto Benéfico</div>
+
+      <h1>Una noche por<br/><em>el agua limpia</em></h1>
+
+      <p class="hero-lede">
+        Cada entrada financia directamente el sistema de purificación
+        de agua para una escuela de más de 500 alumnos en Narok, Kenia.
+        Una noche de música con impacto real.
+      </p>
+
+      <!-- TODO: Update date, time and venue before publishing -->
+      <div class="event-pills">
+        <span class="pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <strong>[Fecha · 2026]</strong>
+        </span>
+        <span class="pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <strong>[Hora]</strong>
+        </span>
+        <span class="pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <strong>[Lugar · Barcelona]</strong>
+        </span>
+      </div>
+
+      <div class="price-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Entrada&nbsp;<span class="amount">20&nbsp;€</span>&nbsp;· Todo va al proyecto
+      </div>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      Inscríbete
+    </div>
+  </section>
+
+  <!-- ================================================================
+       FORM SECTION
+       ================================================================ -->
+  <section class="form-section" id="inscripcion">
+    <div class="form-wrap">
+
+      <div class="form-heading reveal">
+        <div class="form-eyebrow">Reserva tu plaza</div>
+        <h2 class="form-title">Apunta tu nombre</h2>
+        <p class="form-sub">Rellena el formulario y te confirmamos tu plaza. La recaudación íntegra financia el Vitalqua Project.</p>
+      </div>
+
+      <!-- FORM CARD -->
+      <div class="form-card reveal" id="formCard">
+        <form id="concertForm" novalidate>
+
+          <!-- Nombre y Apellidos -->
+          <div class="field" id="field-name">
+            <label for="inputName">
+              Nombre y Apellidos <span class="req" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="text"
+              id="inputName"
+              name="entry.2092238618"
+              class="input"
+              placeholder="Ej. Maria García López"
+              autocomplete="name"
+              required
+              aria-required="true"
+              aria-describedby="hint-name"
+            />
+            <span class="field-hint" id="hint-name">Por favor, introduce tu nombre completo.</span>
+          </div>
+
+          <!-- Numero de Teléfono -->
+          <div class="field" id="field-phone">
+            <label for="inputPhone">
+              Número de Teléfono <span class="req" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="tel"
+              id="inputPhone"
+              name="entry.1556369182"
+              class="input"
+              placeholder="Ej. 612 345 678"
+              autocomplete="tel"
+              required
+              aria-required="true"
+              aria-describedby="hint-phone"
+            />
+            <span class="field-hint" id="hint-phone">Por favor, introduce un número de teléfono.</span>
+          </div>
+
+          <!-- Pagado (20€)? -->
+          <div class="field" id="field-paid">
+            <label>
+              ¿Has pagado los 20&nbsp;€? <span class="req" aria-hidden="true">*</span>
+            </label>
+            <div class="toggle-group" role="radiogroup" aria-label="¿Has pagado los 20 euros?">
+              <input type="radio" id="paidYes" name="entry.2109138769" value="Sí" required />
+              <label for="paidYes" class="toggle-label yes-label">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Sí, pagado
+              </label>
+
+              <input type="radio" id="paidNo" name="entry.2109138769" value="No" />
+              <label for="paidNo" class="toggle-label">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Todavía no
+              </label>
+            </div>
+            <span class="field-hint" id="hint-paid">Por favor, indica si has realizado el pago.</span>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <div class="spinner" aria-hidden="true"></div>
+            <span class="btn-text">Confirmar inscripción</span>
+            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+
+          <!-- Error message (shown if fetch fails) -->
+          <div class="form-error" id="formError" role="alert" aria-live="polite">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Algo ha fallado al enviar. Por favor inténtalo de nuevo o escríbenos a <strong>vitalquaproject@gmail.com</strong>.</span>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- THANK-YOU CARD (hidden until form is submitted successfully) -->
+      <div class="thankyou-card" id="thankYouCard" role="status" aria-live="polite">
+        <div class="check-circle" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1B7A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h2>¡Inscripción recibida!</h2>
+        <p>Muchas gracias. Hemos anotado tu plaza. Nos pondremos en contacto contigo si es necesario confirmar algún detalle.</p>
+        <div class="thankyou-details" id="thankyouDetails" aria-hidden="true">
+          <div class="thankyou-row">
+            <span class="tkey">Nombre</span>
+            <span class="tval" id="tyName">—</span>
+          </div>
+          <div class="thankyou-row">
+            <span class="tkey">Teléfono</span>
+            <span class="tval" id="tyPhone">—</span>
+          </div>
+          <div class="thankyou-row">
+            <span class="tkey">Pago 20 €</span>
+            <span class="tval" id="tyPaid">—</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       BOTTOM CTA
+       ================================================================ -->
+  <div class="bottom-cta reveal">
+    <p>¿Quieres saber más sobre el proyecto?</p>
+    <a href="index.html" class="btn-ghost">
+      Learn more about the project
+      <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- ================================================================
+       FOOTER
+       ================================================================ -->
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>© Vitalqua Project · Kenya</span>
+      <a href="mailto:vitalquaproject@gmail.com">vitalquaproject@gmail.com</a>
+    </div>
+  </footer>
+
+  <!-- ================================================================
+       SCRIPTS
+       ================================================================ -->
+  <script>
+    /* ---- Header: transparent over hero, blurred when scrolled ---- */
+    (function () {
+      const header = document.getElementById('siteHeader');
+      const update = () => header.classList.toggle('scrolled', window.scrollY > 60);
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    /* ---- Hero triangle wobble (dark palette, cohesive with site) ---- */
+    (function () {
+      const g = document.getElementById('hero-tris');
+      if (!g) return;
+      const NS = 'http://www.w3.org/2000/svg';
+      const COUNT = 28;
+      const tris = [];
+      const rand = (i, salt) => {
+        const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
+        return x - Math.floor(x);
+      };
+      const palette = [
+        '#1B5F85', '#2A85B3', '#4FB3D9', '#0F3A56',
+        '#A3D0E3', '#7FBFD6', '#5FAFC7', '#0A2840'
+      ];
+
+      for (let i = 0; i < COUNT; i++) {
+        const p = document.createElementNS(NS, 'polygon');
+        const cx = 4  + rand(i, 1) * 152;
+        const cy = 4  + rand(i, 2) * 82;
+        const s  = 0.8 + rand(i, 3) * 4.2;
+        const pts = `${cx},${cy - s} ${cx - s * 0.9},${cy + s * 0.7} ${cx + s * 0.9},${cy + s * 0.7}`;
+        const fill = palette[Math.floor(rand(i, 4) * palette.length)];
+        p.setAttribute('points', pts);
+        p.setAttribute('fill', fill);
+        p.setAttribute('opacity', (0.08 + rand(i, 5) * 0.25).toFixed(2));
+        g.appendChild(p);
+        tris.push({ el: p, cx, cy, s, phase: rand(i, 6) * Math.PI * 2, sp: 0.18 + rand(i, 7) * 0.45 });
+      }
+
+      function animate(now) {
+        const t = now / 1000;
+        for (const tr of tris) {
+          const dx = Math.sin(t * tr.sp + tr.phase) * 2.6;
+          const dy = Math.cos(t * tr.sp * 0.65 + tr.phase * 1.4) * 1.9;
+          const cx = tr.cx + dx, cy = tr.cy + dy, s = tr.s;
+          tr.el.setAttribute('points',
+            `${cx.toFixed(2)},${(cy - s).toFixed(2)} ${(cx - s*0.9).toFixed(2)},${(cy + s*0.7).toFixed(2)} ${(cx + s*0.9).toFixed(2)},${(cy + s*0.7).toFixed(2)}`
+          );
+        }
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    })();
+
+    /* ---- Reveal on scroll ---- */
+    (function () {
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+        }
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    })();
+
+    /* ---- Form submission ---- */
+    (function () {
+      const FORM_URL = 'https://docs.google.com/forms/d/e/1jHsDsJZJf-Xv9duSOIbDhkuQkeaHkAHNyWrx2gMNuRM/formResponse';
+
+      const form      = document.getElementById('concertForm');
+      const formCard  = document.getElementById('formCard');
+      const thankYou  = document.getElementById('thankYouCard');
+      const submitBtn = document.getElementById('submitBtn');
+      const errorMsg  = document.getElementById('formError');
+
+      const inputName  = document.getElementById('inputName');
+      const inputPhone = document.getElementById('inputPhone');
+      const hintName   = document.getElementById('hint-name');
+      const hintPhone  = document.getElementById('hint-phone');
+      const hintPaid   = document.getElementById('hint-paid');
+
+      function getPaidValue() {
+        const checked = document.querySelector('input[name="entry.2109138769"]:checked');
+        return checked ? checked.value : null;
+      }
+
+      function validate() {
+        let valid = true;
+
+        /* Name */
+        if (!inputName.value.trim()) {
+          inputName.classList.add('invalid');
+          hintName.classList.add('show');
+          valid = false;
+        } else {
+          inputName.classList.remove('invalid');
+          hintName.classList.remove('show');
+        }
+
+        /* Phone */
+        if (!inputPhone.value.trim()) {
+          inputPhone.classList.add('invalid');
+          hintPhone.classList.add('show');
+          valid = false;
+        } else {
+          inputPhone.classList.remove('invalid');
+          hintPhone.classList.remove('show');
+        }
+
+        /* Paid radio */
+        if (!getPaidValue()) {
+          hintPaid.classList.add('show');
+          valid = false;
+        } else {
+          hintPaid.classList.remove('show');
+        }
+
+        return valid;
+      }
+
+      /* Clear individual field errors on input */
+      inputName.addEventListener('input', () => {
+        if (inputName.value.trim()) {
+          inputName.classList.remove('invalid');
+          hintName.classList.remove('show');
+        }
+      });
+      inputPhone.addEventListener('input', () => {
+        if (inputPhone.value.trim()) {
+          inputPhone.classList.remove('invalid');
+          hintPhone.classList.remove('show');
+        }
+      });
+      document.querySelectorAll('input[name="entry.2109138769"]').forEach(r => {
+        r.addEventListener('change', () => hintPaid.classList.remove('show'));
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorMsg.classList.remove('show');
+
+        if (!validate()) return;
+
+        const name  = inputName.value.trim();
+        const phone = inputPhone.value.trim();
+        const paid  = getPaidValue();
+
+        /* Build FormData */
+        const body = new FormData();
+        body.append('entry.2092238618', name);
+        body.append('entry.1556369182', phone);
+        body.append('entry.2109138769', paid);
+
+        /* Loading state */
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+
+        try {
+          /* mode: 'no-cors' returns an opaque response — no body to read.
+             The promise resolves on network success, rejects on failure. */
+          await fetch(FORM_URL, { method: 'POST', mode: 'no-cors', body });
+
+          /* Populate thank-you summary */
+          document.getElementById('tyName').textContent  = name;
+          document.getElementById('tyPhone').textContent = phone;
+          document.getElementById('tyPaid').textContent  = paid === 'Sí' ? '✓ Pagado' : 'Pendiente';
+
+          /* Swap card for thank-you message */
+          formCard.style.display  = 'none';
+          thankYou.classList.add('show');
+
+          /* Scroll the thank-you into view smoothly */
+          thankYou.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        } catch (_) {
+          /* Network-level error only; don't expose technical details */
+          errorMsg.classList.add('show');
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

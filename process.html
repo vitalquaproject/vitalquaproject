@@ -18,6 +18,11 @@
   <!-- =================================================================
        HEADER — same shell as the landing
        ================================================================= -->
+  <!-- Snap progress bar — slim line showing journey progress -->
+  <div class="snap-progress" aria-hidden="true">
+    <div class="snap-progress-fill" id="snapProgressFill"></div>
+  </div>
+
   <header class="site-header" id="siteHeader">
     <div class="wrap nav">
       <a href="index.html#top" class="logo" aria-label="Vitalqua Project">
@@ -191,6 +196,9 @@
     </div>
 
   </main>
+
+  <!-- Snap navigation dots (desktop) — populated by main.js -->
+  <nav class="snap-dots" id="snapDots" aria-label="Stage navigation"></nav>
 
   <script src="main.js"></script>
 </body>

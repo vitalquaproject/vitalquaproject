@@ -1,8 +1,8 @@
 /* =================================================================
    Vitalqua Project — PROCESS page
-   Same design tokens, header and footer language as the landing.
-   Desktop: sticky scene on left, scroll cards on right.
-   Mobile: scene on top (sticky), indicators below, cards at the bottom.
+   Snap-scroll layout: each stage = one full-viewport slide.
+   Desktop: sticky SVG scene left | snap scroll column right.
+   Mobile:  scene top (fixed height) | snap scroll column below.
    ================================================================= */
 :root {
   --bg:        #F6F8FB;
@@ -24,7 +24,7 @@
   --faint:     #A3B5CD;
 
   --amber:     #FFD34E;
-  --alert:     #D24736;    /* red for reduction badges */
+  --alert:     #D24736;
 
   --radius-sm: 10px;
   --radius:    16px;
@@ -35,19 +35,26 @@
 
   --ease: cubic-bezier(.22,.61,.36,1);
 
-  --header-h: 64px;
+  --header-h:     64px;
   --indicators-h: 96px;
+  --scene-h-mob:  52vh;
+  /* height of each snap slide on desktop */
+  --snap-h: calc(100vh - var(--header-h));
+  /* height of each snap slide on mobile (below scene-col) */
+  --snap-h-mob: calc(100vh - var(--header-h) - var(--scene-h-mob));
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* ---- Lock document scroll — only the scroll-col scrolls ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; overflow: hidden; }
 body {
+  height: 100%;
+  overflow: hidden;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   color: var(--ink);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   line-height: 1.58;
-  overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; }
 
@@ -58,14 +65,14 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* =================================================================
-   HEADER — mirrors the landing
+   HEADER
    ================================================================= */
 .site-header {
   position: fixed; top: 0; left: 0; right: 0;
   z-index: 100;
   height: var(--header-h);
   display: flex; align-items: center;
-  background: rgba(246, 248, 251, 0.88);
+  background: rgba(246, 248, 251, 0.92);
   backdrop-filter: blur(14px) saturate(1.15);
   border-bottom: 1px solid rgba(15, 26, 46, .06);
   transition: background 260ms var(--ease);
@@ -85,8 +92,7 @@ a { color: inherit; text-decoration: none; }
 .logo-mark { width: auto; height: 34px; display: block; flex-shrink: 0; }
 .nav-links {
   display: flex; gap: 26px;
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-size: 0.88rem; font-weight: 600;
   color: var(--ink-soft);
 }
 .nav-links a { position: relative; transition: color 180ms ease; }
@@ -115,24 +121,41 @@ a { color: inherit; text-decoration: none; }
 .nav-cta:hover { background: var(--cy-dk); transform: translateY(-1px); }
 
 /* =================================================================
-   STAGE — split layout
-     Desktop: 2 cols (scene-col with its pinned indicators | scroll-col)
-     Mobile:  3 rows (scene-col sticky, indicators-strip sticky, scroll-col)
+   SNAP PROGRESS BAR — slim line below the header showing progress
+   ================================================================= */
+.snap-progress {
+  position: fixed;
+  top: var(--header-h);
+  left: 0; right: 0;
+  height: 2px;
+  background: rgba(15, 26, 46, .07);
+  z-index: 90;
+  pointer-events: none;
+}
+.snap-progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--cy-lt), var(--cy-dk));
+  width: 0%;
+  border-radius: 0 2px 2px 0;
+  transition: width 480ms var(--ease);
+}
+
+/* =================================================================
+   STAGE — the two-column snap layout
    ================================================================= */
 .stage {
   margin-top: var(--header-h);
   display: grid;
   grid-template-columns: 1.2fr 1fr;
-  min-height: calc(100vh - var(--header-h));
+  height: var(--snap-h);
+  overflow: hidden;
   position: relative;
 }
 
-/* ---------- Scene column (sticky) ---------- */
+/* ---------- Scene column (desktop) — fills its grid cell ---------- */
 .scene-col {
-  grid-column: 1;
-  position: sticky;
-  top: var(--header-h);
-  height: calc(100vh - var(--header-h));
+  position: relative;
+  height: 100%;
   background:
     radial-gradient(ellipse at 30% 25%, rgba(79,179,217,.06), transparent 60%),
     radial-gradient(ellipse at 70% 70%, rgba(255,211,78,.04), transparent 60%),
@@ -142,7 +165,8 @@ a { color: inherit; text-decoration: none; }
 }
 #scene {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: var(--indicators-h);
+  top: 0; left: 0; right: 0;
+  bottom: var(--indicators-h);
   width: 100%;
   height: calc(100% - var(--indicators-h));
   display: block;
@@ -152,7 +176,7 @@ a { color: inherit; text-decoration: none; }
 .scene-layer { opacity: 0; transition: opacity 600ms var(--ease); }
 .scene-layer.active { opacity: 1; }
 
-/* ---------- Indicators (pinned at the bottom of scene column on desktop) ---------- */
+/* ---------- Indicators (pinned at bottom of scene column) ---------- */
 .indicators {
   position: absolute;
   left: 0; right: 0; bottom: 0;
@@ -175,9 +199,7 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
   color: var(--ink-soft);
 }
-.ind-row {
-  display: flex; align-items: baseline; gap: 8px;
-}
+.ind-row { display: flex; align-items: baseline; gap: 8px; }
 .ind-value {
   font-family: 'Inter Tight', 'Inter', sans-serif;
   font-size: 1.2rem;
@@ -198,10 +220,7 @@ a { color: inherit; text-decoration: none; }
   transform: translateY(2px);
   transition: opacity 500ms var(--ease), transform 500ms var(--ease);
 }
-.ind-delta.show {
-  opacity: 1;
-  transform: translateY(0);
-}
+.ind-delta.show { opacity: 1; transform: translateY(0); }
 .ind-bar {
   display: block;
   height: 3px;
@@ -215,25 +234,47 @@ a { color: inherit; text-decoration: none; }
   border-radius: 2px;
 }
 
-/* ---------- Scroll column ---------- */
+/* ---------- Scroll column — the snap scroll container ---------- */
 .scroll-col {
-  grid-column: 2;
-  position: relative;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* IE/Edge */
 }
+.scroll-col::-webkit-scrollbar { display: none; }
+
+/* ---------- Steps container ---------- */
 .steps {
-  padding: 10vh clamp(24px, 5vw, 56px) 22vh;
-  display: flex; flex-direction: column;
-  gap: 22vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  gap: 0;
 }
+
+/* ---------- Individual step — one full viewport slide ---------- */
 .step {
-  opacity: 0.3;
-  transition: opacity 500ms var(--ease), transform 500ms var(--ease);
-  transform: translateY(10px);
+  flex-shrink: 0;
+  height: var(--snap-h);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 clamp(28px, 5vw, 60px);
+  opacity: 0.18;
+  transform: translateY(12px) scale(0.99);
+  transition:
+    opacity 560ms var(--ease),
+    transform 560ms var(--ease);
 }
 .step.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
+
+/* ---- Step text ---- */
 .step-eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
   font-size: 0.72rem;
@@ -254,7 +295,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.1;
   letter-spacing: -0.025em;
   color: var(--navy);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .step-desc {
   font-size: clamp(0.95rem, 1.3vw, 1.05rem);
@@ -262,10 +303,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink-soft);
   max-width: 42ch;
 }
-.step-desc .hl {
-  color: var(--cy-dk);
-  font-weight: 600;
-}
+.step-desc .hl { color: var(--cy-dk); font-weight: 600; }
 .step-hint {
   margin-top: 18px;
   font-size: 0.82rem;
@@ -274,19 +312,18 @@ a { color: inherit; text-decoration: none; }
 }
 .step[data-step="0"] .step-title { font-size: clamp(2rem, 4vw, 2.6rem); }
 
-/* Final CTA step (step 9) — subtle card */
+/* Final CTA step */
 .step-final {
-  padding: 28px clamp(22px, 3vw, 34px);
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(6px);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(15, 26, 46, .06);
+  background: none;
+  backdrop-filter: none;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
 }
 .step-cta {
   display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 20px;
-  padding: 12px 22px;
+  margin-top: 24px;
+  padding: 13px 24px;
   border-radius: 999px;
   background: var(--navy);
   color: #fff;
@@ -297,7 +334,7 @@ a { color: inherit; text-decoration: none; }
 }
 .step-cta:hover { background: var(--cy-dk); transform: translateY(-2px); }
 
-/* Night mode — scene column darkens when on step 1 */
+/* Night mode */
 .stage.night .scene-col {
   background:
     radial-gradient(ellipse at 30% 30%, rgba(25, 45, 90, .6), transparent 70%),
@@ -312,35 +349,85 @@ a { color: inherit; text-decoration: none; }
 .stage.night .ind-bar  { background: rgba(255,255,255,.08); }
 
 /* =================================================================
-   MOBILE (< 900px) — single column: scene · indicators · scroll
-   The scene-col becomes a flex column where the SVG takes available
-   space and the indicators sit as a fixed-height strip at the bottom.
+   SNAP DOTS — vertical pill on the right edge (desktop only)
+   ================================================================= */
+.snap-dots {
+  position: fixed;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 80;
+  padding: 10px 5px;
+  background: rgba(246, 248, 251, 0.65);
+  backdrop-filter: blur(12px) saturate(1.1);
+  border: 1px solid rgba(15, 26, 46, .07);
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.snap-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(15, 26, 46, 0.18);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background 250ms ease,
+    transform 250ms ease,
+    height 250ms var(--ease),
+    border-radius 250ms var(--ease);
+}
+.snap-dot.active {
+  background: var(--cy-dk);
+  height: 16px;
+  border-radius: 3px;
+  transform: none;
+}
+.snap-dot:hover:not(.active) {
+  background: var(--cy-lt);
+  transform: scale(1.35);
+}
+/* Night mode dots */
+.snap-dots.night .snap-dot { background: rgba(255,255,255,0.2); }
+.snap-dots.night .snap-dot.active { background: var(--cy-lt); }
+
+/* =================================================================
+   MOBILE (≤ 900px) — scene fixed on top, snap column below
    ================================================================= */
 @media (max-width: 900px) {
-  :root { --indicators-h: 82px; }
+  :root {
+    --indicators-h: 82px;
+    --scene-h-mob:  52vh;
+    --snap-h-mob:   calc(100vh - var(--header-h) - var(--scene-h-mob));
+  }
   .nav-links { display: none; }
   .nav-cta { padding: 8px 14px; font-size: 0.8rem; }
   .logo-mark { height: 30px; }
 
   .stage {
-    display: block;
-    margin-top: var(--header-h);
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+    height: var(--snap-h);
+    overflow: hidden;
   }
   .scene-col {
-    position: sticky;
-    top: var(--header-h);
-    height: 52vh;
+    flex-shrink: 0;
+    height: var(--scene-h-mob);
     min-height: 260px;
-    z-index: 3;
     width: 100%;
-    grid-column: auto;
+    position: relative;
+    z-index: 3;
   }
-  /* SVG fills the area above indicators */
   #scene {
     bottom: var(--indicators-h);
     height: calc(100% - var(--indicators-h));
   }
-  /* Indicators stay at bottom of scene-col (absolute within it) */
   .indicators {
     height: var(--indicators-h);
     padding: 10px 14px;
@@ -349,79 +436,41 @@ a { color: inherit; text-decoration: none; }
   .ind-label { font-size: 0.56rem; letter-spacing: 0.12em; }
   .ind-value { font-size: 1rem; }
   .ind-delta { font-size: 0.62rem; }
-  .ind-bar { height: 2px; }
+  .ind-bar   { height: 2px; }
 
   .scroll-col {
-    width: 100%;
-    grid-column: auto;
+    flex: 1;
+    min-height: 0;
+    height: auto;
+    /* scroll-snap-type and overflow-y already set above */
   }
-  .steps {
-    /* Tall top+bottom pads so every step can scroll into the trigger zone
-       beneath the sticky scene; snappy gap makes navigation predictable. */
-    padding: 6vh clamp(18px, 4vw, 28px) 50vh;
-    gap: 10vh;
-    scroll-snap-type: y proximity;
-  }
+  .steps { height: auto; }
   .step {
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
-    min-height: 32vh;     /* each card occupies enough scroll range to lock in */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    height: var(--snap-h-mob);
+    padding: 18px clamp(18px, 4vw, 28px);
+    /* use actual container height for reliability — JS will also use clientHeight */
   }
-  .step-title { font-size: clamp(1.4rem, 5.5vw, 1.9rem); }
-  .step-desc { font-size: 0.95rem; max-width: none; }
+  .step-title  { font-size: clamp(1.3rem, 5.5vw, 1.8rem); }
+  .step-desc   { font-size: 0.92rem; max-width: none; }
+
+  /* Hide side dots on mobile — swipe handles navigation */
+  .snap-dots { display: none; }
 }
 
 /* Extra-small phones */
 @media (max-width: 520px) {
-  :root { --header-h: 56px; --indicators-h: 74px; }
-  .logo .name, .logo span { font-size: 0.9rem; }
-  .logo-mark { height: 26px; }
-  .nav-cta { padding: 7px 12px; font-size: 0.75rem; }
-  .scene-col { height: 46vh; min-height: 240px; }
-  .indicators {
-    padding: 8px 10px;
-    gap: 6px;
+  :root {
+    --header-h:    56px;
+    --indicators-h: 74px;
+    --scene-h-mob:  46vh;
   }
-  .ind-label { font-size: 0.5rem; letter-spacing: 0.08em; }
-  .ind-value { font-size: 0.88rem; }
-  .ind-delta { font-size: 0.58rem; }
+  .logo-mark { height: 26px; }
+  .nav-cta   { padding: 7px 12px; font-size: 0.75rem; }
+  .scene-col { min-height: 240px; }
+  .indicators { padding: 8px 10px; gap: 6px; }
+  .ind-label  { font-size: 0.5rem; letter-spacing: 0.08em; }
+  .ind-value  { font-size: 0.88rem; }
+  .ind-delta  { font-size: 0.58rem; }
   .step-eyebrow { font-size: 0.64rem; letter-spacing: 0.18em; }
-  .step-title { font-size: clamp(1.3rem, 6vw, 1.7rem); }
-  .steps { padding: 5vh 14px 55vh; gap: 8vh; }
-  .step { min-height: 28vh; }
-}
-
-.nav-cta--gold {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.nav-cta--gold::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 0%;
-  background: linear-gradient(to top, #b8860b, #d4af37, #f9e1a1);
-  z-index: 0;
-  animation: fillWithGold 5s ease-in-out infinite;
-}
-
-.nav-cta--gold span {
-  position: relative;
-  z-index: 1;
-  color: #ffffff !important;
-  display: inline-block;
-}
-
-@keyframes fillWithGold {
-  0%   { height: 0%;   }
-  60%  { height: 100%; }
-  80%  { height: 100%; }
-  100% { height: 0%;   }
+  .step-title   { font-size: clamp(1.2rem, 6vw, 1.6rem); }
 }

@@ -1176,24 +1176,9 @@ function renderLoop(now) {
 requestAnimationFrame(renderLoop);
 
 // =========================================================
-// SCROLL → scene switching
-// =========================================================
-function setStep(idx) {
-  if (idx === currentStep) return;
-  const sceneIdx = Math.min(idx, SCENE_DATA.length - 1);
-  const sceneChanged = sceneIdx !== Math.min(currentStep, SCENE_DATA.length - 1);
-  currentStep = sceneIdx;
-  if (sceneChanged) applyScene(sceneIdx);
-  stage.classList.toggle('night', sceneIdx === 1);
-  steps.forEach(s => {
-    const sIdx = parseInt(s.dataset.step, 10);
-    s.classList.toggle('active', sIdx === idx);
-  });
-  updateIndicators(sceneIdx);
-}
-
-// ---- Contaminant indicators --------------------------------
+// CONTAMINANT INDICATORS
 // Levels at the end of each scene (turbidity · gases · pathogens · organics, %)
+// =========================================================
 const LEVELS = [
   { turb:100, gas:100, path:100, org:100 }, // 0 Intro
   { turb:100, gas:100, path:100, org:100 }, // 1 Night
@@ -1225,20 +1210,18 @@ const deltaEls = {
   org:  document.getElementById('delta-org')
 };
 function updateIndicators(sceneIdx) {
-  const L = LEVELS[Math.min(sceneIdx, LEVELS.length - 1)];
-  const prevIdx = Math.max(0, sceneIdx - 1);
-  const prevL = LEVELS[prevIdx];
+  const L    = LEVELS[Math.min(sceneIdx, LEVELS.length - 1)];
+  const prevL = LEVELS[Math.max(0, sceneIdx - 1)];
   for (const k of ['turb', 'gas', 'path', 'org']) {
-    const next = L[k];
+    const next      = L[k];
     const prevShown = parseInt(indEls[k].textContent, 10);
     const reduction = prevL[k] - next;
     if (prevShown !== next) {
       indEls[k].classList.add('ind-changed');
       setTimeout(() => indEls[k].classList.remove('ind-changed'), 800);
     }
-    indEls[k].textContent = next + '%';
-    barEls[k].style.width = next + '%';
-    // Show red reduction badge only when this scene reduces the metric
+    indEls[k].textContent  = next + '%';
+    barEls[k].style.width  = next + '%';
     if (reduction > 0 && sceneIdx > 0) {
       deltaEls[k].textContent = `−${reduction}%`;
       deltaEls[k].classList.add('show');
@@ -1248,34 +1231,113 @@ function updateIndicators(sceneIdx) {
   }
 }
 
-// IntersectionObserver over step cards — rootMargin differs by viewport:
-//   desktop: centre 20% of viewport is the trigger zone
-//   mobile: trigger zone sits BELOW the sticky scene-col (which takes top ~52vh),
-//           so steps activate as soon as they reach the empty area beneath.
-function makeObserver() {
-  const isMobile = window.matchMedia('(max-width: 900px)').matches;
-  const rootMargin = isMobile ? '-60% 0px -20% 0px' : '-40% 0px -40% 0px';
-  return new IntersectionObserver(entries => {
-    for (const e of entries) {
-      if (e.isIntersecting) {
-        const idx = parseInt(e.target.dataset.step, 10);
-        setStep(idx);
-      }
-    }
-  }, { root: null, rootMargin, threshold: 0 });
+// =========================================================
+// SNAP SCROLL ENGINE
+// =========================================================
+const scrollColEl   = document.querySelector('.scroll-col');
+const snapDotsEl    = document.getElementById('snapDots');
+const progressFill  = document.getElementById('snapProgressFill');
+const TOTAL_STEPS   = steps.length;   // 10 (steps 0–9)
+
+// ---- Progress dots (desktop) ----
+const dotEls = [];
+for (let i = 0; i < TOTAL_STEPS; i++) {
+  const btn = document.createElement('button');
+  btn.className = 'snap-dot';
+  btn.setAttribute('aria-label', `Go to stage ${i}`);
+  const label = steps[i].querySelector('.step-eyebrow');
+  if (label) btn.setAttribute('title', label.textContent.trim());
+  btn.addEventListener('click', () => scrollToStep(i));
+  snapDotsEl.appendChild(btn);
+  dotEls.push(btn);
 }
-let io = makeObserver();
-steps.forEach(s => io.observe(s));
-// Re-create observer on viewport resize across the mobile breakpoint
-let wasMobile = window.matchMedia('(max-width: 900px)').matches;
-window.addEventListener('resize', () => {
-  const nowMobile = window.matchMedia('(max-width: 900px)').matches;
-  if (nowMobile !== wasMobile) {
-    wasMobile = nowMobile;
-    io.disconnect();
-    io = makeObserver();
-    steps.forEach(s => io.observe(s));
+
+// ---- Update dots + progress bar ----
+function updateDotsAndProgress(idx) {
+  dotEls.forEach((d, i) => d.classList.toggle('active', i === idx));
+  snapDotsEl.classList.toggle('night', idx === 1);
+  if (progressFill) {
+    progressFill.style.width =
+      ((idx / Math.max(1, TOTAL_STEPS - 1)) * 100).toFixed(1) + '%';
   }
+}
+
+// ---- Smooth scroll to a step ----
+function scrollToStep(idx) {
+  const clamped = Math.max(0, Math.min(TOTAL_STEPS - 1, idx));
+  const stepH   = scrollColEl.clientHeight;
+  scrollColEl.scrollTo({ top: clamped * stepH, behavior: 'smooth' });
+}
+
+// ---- Main setStep (called whenever the active stage changes) ----
+function setStep(idx) {
+  if (idx === currentStep) return;
+  const sceneIdx    = Math.min(idx, SCENE_DATA.length - 1);
+  const sceneChanged = sceneIdx !== Math.min(currentStep, SCENE_DATA.length - 1);
+  currentStep = sceneIdx;
+  if (sceneChanged) applyScene(sceneIdx);
+  stage.classList.toggle('night', sceneIdx === 1);
+  steps.forEach(s => {
+    const sIdx = parseInt(s.dataset.step, 10);
+    s.classList.toggle('active', sIdx === idx);
+  });
+  updateIndicators(sceneIdx);
+  updateDotsAndProgress(sceneIdx);
+}
+
+// ---- Scroll listener — detect snap position ----
+// Fires both during scroll (for early morph trigger) and after settle (for accuracy).
+let _scrollTimer;
+let _lastNearStep = 0;
+
+scrollColEl.addEventListener('scroll', () => {
+  const stepH = scrollColEl.clientHeight;
+  if (stepH < 1) return;
+
+  // Early trigger: as soon as we cross the midpoint between two steps
+  const nearest = Math.round(scrollColEl.scrollTop / stepH);
+  if (nearest !== _lastNearStep) {
+    _lastNearStep = nearest;
+    setStep(nearest);
+  }
+
+  // Settle trigger: wait for snap to fully finish, then confirm
+  clearTimeout(_scrollTimer);
+  _scrollTimer = setTimeout(() => {
+    const settled = Math.round(scrollColEl.scrollTop / stepH);
+    setStep(settled);
+  }, 90);
 }, { passive: true });
 
+// ---- Keyboard navigation ----
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+    e.preventDefault();
+    scrollToStep(currentStep + 1);
+  } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault();
+    scrollToStep(currentStep - 1);
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    scrollToStep(0);
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    scrollToStep(TOTAL_STEPS - 1);
+  }
+});
+
+// ---- Recalibrate after resize (step heights change with viewport) ----
+let _resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(() => {
+    const stepH = scrollColEl.clientHeight;
+    // Jump to current step without animation to avoid stale scroll position
+    scrollColEl.scrollTo({ top: currentStep * stepH, behavior: 'instant' });
+  }, 150);
+}, { passive: true });
+
+// ---- Initialise ----
 updateIndicators(0);
+updateDotsAndProgress(0);
+steps[0].classList.add('active');

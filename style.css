@@ -334,6 +334,7 @@ a { color: inherit; text-decoration: none; }
 }
 .step-cta:hover { background: var(--cy-dk); transform: translateY(-2px); }
 
+
 /* Night mode */
 .stage.night .scene-col {
   background:
@@ -455,6 +456,7 @@ a { color: inherit; text-decoration: none; }
 
   /* Hide side dots on mobile — swipe handles navigation */
   .snap-dots { display: none; }
+
 }
 
 /* Extra-small phones */

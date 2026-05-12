@@ -1022,10 +1022,164 @@ function scene9() {
   return { tris: fill60(tris), parts };
 }
 
+// ---- OVERVIEW: full-process schematic (60 tris, sunny day) ----------
+// Shown as a static+particle overview inside the final step card.
+// Layout (L→R, 160×100 viewBox):
+//   Source pond + solar panel + pump → Buffer tank → Cascade (4 steps)
+//   → Settling tank → Roughing filter → Slow sand filter
+//   → Biochar column → Clean glass output
+// All stages connected by pipe connectors; water flows left to right.
+// Layout (final, pixel-verified, 160 × 100 viewBox):
+//   Source x:2-20 | pipe x:8-29 (rect, 9 exposed units) | Buffer x:29-37
+//   | Cascade x:40-68 | Settling x:71-89 | Roughing x:92-100
+//   | SSF x:103-119 | Biochar x:122-130 | Glass x:133-145 | sun x:152
+// Heights trimmed so URF/Biochar/Buffer no longer tower into the sky.
+function sceneOverview() {
+  const tris = [];
+  const parts = [];
+
+  // --- BACKGROUND (6 tris) ---
+  tris.push(T(0, 0, 160, 0, 160, 62, '#BCD6EA'));
+  tris.push(T(0, 0, 160, 62, 0, 62, '#9CCAE4'));
+  tris.push(T(0, 60, 44, 50, 80, 62, '#B0C4A8'));
+  tris.push(T(80, 62, 128, 52, 160, 62, '#C0CEB8'));
+  tris.push(T(0, 72, 160, 72, 160, 84, P.sLt));
+  tris.push(T(0, 72, 160, 84, 0, 84, P.sMd));
+
+  // --- SUN (4 rays + 2-tri diamond core = 6 tris) ---
+  const sunX = 152, sunY = 12;
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2 + Math.PI / 8;
+    tris.push(T(
+      sunX + Math.sin(a) * 9,          sunY - Math.cos(a) * 9,
+      sunX + Math.sin(a - 0.16) * 5.5, sunY - Math.cos(a - 0.16) * 5.5,
+      sunX + Math.sin(a + 0.16) * 5.5, sunY - Math.cos(a + 0.16) * 5.5,
+      P.aMd
+    ));
+  }
+  tris.push(T(sunX, sunY - 4, sunX + 4, sunY, sunX, sunY + 4, P.aHi));
+  tris.push(T(sunX, sunY - 4, sunX - 4, sunY, sunX, sunY + 4, P.aMd));
+
+  // --- SOURCE ZONE (x: 2–20) ---
+  // Pond / lake — taller for visibility (y: 58–72, 14 px)
+  tris.push(T(2, 60, 20, 58, 20, 72, P.w));
+  tris.push(T(2, 60, 20, 72, 2, 72, P.wDk));
+  // Solar panel — tilted grey plate (y: 10–20)
+  tris.push(T(2, 10, 18, 14, 18, 18, P.cHi));
+  tris.push(T(2, 10, 18, 18, 2, 14, P.cMd));
+  // Pump + riser — single tall triangle: narrow at pipe level, wider in pond
+  tris.push(T(8, 34, 12, 34, 10, 68, P.cDk));
+
+  // --- PIPE: source → buffer (full rectangle = 2 tris, 9 exposed units) ---
+  // This runs from x=8 to x=29 at y=31–36; x=20–29 is clearly visible pipe.
+  tris.push(T(8, 31, 29, 31, 29, 36, P.cMd));   // upper half
+  tris.push(T(8, 31, 29, 36, 8, 36, P.cDk));    // lower half → full rectangle
+
+  // --- BUFFER TANK  (x: 29–37, y: 42–72  ← top lowered from 28 to 42) ---
+  tris.push(T(29, 42, 37, 42, 37, 72, P.cHi));
+  tris.push(T(29, 42, 37, 72, 29, 72, P.cMd));
+  tris.push(T(30, 46, 36, 46, 36, 68, P.w));    // blue water inside
+
+  // --- PIPE: buffer → cascade step 1 (1 tri) ---
+  tris.push(T(37, 42, 40, 42, 40, 46, P.cMd));
+
+  // --- CASCADE AERATION: 4 steps × 2 tris + 3 waterfalls = 11 tris ---
+  // Steps descend from y=42 to y=70; step 4 nearly touches ground.
+  const cascadeSteps = [[40, 42], [47, 50], [54, 58], [61, 66]]; // [xLeft, topY]
+  for (const [csx, topY] of cascadeSteps) {
+    tris.push(T(csx, topY, csx + 7, topY, csx + 7, topY + 4, P.cHi));
+    tris.push(T(csx, topY, csx + 7, topY + 4, csx, topY + 4, P.cMd));
+  }
+  tris.push(T(46, 46, 48, 46, 47, 50, P.wLt));  // waterfall 1→2
+  tris.push(T(53, 54, 55, 54, 54, 58, P.wLt));  // waterfall 2→3
+  tris.push(T(60, 62, 62, 62, 61, 66, P.wLt));  // waterfall 3→4
+
+  // --- PIPE: cascade → settling (1 tri) ---
+  tris.push(T(68, 68, 71, 68, 71, 72, P.cMd));
+
+  // --- SETTLING TANK (x: 71–89, y: 52–72  ← wide & shallow, turbid fill) ---
+  tris.push(T(71, 52, 89, 52, 89, 72, P.cHi));
+  tris.push(T(71, 52, 89, 72, 71, 72, P.cMd));
+  tris.push(T(72, 57, 88, 57, 88, 68, '#C8A870')); // turbid/muddy water
+
+  // --- PIPE: settling → roughing (1 tri) ---
+  tris.push(T(89, 58, 92, 58, 92, 62, P.cMd));
+
+  // --- ROUGHING FILTER (x: 92–100, y: 36–72  ← top lowered from 18 to 36) ---
+  tris.push(T(92, 36, 100, 36, 100, 72, P.cHi));
+  tris.push(T(92, 36, 100, 72, 92, 72, P.cMd));
+  tris.push(T(93, 40, 99, 40, 99, 68, '#A8A89E'));  // grey gravel
+
+  // --- PIPE: roughing → slow sand filter (1 tri) ---
+  tris.push(T(100, 58, 103, 58, 103, 62, P.cMd));
+
+  // --- SLOW SAND FILTER (x: 103–119, y: 42–72) ---
+  tris.push(T(103, 42, 119, 42, 119, 72, P.cHi));
+  tris.push(T(103, 42, 119, 72, 103, 72, P.cMd));
+  tris.push(T(104, 46, 118, 46, 118, 68, P.sLt));   // sandy fill
+
+  // --- PIPE: slow sand → biochar (1 tri) ---
+  tris.push(T(119, 58, 122, 58, 122, 62, P.cMd));
+
+  // --- BIOCHAR COLUMN (x: 122–130, y: 32–72  ← top lowered from 14 to 32) ---
+  tris.push(T(122, 32, 130, 32, 130, 72, P.cHi));
+  tris.push(T(122, 32, 130, 72, 122, 72, P.cMd));
+  tris.push(T(123, 36, 129, 36, 129, 68, P.cBlk));  // black biochar
+
+  // --- PIPE: biochar → glass (1 tri) ---
+  tris.push(T(130, 58, 133, 58, 133, 63, P.cMd));
+
+  // --- CLEAN WATER GLASS (x: 133–145, y: 56–74) ---
+  tris.push(T(133, 56, 145, 56, 145, 74, '#C8E0EC'));
+  tris.push(T(133, 56, 145, 74, 133, 74, '#A0C4D8'));
+  tris.push(T(134, 60, 144, 60, 144, 72, P.wHi));   // bright clean water
+
+  // --- DETAIL INDICATORS (6 tris, 1 per zone) ---
+  // Glint on pond surface
+  tris.push(T(3, 57, 19, 57, 19, 60, P.wHi));
+  // Water drop mid-exposed-pipe (x≈20–22, shows the pipe has water)
+  tris.push(T(21, 32, 23, 32, 22, 36, P.wHi));
+  // Water sheen on cascade step 1 surface
+  tris.push(T(40, 41, 47, 41, 43.5, 43, P.w));
+  // Water surface in settling
+  tris.push(T(72, 55, 87, 55, 87, 58, P.wHi));
+  // Water surface in SSF
+  tris.push(T(104, 45, 117, 45, 117, 47, P.wHi));
+  // Water surface in glass
+  tris.push(T(134, 59, 144, 59, 144, 61, P.wHi));
+
+  // Tri count: 6+6+2+2+1+2+3+1+11+1+3+1+3+1+3+1+3+1+3+6 = 60 ✓
+
+  // --- PARTICLES ---
+  // Pump → buffer: up riser then along exposed horizontal pipe
+  for (let i = 0; i < 3; i++) {
+    parts.push(F([[10, 64], [10, 34], [28, 34]], 0.9, P.w, 0.28, i / 3));
+  }
+  // Cascade staircase: each step then falls
+  for (let i = 0; i < 4; i++) {
+    parts.push(F([
+      [37, 44], [47, 44], [47, 52],
+      [54, 52], [54, 60],
+      [61, 60], [61, 68], [68, 68]
+    ], 0.9, P.wLt, 0.18, i / 4));
+  }
+  // Backbone: settling → roughing → SSF → biochar → glass
+  for (let i = 0; i < 3; i++) {
+    parts.push(F([
+      [89, 59], [92, 59], [100, 59],
+      [103, 59], [119, 59], [122, 59],
+      [130, 59], [133, 63]
+    ], 1.0, P.w, 0.14, i / 3));
+  }
+  parts.push(Pu(sunX, sunY, 6, 'rgba(255,224,102,0.22)', 0.15, 0));
+
+  return { tris: fill60(tris), parts };
+}
+
 // =========================================================
 // SETUP
 // =========================================================
-const SCENES_BUILD = [scene0, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9];
+const SCENES_BUILD = [scene0, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, sceneOverview];
 const svgEl  = document.getElementById('scene');
 const stage  = document.querySelector('.stage');
 const steps  = document.querySelectorAll('.step');
@@ -1189,7 +1343,8 @@ const LEVELS = [
   { turb:5,   gas:5,   path:90,  org:100 }, // 6 URF
   { turb:0,   gas:0,   path:1,   org:70  }, // 7 Slow sand filter
   { turb:0,   gas:0,   path:0,   org:0   }, // 8 Biochar
-  { turb:0,   gas:0,   path:0,   org:0   }  // 9 Finished glass
+  { turb:0,   gas:0,   path:0,   org:0   }, // 9 Finished glass
+  { turb:0,   gas:0,   path:0,   org:0   }  // 10 Full process overview
 ];
 const indEls = {
   turb: document.getElementById('val-turb'),
@@ -1341,3 +1496,4 @@ window.addEventListener('resize', () => {
 updateIndicators(0);
 updateDotsAndProgress(0);
 steps[0].classList.add('active');
+

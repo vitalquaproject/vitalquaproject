@@ -667,19 +667,18 @@
           de agua para 500+ alumnos en Narok, Kenia.
         </p>
 
-        <!-- TODO: Update date, time and venue before publishing -->
         <div class="event-pills">
           <span class="pill">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <strong>[Fecha · 2026]</strong>
+            <strong>23 de junio</strong>
           </span>
           <span class="pill">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <strong>[Hora]</strong>
+            <strong>21.00h</strong>
           </span>
           <span class="pill">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <strong>[Lugar · Barcelona]</strong>
+            <strong>Ubicación sorpresa</strong>
           </span>
         </div>
 
@@ -856,7 +855,7 @@
               aria-required="true"
               aria-describedby="hint-telefono"
             />
-            <span class="field-hint" id="hint-telefono">Introduce un número de teléfono.</span>
+            <span class="field-hint" id="hint-telefono">Número español no válido (ej. 612 345 678).</span>
           </div>
 
           <div class="form-divider"></div>
@@ -1020,9 +1019,17 @@
       const hintApellidos = document.getElementById('hint-apellidos');
       const hintTelefono  = document.getElementById('hint-telefono');
 
-      function clearError(input, hint) {
+      /* Valida teléfono español: 9 dígitos, empieza por 6, 7, 8 o 9.
+         Acepta prefijo +34 / 0034 y espacios/guiones como separadores. */
+      function isValidSpanishPhone(raw) {
+        const cleaned = raw.replace(/[\s\-\.]/g, '');
+        return /^(\+34|0034)?[6789]\d{8}$/.test(cleaned);
+      }
+
+      function clearError(input, hint, extraCheck) {
         input.addEventListener('input', () => {
-          if (input.value.trim()) {
+          const ok = extraCheck ? extraCheck(input.value) : input.value.trim().length > 0;
+          if (ok) {
             input.classList.remove('invalid');
             hint.classList.remove('show');
           }
@@ -1030,7 +1037,7 @@
       }
       clearError(inputNombre,    hintNombre);
       clearError(inputApellidos, hintApellidos);
-      clearError(inputTelefono,  hintTelefono);
+      clearError(inputTelefono,  hintTelefono, isValidSpanishPhone);
 
       function validate() {
         let ok = true;
@@ -1039,9 +1046,9 @@
           hint.classList.add('show');
           ok = false;
         };
-        if (!inputNombre.value.trim())    setErr(inputNombre,    hintNombre);
-        if (!inputApellidos.value.trim()) setErr(inputApellidos, hintApellidos);
-        if (!inputTelefono.value.trim())  setErr(inputTelefono,  hintTelefono);
+        if (!inputNombre.value.trim())              setErr(inputNombre,    hintNombre);
+        if (!inputApellidos.value.trim())           setErr(inputApellidos, hintApellidos);
+        if (!isValidSpanishPhone(inputTelefono.value)) setErr(inputTelefono, hintTelefono);
         return ok;
       }
 

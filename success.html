@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¡Pago confirmado! — Vitalqua Party</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
+
+  <style>
+    :root {
+      --navy:      #0F1A2E;
+      --navy-dp:   #07101E;
+      --cy-dk:     #2A85B3;
+      --ink-soft:  #3F4F6B;
+      --muted:     #6B7890;
+      --faint:     #A3B5CD;
+      --success:   #1B7A5C;
+      --success-lt:#D1F0E6;
+      --gold:      #D4AF37;
+      --radius-lg: 24px;
+      --shadow-lg: 0 8px 28px rgba(15,26,46,.12), 0 36px 60px rgba(15,26,46,.08);
+      --ease: cubic-bezier(.22,.61,.36,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(79,179,217,.1) 0%, transparent 55%),
+        linear-gradient(160deg, #0A1628 0%, #07101E 60%, #0D1E38 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(32px, 8vw, 80px) clamp(20px, 5vw, 48px);
+      -webkit-font-smoothing: antialiased;
+      color: #fff;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ---- Loading ring ---- */
+    .loading-ring {
+      width: 52px; height: 52px;
+      border: 3px solid rgba(163,208,227,.2);
+      border-top-color: var(--cy-dk);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ---- Card ---- */
+    .card {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-lg);
+      padding: clamp(36px, 6vw, 60px) clamp(28px, 5vw, 56px);
+      max-width: 480px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      animation: fade-up .65s var(--ease) both;
+    }
+    .card.show { display: flex; }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Check circle */
+    .check-circle {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(27,122,92,.18);
+      border: 2px solid rgba(27,122,92,.4);
+      display: grid; place-items: center;
+      margin-bottom: 28px;
+      animation: pop .5s .2s var(--ease) both;
+    }
+    @keyframes pop {
+      from { opacity: 0; transform: scale(.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Eyebrow */
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #4ADE80;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #4ADE80;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,.45); }
+      50%       { box-shadow: 0 0 0 7px rgba(74,222,128,0); }
+    }
+
+    /* Heading */
+    h1 {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    /* Body text */
+    .body-text {
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      color: rgba(163,181,205,.8);
+      line-height: 1.7;
+      max-width: 36ch;
+      margin-bottom: 36px;
+    }
+    .body-text strong { color: var(--gold); }
+
+    /* CTA button */
+    .btn-main {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 18px 36px;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--navy);
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition:
+        background 180ms ease,
+        transform 200ms var(--ease),
+        box-shadow 200ms ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,.25);
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-main:hover {
+      background: #f0f4ff;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(0,0,0,.35);
+    }
+    .btn-main:active { transform: translateY(0); }
+    .btn-main .arrow { transition: transform 200ms var(--ease); }
+    .btn-main:hover .arrow { transform: translateX(4px); }
+
+    /* Error card */
+    .card-error {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 420px;
+      gap: 16px;
+    }
+    .card-error.show { display: flex; animation: fade-up .5s var(--ease) both; }
+    .card-error h2 {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.5rem; font-weight: 700;
+    }
+    .card-error p { color: rgba(163,181,205,.8); font-size: 0.95rem; line-height: 1.65; }
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 24px; border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,.2); color: rgba(255,255,255,.75);
+      font-size: 0.9rem; font-weight: 600;
+      transition: border-color 180ms ease, color 180ms ease;
+    }
+    .btn-back:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- Loading -->
+  <div class="loading-ring" id="loader" aria-label="Cargando…"></div>
+
+  <!-- Success card -->
+  <div class="card" id="cardOk">
+    <div class="check-circle">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+
+    <div class="eyebrow"><span class="live-dot"></span>Pago confirmado</div>
+
+    <h1>¡Tu entrada está asegurada!</h1>
+
+    <p class="body-text">
+      Hemos registrado tu plaza para <strong>The Vitalqua Party</strong>.
+      Gracias por apoyar el proyecto — tu entrada ayuda a llevar agua limpia a Kenia.
+    </p>
+
+    <a href="index.html" class="btn-main">
+      Descubre el proyecto
+      <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Error card -->
+  <div class="card-error" id="cardErr">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(248,113,113,.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <h2>Algo ha fallado</h2>
+    <p id="errMsg">No hemos podido confirmar tu pago. Si crees que se ha procesado correctamente, escríbenos a <strong>vitalquaproject@gmail.com</strong>.</p>
+    <a href="concert.html" class="btn-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver a la compra
+    </a>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey:            "AIzaSyDKic5e9DAU1iw6ZOtsT1gGEEyU8WCtAXE",
+      authDomain:        "vitalqua-project.firebaseapp.com",
+      projectId:         "vitalqua-project",
+      storageBucket:     "vitalqua-project.firebasestorage.app",
+      messagingSenderId: "263061224525",
+      appId:             "1:263061224525:web:9bc179545f515ffac27004",
+      measurementId:     "G-QQRGPXQP38"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db   = firebase.firestore();
+
+    function ticketsCol() {
+      return db
+        .collection('artifacts')
+        .doc('vitalqua-party-tickets')
+        .collection('public')
+        .doc('data')
+        .collection('tickets');
+    }
+
+    function showOk()      { document.getElementById('loader').style.display = 'none'; document.getElementById('cardOk').classList.add('show'); }
+    function showErr(msg)  { document.getElementById('loader').style.display = 'none'; if (msg) document.getElementById('errMsg').innerHTML = msg; document.getElementById('cardErr').classList.add('show'); }
+
+    (async function () {
+      /* 1. Comprobar session_id de Stripe en la URL */
+      const sessionId = new URLSearchParams(window.location.search).get('session_id');
+      if (!sessionId) { showErr('No se recibió la confirmación de pago de Stripe. Si acabas de pagar, recarga la página en unos segundos.'); return; }
+
+      /* 2. Leer datos de localStorage (guardados en concert.html) */
+      const ticketId = localStorage.getItem('vq_ticketId');
+      const nombre   = localStorage.getItem('vq_nombre')   || '';
+      const apellidos= localStorage.getItem('vq_apellidos')|| '';
+      const telefono = localStorage.getItem('vq_telefono') || '';
+
+      if (!ticketId) { showOk(); return; } // recarga de la página — ya guardado
+
+      try {
+        /* 3. Auth anónima */
+        await auth.signInAnonymously();
+
+        /* 4. Evitar duplicados si el usuario recarga */
+        const snap = await ticketsCol().doc(ticketId).get();
+        if (!snap.exists) {
+          await ticketsCol().doc(ticketId).set({
+            name:            nombre,
+            surname:         apellidos,
+            phone:           telefono,
+            stripeSessionId: sessionId,
+            scanned:         false,
+            scanTimestamp:   null,
+            createdAt:       firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+
+        /* 5. Limpiar localStorage */
+        ['vq_ticketId','vq_nombre','vq_apellidos','vq_telefono'].forEach(k => localStorage.removeItem(k));
+
+        showOk();
+
+      } catch (err) {
+        console.error(err);
+        if (err.code === 'unavailable') {
+          showErr('Sin conexión a internet. Conéctate y recarga la página.');
+        } else if (err.code === 'permission-denied') {
+          showErr('Error de permisos. Contacta con <strong>vitalquaproject@gmail.com</strong>.');
+        } else {
+          showErr(`Error inesperado (${err.code || err.message}). Contacta con <strong>vitalquaproject@gmail.com</strong>.`);
+        }
+      }
+    })();
+  </script>
+
+</body>
+</html>

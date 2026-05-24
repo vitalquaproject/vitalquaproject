@@ -40,6 +40,9 @@
       --success:   #1B7A5C;
       --success-lt:#D1F0E6;
 
+      --stripe:    #635BFF;
+      --stripe-dk: #4B44D9;
+
       --radius-sm: 10px;
       --radius:    16px;
       --radius-lg: 24px;
@@ -124,7 +127,6 @@
         linear-gradient(160deg, #0A1628 0%, #07101E 60%, #0D1E38 100%);
     }
 
-    /* triangle background canvas */
     .hero-canvas {
       position: absolute; inset: 0;
       pointer-events: none; z-index: 0;
@@ -132,7 +134,6 @@
     }
     .hero-canvas svg { width: 100%; height: 100%; display: block; }
 
-    /* ---- Split hero grid ---- */
     .hero-inner {
       position: relative; z-index: 2;
       width: 100%;
@@ -166,7 +167,6 @@
       opacity: 0.6;
     }
 
-    /* Concert name — brand anchor */
     .concert-name {
       font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
       font-size: clamp(1.3rem, 2.8vw, 2rem);
@@ -182,17 +182,15 @@
       font-weight: 700;
     }
 
-    /* Tagline block */
     .tagline-block {
       margin-bottom: 30px;
       line-height: 1;
     }
-    /* YOUR NIGHT — neon gold, Bebas Neue */
     .your-night {
       display: block;
       font-family: 'Bebas Neue', 'Inter Tight', sans-serif;
       font-size: clamp(3.8rem, 9vw, 7.2rem);
-      font-weight: 400; /* Bebas Neue is inherently bold */
+      font-weight: 400;
       letter-spacing: 0.1em;
       line-height: 0.92;
       color: #D4AF37;
@@ -202,7 +200,6 @@
         0 0 36px rgba(212,175,55,0.45),
         0 0 72px rgba(212,175,55,0.2);
     }
-    /* Thin separator between the two lines */
     .tagline-sep {
       display: block;
       width: 38px;
@@ -210,7 +207,6 @@
       background: rgba(163,213,227,0.35);
       margin: 10px 0;
     }
-    /* THEIR WATER — clean Helvetica, water blue */
     .their-water {
       display: block;
       font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
@@ -229,7 +225,6 @@
       line-height: 1.65;
     }
 
-    /* Event detail pills */
     .event-pills {
       display: flex;
       flex-wrap: wrap;
@@ -252,7 +247,6 @@
     .pill svg { flex-shrink: 0; opacity: 0.75; }
     .pill strong { color: #fff; font-weight: 600; }
 
-    /* Price badge */
     .price-badge {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 14px 28px;
@@ -270,7 +264,6 @@
       color: #F2D49A;
     }
 
-    /* Scroll hint */
     .scroll-hint {
       position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
       display: flex; flex-direction: column; align-items: center; gap: 6px;
@@ -287,7 +280,6 @@
     }
     .scroll-hint svg { opacity: 0.55; }
 
-    /* ---- Guitar column ---- */
     .guitar-col {
       display: flex;
       justify-content: center;
@@ -307,7 +299,6 @@
       50%       { transform: translateY(-13px) rotate(0.8deg); }
     }
 
-    /* ---- Responsive: stack on mobile ---- */
     @media (max-width: 820px) {
       .hero-inner {
         grid-template-columns: 1fr;
@@ -364,7 +355,6 @@
       line-height: 1.6;
     }
 
-    /* The card */
     .form-card {
       background: var(--surface);
       border-radius: var(--radius-lg);
@@ -374,7 +364,7 @@
     }
 
     /* Fields */
-    .field { margin-bottom: 24px; }
+    .field { margin-bottom: 22px; }
     .field:last-of-type { margin-bottom: 0; }
 
     label {
@@ -386,9 +376,14 @@
       color: var(--ink-soft);
       margin-bottom: 8px;
     }
-    label .req {
-      color: var(--cy-dk);
-      margin-left: 2px;
+    label .req { color: var(--cy-dk); margin-left: 2px; }
+    label .opt {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: var(--faint);
+      margin-left: 6px;
     }
 
     .input {
@@ -419,55 +414,50 @@
       box-shadow: 0 0 0 3px rgba(192,57,43,.1);
     }
 
-    /* Yes / No toggle */
-    .toggle-group {
+    /* Two-column grid for Nombre + Apellidos */
+    .field-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 14px;
+      margin-bottom: 22px;
     }
-    .toggle-group input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      width: 0; height: 0;
-      pointer-events: none;
+    .field-row .field { margin-bottom: 0; }
+    @media (max-width: 480px) {
+      .field-row { grid-template-columns: 1fr; }
     }
-    .toggle-label {
+
+    /* Price summary box */
+    .price-summary {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 16px;
+      justify-content: space-between;
+      padding: 16px 20px;
       border-radius: var(--radius-sm);
-      border: 1.5px solid rgba(15,26,46,.13);
-      background: var(--bg);
-      color: var(--ink-soft);
-      font-size: 0.93rem;
+      background: linear-gradient(135deg, rgba(200,148,100,.07) 0%, rgba(212,175,55,.04) 100%);
+      border: 1.5px solid rgba(200,148,100,.22);
+      margin-bottom: 22px;
+    }
+    .price-summary-label {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .price-summary-label .ps-title {
+      font-size: 0.84rem;
       font-weight: 600;
-      letter-spacing: normal;
-      text-transform: none;
-      cursor: pointer;
-      transition:
-        border-color 180ms ease,
-        background 180ms ease,
-        color 180ms ease,
-        box-shadow 180ms ease;
-      user-select: none;
+      color: var(--ink-soft);
+      letter-spacing: 0.01em;
     }
-    .toggle-label:hover {
-      border-color: var(--cy-lt);
-      color: var(--navy);
+    .price-summary-label .ps-sub {
+      font-size: 0.76rem;
+      color: var(--muted);
     }
-    .toggle-group input[type="radio"]:checked + .toggle-label {
-      border-color: var(--cy-dk);
-      background: var(--cy-xlt);
-      color: var(--cy-xdk);
-      box-shadow: 0 0 0 3px rgba(42,133,179,.12);
-    }
-    .toggle-group input[type="radio"]:checked + .toggle-label.yes-label {
-      border-color: var(--success);
-      background: var(--success-lt);
-      color: var(--success);
-      box-shadow: 0 0 0 3px rgba(27,122,92,.1);
+    .price-summary-amount {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--sand);
+      letter-spacing: -0.02em;
     }
 
     /* Field validation hint */
@@ -483,32 +473,32 @@
     .form-divider {
       height: 1px;
       background: rgba(15,26,46,.07);
-      margin: 28px 0;
+      margin: 24px 0;
     }
 
-    /* Submit button */
+    /* Payment button */
     .btn-submit {
       width: 100%;
       display: flex; align-items: center; justify-content: center; gap: 10px;
-      padding: 15px 28px;
+      padding: 16px 28px;
       border-radius: 999px;
-      background: var(--navy);
+      background: linear-gradient(135deg, #635BFF 0%, #4B44D9 100%);
       color: #fff;
-      font-weight: 600;
-      font-size: 1rem;
+      font-weight: 700;
+      font-size: 1.05rem;
       letter-spacing: 0.01em;
       border: none;
       cursor: pointer;
       transition:
-        background 180ms ease,
+        opacity 180ms ease,
         transform 180ms var(--ease),
         box-shadow 180ms ease;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 4px 18px rgba(99,91,255,.35), var(--shadow-sm);
     }
     .btn-submit:hover {
-      background: var(--cy-dk);
+      opacity: 0.92;
       transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 8px 28px rgba(99,91,255,.45), var(--shadow-md);
     }
     .btn-submit:active { transform: translateY(0); }
     .btn-submit:disabled {
@@ -519,7 +509,7 @@
     .btn-submit .spinner {
       display: none;
       width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,.3);
+      border: 2px solid rgba(255,255,255,.35);
       border-top-color: #fff;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
@@ -528,6 +518,17 @@
     .btn-submit.loading .spinner { display: block; }
     .btn-submit.loading .btn-text { opacity: 0.7; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Stripe trust note */
+    .stripe-trust {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+      font-size: 0.76rem;
+      color: var(--faint);
+    }
 
     /* Error message */
     .form-error {
@@ -543,75 +544,6 @@
     }
     .form-error.show { display: flex; gap: 10px; align-items: flex-start; }
     .form-error svg { flex-shrink: 0; margin-top: 1px; }
-
-    /* ============================================================
-       THANK-YOU CARD
-       ============================================================ */
-    .thankyou-card {
-      display: none;
-      text-align: center;
-      padding: clamp(28px, 5vw, 48px);
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(27,122,92,.18);
-      box-shadow: var(--shadow-lg);
-    }
-    .thankyou-card.show { display: block; animation: fade-up 0.55s var(--ease) both; }
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .check-circle {
-      width: 72px; height: 72px;
-      background: var(--success-lt);
-      border-radius: 50%;
-      display: grid; place-items: center;
-      margin: 0 auto 24px;
-      border: 2px solid rgba(27,122,92,.15);
-    }
-    .thankyou-card h2 {
-      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
-      font-size: clamp(1.5rem, 3.5vw, 2rem);
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      color: var(--navy);
-      margin-bottom: 12px;
-    }
-    .thankyou-card p {
-      font-size: 1rem;
-      color: var(--ink-soft);
-      max-width: 40ch;
-      margin: 0 auto;
-      line-height: 1.65;
-    }
-    .thankyou-details {
-      margin-top: 28px;
-      padding: 18px 20px;
-      border-radius: var(--radius-sm);
-      background: var(--bg-soft);
-      border: 1px solid rgba(15,26,46,.07);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      text-align: left;
-    }
-    .thankyou-row {
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.88rem;
-      gap: 12px;
-    }
-    .thankyou-row .tkey {
-      color: var(--muted);
-      font-weight: 500;
-      flex-shrink: 0;
-    }
-    .thankyou-row .tval {
-      color: var(--navy);
-      font-weight: 600;
-      text-align: right;
-      word-break: break-word;
-    }
 
     /* ============================================================
        BOTTOM CTA — ghost button link
@@ -685,9 +617,6 @@
     }
     .reveal.in { opacity: 1; transform: translateY(0); }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
     @media (max-width: 520px) {
       .hero h1 { font-size: clamp(2.1rem, 9vw, 3rem); }
       .event-pills { gap: 8px; }
@@ -714,7 +643,6 @@
        ================================================================ -->
   <section class="hero" id="top">
 
-    <!-- animated triangle background -->
     <div class="hero-canvas" aria-hidden="true">
       <svg id="heroBg" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
         <g id="hero-tris"></g>
@@ -723,7 +651,6 @@
 
     <div class="hero-inner">
 
-      <!-- LEFT: text -->
       <div class="hero-text">
         <div class="eyebrow-concert">Concierto Benéfico · Vitalqua Project</div>
 
@@ -762,39 +689,21 @@
         </div>
       </div>
 
-      <!-- RIGHT: Spanish classical guitar — neck + beige body -->
+      <!-- RIGHT: Spanish classical guitar -->
       <div class="guitar-col" aria-hidden="true">
-        <!--
-          viewBox 0 0 160 340.
-          Neck zone  y=0–120  : slotted headstock + cedar neck (centered x=70–90)
-          Body zone  y=120–333: upper bout (12 △, warm beige) · waist (3 △) ·
-                                lower bout (12 △, warm beige)
-          + multi-ring rosette · deep sound hole · classical bridge · strings
-        -->
         <svg class="guitar-svg" viewBox="0 0 160 340" xmlns="http://www.w3.org/2000/svg">
-
-          <!-- ── HEADSTOCK (classical slotted style · dark rosewood) ── -->
-          <!-- Main body -->
           <polygon points="46,0  114,0  114,25" fill="#4A2508"/>
           <polygon points="46,0   46,25  114,25" fill="#321605"/>
-          <!-- Left slot shadow (open tuner slot) -->
           <polygon points="53,3  72,3  72,22"   fill="#140800" opacity=".7"/>
           <polygon points="53,3  53,22  72,22"   fill="#0C0400" opacity=".7"/>
-          <!-- Right slot shadow -->
           <polygon points="88,3  107,3  107,22"  fill="#140800" opacity=".7"/>
           <polygon points="88,3   88,22  107,22"  fill="#0C0400" opacity=".7"/>
-          <!-- Center spine (raised ridge between slots) -->
           <polygon points="72,0  88,0  88,25"   fill="#6B3A18" opacity=".75"/>
           <polygon points="72,0  72,25  88,25"   fill="#8A4C22" opacity=".75"/>
-          <!-- Top corners (slightly rounded feel) -->
           <polygon points="46,0  53,0  53,6"    fill="#1E0A02" opacity=".5"/>
           <polygon points="107,0 114,0 107,6"   fill="#1E0A02" opacity=".5"/>
-
-          <!-- ── NUT ─────────────────────────────────────────────────── -->
           <polygon points="70,119 90,119 90,122" fill="#EED898"/>
           <polygon points="70,119 70,122 90,122" fill="#D8C080"/>
-
-          <!-- ── NECK (cedar/mahogany · centered x=70–90 · y=25–119) ── -->
           <polygon points="70,25  90,25  90,49"  fill="#9E5A28"/>
           <polygon points="70,25  70,49  90,49"  fill="#7A3E18"/>
           <polygon points="70,49  90,49  90,73"  fill="#7A3E18"/>
@@ -803,15 +712,8 @@
           <polygon points="70,73  70,97  90,97"  fill="#7A3E18"/>
           <polygon points="70,97  90,97  90,119" fill="#7A3E18"/>
           <polygon points="70,97  70,119 90,119" fill="#9E5A28"/>
-
-          <!-- ── SHOULDER (neck base → upper bout top) ──────────────── -->
           <polygon points="70,120 80,120  58,126" fill="#C8A862"/>
           <polygon points="90,120 80,120 102,126" fill="#C8A862"/>
-
-          <!-- ── UPPER BOUT (center 80,163 · r=43 · 12 fan triangles)
-               Perimeter CW from top: (80,120)(102,126)(117,142)(123,163)
-               (117,185)(102,200)(80,206)(58,200)(43,185)(37,163)
-               (43,142)(58,126) ──────────────────────────────────────── -->
           <polygon points="80,163  80,120  102,126" fill="#F5EAD0"/>
           <polygon points="80,163 102,126  117,142" fill="#EDD9AA"/>
           <polygon points="80,163 117,142  123,163" fill="#DCCA88"/>
@@ -824,19 +726,11 @@
           <polygon points="80,163  37,163   43,142" fill="#CAAA66"/>
           <polygon points="80,163  43,142   58,126" fill="#DCCA88"/>
           <polygon points="80,163  58,126   80,120" fill="#EDD9AA"/>
-
-          <!-- ── WAIST ─────────────────────────────────────────────── -->
           <polygon points=" 58,200 102,200  80,217" fill="#B89048"/>
           <polygon points=" 58,200  52,218  80,217" fill="#A87E38"/>
           <polygon points="102,200 108,218  80,217" fill="#A87E38"/>
-          <!-- gap-fill: bridge waist sides to lower bout top -->
           <polygon points="80,217  52,218  51,225" fill="#A87E38"/>
           <polygon points="80,217 108,218 109,225" fill="#A87E38"/>
-
-          <!-- ── LOWER BOUT (center 80,275 · r=58 · 12 fan triangles)
-               Perimeter CW from top: (80,217)(109,225)(130,246)(138,275)
-               (130,304)(109,325)(80,333)(51,325)(30,304)(22,275)
-               (30,246)(51,225) ──────────────────────────────────────── -->
           <polygon points="80,275  80,217  109,225" fill="#DCCA88"/>
           <polygon points="80,275 109,225  130,246" fill="#CAAA66"/>
           <polygon points="80,275 130,246  138,275" fill="#B89048"/>
@@ -849,21 +743,11 @@
           <polygon points="80,275  22,275   30,246" fill="#CAAA66"/>
           <polygon points="80,275  30,246   51,225" fill="#DCCA88"/>
           <polygon points="80,275  51,225   80,217" fill="#CAAA66"/>
-
-          <!-- ── ROSETTE (3 concentric decorative rings) ────────────── -->
-          <circle cx="80" cy="163" r="20"
-                  fill="none" stroke="#7A5018" stroke-width="4"   opacity=".5"/>
-          <circle cx="80" cy="163" r="18"
-                  fill="none" stroke="#E8C060" stroke-width="1.5" opacity=".5"/>
-          <circle cx="80" cy="163" r="16.2"
-                  fill="none" stroke="#7A5018" stroke-width="1"   opacity=".4"/>
-          <circle cx="80" cy="163" r="14.8"
-                  fill="none" stroke="#E8C060" stroke-width=".8"  opacity=".3"/>
-
-          <!-- ── SOUND HOLE ──────────────────────────────────────────── -->
+          <circle cx="80" cy="163" r="20" fill="none" stroke="#7A5018" stroke-width="4"   opacity=".5"/>
+          <circle cx="80" cy="163" r="18" fill="none" stroke="#E8C060" stroke-width="1.5" opacity=".5"/>
+          <circle cx="80" cy="163" r="16.2" fill="none" stroke="#7A5018" stroke-width="1"   opacity=".4"/>
+          <circle cx="80" cy="163" r="14.8" fill="none" stroke="#E8C060" stroke-width=".8"  opacity=".3"/>
           <circle cx="80" cy="163" r="13.5" fill="#0E0700" opacity=".97"/>
-
-          <!-- ── FRETS (ivory color, spaced along neck) ─────────────── -->
           <line x1="70" y1="37"  x2="90" y2="37"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
           <line x1="70" y1="49"  x2="90" y2="49"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
           <line x1="70" y1="61"  x2="90" y2="61"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
@@ -871,37 +755,28 @@
           <line x1="70" y1="85"  x2="90" y2="85"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
           <line x1="70" y1="97"  x2="90" y2="97"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
           <line x1="70" y1="109" x2="90" y2="109" stroke="#EAD898" stroke-width=".6" opacity=".4"/>
-
-          <!-- ── STRINGS (6 · nylon trebles + wound basses · nut→saddle · centered x=80) -->
           <line x1="75" y1="12" x2="75" y2="297" stroke="#E8D050" stroke-width=".5"  opacity=".55"/>
           <line x1="77" y1="12" x2="77" y2="297" stroke="#E8D050" stroke-width=".5"  opacity=".55"/>
           <line x1="79" y1="12" x2="79" y2="297" stroke="#E8D050" stroke-width=".55" opacity=".55"/>
           <line x1="81" y1="12" x2="81" y2="297" stroke="#C8A848" stroke-width=".7"  opacity=".5"/>
           <line x1="83" y1="12" x2="83" y2="297" stroke="#C8A848" stroke-width=".9"  opacity=".5"/>
           <line x1="85" y1="12" x2="85" y2="297" stroke="#C8A848" stroke-width="1.1" opacity=".45"/>
-
-          <!-- ── BRIDGE (classical tie-block style · ebony) ────────────── -->
           <polygon points="62,297  98,297  98,311" fill="#180C00"/>
           <polygon points="62,297  62,311  98,311" fill="#0C0500"/>
-          <!-- Saddle (bone white) — aligns with string positions x=75–85 -->
           <polygon points="73,295  87,295  87,299" fill="#F0EAC8"/>
           <polygon points="73,295  73,299  87,299" fill="#DDDAAA"/>
-          <!-- 6 tie holes matching string x positions -->
           <circle cx="75" cy="306" r="1.4" fill="#000" opacity=".55"/>
           <circle cx="77" cy="306" r="1.4" fill="#000" opacity=".55"/>
           <circle cx="79" cy="306" r="1.4" fill="#000" opacity=".55"/>
           <circle cx="81" cy="306" r="1.4" fill="#000" opacity=".55"/>
           <circle cx="83" cy="306" r="1.4" fill="#000" opacity=".55"/>
           <circle cx="85" cy="306" r="1.4" fill="#000" opacity=".55"/>
-
-          <!-- ── TUNING ROLLERS (3 per side, classical machine heads) ── -->
           <circle cx="54" cy="6"  r="2.6" fill="#D4AF37" opacity=".85"/>
           <circle cx="54" cy="13" r="2.6" fill="#D4AF37" opacity=".85"/>
           <circle cx="54" cy="20" r="2.6" fill="#D4AF37" opacity=".85"/>
           <circle cx="106" cy="6"  r="2.6" fill="#D4AF37" opacity=".85"/>
           <circle cx="106" cy="13" r="2.6" fill="#D4AF37" opacity=".85"/>
           <circle cx="106" cy="20" r="2.6" fill="#D4AF37" opacity=".85"/>
-
         </svg>
       </div>
 
@@ -909,7 +784,7 @@
 
     <div class="scroll-hint" aria-hidden="true">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-      Inscríbete
+      Compra tu entrada
     </div>
   </section>
 
@@ -920,114 +795,100 @@
     <div class="form-wrap">
 
       <div class="form-heading reveal">
-        <div class="form-eyebrow">Reserva tu plaza</div>
-        <h2 class="form-title">Apunta tu nombre</h2>
-        <p class="form-sub">Rellena el formulario y te confirmamos tu plaza. La recaudación íntegra financia el Vitalqua Project.</p>
+        <div class="form-eyebrow">Compra tu entrada</div>
+        <h2 class="form-title">Asegura tu plaza</h2>
+        <p class="form-sub">Rellena tus datos y paga de forma segura con Stripe. Recibirás tu entrada digital al instante.</p>
       </div>
 
       <!-- FORM CARD -->
       <div class="form-card reveal" id="formCard">
         <form id="concertForm" novalidate>
 
-          <!-- Nombre y Apellidos -->
-          <div class="field" id="field-name">
-            <label for="inputName">
-              Nombre y Apellidos <span class="req" aria-hidden="true">*</span>
-            </label>
-            <input
-              type="text"
-              id="inputName"
-              name="entry.2092238618"
-              class="input"
-              placeholder="Ej. Maria García López"
-              autocomplete="name"
-              required
-              aria-required="true"
-              aria-describedby="hint-name"
-            />
-            <span class="field-hint" id="hint-name">Por favor, introduce tu nombre completo.</span>
+          <!-- Nombre + Apellidos en dos columnas -->
+          <div class="field-row">
+            <div class="field" id="field-nombre">
+              <label for="inputNombre">
+                Nombre <span class="req" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="inputNombre"
+                class="input"
+                placeholder="Ej. María"
+                autocomplete="given-name"
+                required
+                aria-required="true"
+                aria-describedby="hint-nombre"
+              />
+              <span class="field-hint" id="hint-nombre">Introduce tu nombre.</span>
+            </div>
+
+            <div class="field" id="field-apellidos">
+              <label for="inputApellidos">
+                Apellidos <span class="req" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="inputApellidos"
+                class="input"
+                placeholder="Ej. García López"
+                autocomplete="family-name"
+                required
+                aria-required="true"
+                aria-describedby="hint-apellidos"
+              />
+              <span class="field-hint" id="hint-apellidos">Introduce tus apellidos.</span>
+            </div>
           </div>
 
-          <!-- Numero de Teléfono -->
-          <div class="field" id="field-phone">
-            <label for="inputPhone">
-              Número de Teléfono <span class="req" aria-hidden="true">*</span>
+          <!-- Teléfono -->
+          <div class="field" id="field-telefono">
+            <label for="inputTelefono">
+              Teléfono <span class="req" aria-hidden="true">*</span>
             </label>
             <input
               type="tel"
-              id="inputPhone"
-              name="entry.1556369182"
+              id="inputTelefono"
               class="input"
               placeholder="Ej. 612 345 678"
               autocomplete="tel"
               required
               aria-required="true"
-              aria-describedby="hint-phone"
+              aria-describedby="hint-telefono"
             />
-            <span class="field-hint" id="hint-phone">Por favor, introduce un número de teléfono.</span>
-          </div>
-
-          <!-- Pagado (20€)? -->
-          <div class="field" id="field-paid">
-            <label>
-              ¿Has pagado los 20&nbsp;€? <span class="req" aria-hidden="true">*</span>
-            </label>
-            <div class="toggle-group" role="radiogroup" aria-label="¿Has pagado los 20 euros?">
-              <input type="radio" id="paidYes" name="entry.2109138769" value="Sí" required />
-              <label for="paidYes" class="toggle-label yes-label">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                Sí, pagado
-              </label>
-
-              <input type="radio" id="paidNo" name="entry.2109138769" value="No" />
-              <label for="paidNo" class="toggle-label">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                Todavía no
-              </label>
-            </div>
-            <span class="field-hint" id="hint-paid">Por favor, indica si has realizado el pago.</span>
+            <span class="field-hint" id="hint-telefono">Introduce un número de teléfono.</span>
           </div>
 
           <div class="form-divider"></div>
 
+          <!-- Price summary -->
+          <div class="price-summary" aria-label="Resumen de precio">
+            <div class="price-summary-label">
+              <span class="ps-title">Entrada General</span>
+              <span class="ps-sub">Todo va al proyecto · Kenia</span>
+            </div>
+            <span class="price-summary-amount">20,00&nbsp;€</span>
+          </div>
+
+          <!-- Pay button -->
           <button type="submit" class="btn-submit" id="submitBtn">
             <div class="spinner" aria-hidden="true"></div>
-            <span class="btn-text">Confirmar inscripción</span>
-            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <svg class="lock-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="btn-text">Pagar Entrada (20&nbsp;€)</span>
           </button>
 
-          <!-- Error message (shown if fetch fails) -->
+          <p class="stripe-trust">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Pago seguro procesado por Stripe
+          </p>
+
+          <!-- Error message -->
           <div class="form-error" id="formError" role="alert" aria-live="polite">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span>Algo ha fallado al enviar. Por favor inténtalo de nuevo o escríbenos a <strong>vitalquaproject@gmail.com</strong>.</span>
+            <span id="formErrorText">Algo ha fallado. Por favor inténtalo de nuevo o escríbenos a <strong>vitalquaproject@gmail.com</strong>.</span>
           </div>
 
         </form>
-      </div>
-
-      <!-- THANK-YOU CARD (hidden until form is submitted successfully) -->
-      <div class="thankyou-card" id="thankYouCard" role="status" aria-live="polite">
-        <div class="check-circle" aria-hidden="true">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1B7A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-        </div>
-        <h2>¡Inscripción recibida!</h2>
-        <p>Muchas gracias. Hemos anotado tu plaza. Nos pondremos en contacto contigo si es necesario confirmar algún detalle.</p>
-        <div class="thankyou-details" id="thankyouDetails" aria-hidden="true">
-          <div class="thankyou-row">
-            <span class="tkey">Nombre</span>
-            <span class="tval" id="tyName">—</span>
-          </div>
-          <div class="thankyou-row">
-            <span class="tkey">Teléfono</span>
-            <span class="tval" id="tyPhone">—</span>
-          </div>
-          <div class="thankyou-row">
-            <span class="tkey">Pago 20 €</span>
-            <span class="tval" id="tyPaid">—</span>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -1061,7 +922,26 @@
        SCRIPTS
        ================================================================ -->
   <script>
-    /* ---- Header: transparent over hero, blurred when scrolled ---- */
+    /* ----------------------------------------------------------------
+       ⚙️  Stripe Payment Link
+       Configura la URL de éxito en Stripe como:
+       https://TU_SITIO/success.html?session_id={CHECKOUT_SESSION_ID}
+       ---------------------------------------------------------------- */
+    const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/test_eVqdRb75y2svbv890rdfG00";
+
+    /* ----------------------------------------------------------------
+       Genera un ID único de ticket: VTQ-XXXXXX
+       ---------------------------------------------------------------- */
+    function generateTicketId() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let id = 'VTQ-';
+      for (let i = 0; i < 6; i++) {
+        id += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return id;
+    }
+
+    /* ---- Header scroll ---- */
     (function () {
       const header = document.getElementById('siteHeader');
       const update = () => header.classList.toggle('scrolled', window.scrollY > 60);
@@ -1069,7 +949,7 @@
       update();
     })();
 
-    /* ---- Hero triangle wobble (dark palette, cohesive with site) ---- */
+    /* ---- Hero triangle animation ---- */
     (function () {
       const g = document.getElementById('hero-tris');
       if (!g) return;
@@ -1084,21 +964,18 @@
         '#1B5F85', '#2A85B3', '#4FB3D9', '#0F3A56',
         '#A3D0E3', '#7FBFD6', '#5FAFC7', '#0A2840'
       ];
-
       for (let i = 0; i < COUNT; i++) {
         const p = document.createElementNS(NS, 'polygon');
         const cx = 4  + rand(i, 1) * 152;
         const cy = 4  + rand(i, 2) * 82;
         const s  = 0.8 + rand(i, 3) * 4.2;
         const pts = `${cx},${cy - s} ${cx - s * 0.9},${cy + s * 0.7} ${cx + s * 0.9},${cy + s * 0.7}`;
-        const fill = palette[Math.floor(rand(i, 4) * palette.length)];
         p.setAttribute('points', pts);
-        p.setAttribute('fill', fill);
+        p.setAttribute('fill', palette[Math.floor(rand(i, 4) * palette.length)]);
         p.setAttribute('opacity', (0.08 + rand(i, 5) * 0.25).toFixed(2));
         g.appendChild(p);
         tris.push({ el: p, cx, cy, s, phase: rand(i, 6) * Math.PI * 2, sp: 0.18 + rand(i, 7) * 0.45 });
       }
-
       function animate(now) {
         const t = now / 1000;
         for (const tr of tris) {
@@ -1106,7 +983,7 @@
           const dy = Math.cos(t * tr.sp * 0.65 + tr.phase * 1.4) * 1.9;
           const cx = tr.cx + dx, cy = tr.cy + dy, s = tr.s;
           tr.el.setAttribute('points',
-            `${cx.toFixed(2)},${(cy - s).toFixed(2)} ${(cx - s*0.9).toFixed(2)},${(cy + s*0.7).toFixed(2)} ${(cx + s*0.9).toFixed(2)},${(cy + s*0.7).toFixed(2)}`
+            `${cx.toFixed(2)},${(cy-s).toFixed(2)} ${(cx-s*0.9).toFixed(2)},${(cy+s*0.7).toFixed(2)} ${(cx+s*0.9).toFixed(2)},${(cy+s*0.7).toFixed(2)}`
           );
         }
         requestAnimationFrame(animate);
@@ -1124,121 +1001,71 @@
       document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
     })();
 
-    /* ---- Form submission ---- */
+    /* ----------------------------------------------------------------
+       FORMULARIO — Guarda en localStorage y redirige a Stripe.
+       Firebase NO se toca aquí: Firestore solo se escribe en success.html
+       cuando Stripe confirma el pago con ?session_id=
+       ---------------------------------------------------------------- */
     (function () {
-      const FORM_URL = 'https://docs.google.com/forms/d/e/1jHsDsJZJf-Xv9duSOIbDhkuQkeaHkAHNyWrx2gMNuRM/formResponse';
-
       const form      = document.getElementById('concertForm');
-      const formCard  = document.getElementById('formCard');
-      const thankYou  = document.getElementById('thankYouCard');
       const submitBtn = document.getElementById('submitBtn');
       const errorMsg  = document.getElementById('formError');
+      const errorText = document.getElementById('formErrorText');
 
-      const inputName  = document.getElementById('inputName');
-      const inputPhone = document.getElementById('inputPhone');
-      const hintName   = document.getElementById('hint-name');
-      const hintPhone  = document.getElementById('hint-phone');
-      const hintPaid   = document.getElementById('hint-paid');
+      const inputNombre    = document.getElementById('inputNombre');
+      const inputApellidos = document.getElementById('inputApellidos');
+      const inputTelefono  = document.getElementById('inputTelefono');
 
-      function getPaidValue() {
-        const checked = document.querySelector('input[name="entry.2109138769"]:checked');
-        return checked ? checked.value : null;
+      const hintNombre    = document.getElementById('hint-nombre');
+      const hintApellidos = document.getElementById('hint-apellidos');
+      const hintTelefono  = document.getElementById('hint-telefono');
+
+      function clearError(input, hint) {
+        input.addEventListener('input', () => {
+          if (input.value.trim()) {
+            input.classList.remove('invalid');
+            hint.classList.remove('show');
+          }
+        });
       }
+      clearError(inputNombre,    hintNombre);
+      clearError(inputApellidos, hintApellidos);
+      clearError(inputTelefono,  hintTelefono);
 
       function validate() {
-        let valid = true;
-
-        /* Name */
-        if (!inputName.value.trim()) {
-          inputName.classList.add('invalid');
-          hintName.classList.add('show');
-          valid = false;
-        } else {
-          inputName.classList.remove('invalid');
-          hintName.classList.remove('show');
-        }
-
-        /* Phone */
-        if (!inputPhone.value.trim()) {
-          inputPhone.classList.add('invalid');
-          hintPhone.classList.add('show');
-          valid = false;
-        } else {
-          inputPhone.classList.remove('invalid');
-          hintPhone.classList.remove('show');
-        }
-
-        /* Paid radio */
-        if (!getPaidValue()) {
-          hintPaid.classList.add('show');
-          valid = false;
-        } else {
-          hintPaid.classList.remove('show');
-        }
-
-        return valid;
+        let ok = true;
+        const setErr = (inp, hint) => {
+          inp.classList.add('invalid');
+          hint.classList.add('show');
+          ok = false;
+        };
+        if (!inputNombre.value.trim())    setErr(inputNombre,    hintNombre);
+        if (!inputApellidos.value.trim()) setErr(inputApellidos, hintApellidos);
+        if (!inputTelefono.value.trim())  setErr(inputTelefono,  hintTelefono);
+        return ok;
       }
 
-      /* Clear individual field errors on input */
-      inputName.addEventListener('input', () => {
-        if (inputName.value.trim()) {
-          inputName.classList.remove('invalid');
-          hintName.classList.remove('show');
-        }
-      });
-      inputPhone.addEventListener('input', () => {
-        if (inputPhone.value.trim()) {
-          inputPhone.classList.remove('invalid');
-          hintPhone.classList.remove('show');
-        }
-      });
-      document.querySelectorAll('input[name="entry.2109138769"]').forEach(r => {
-        r.addEventListener('change', () => hintPaid.classList.remove('show'));
-      });
-
-      form.addEventListener('submit', async (e) => {
+      form.addEventListener('submit', (e) => {
         e.preventDefault();
         errorMsg.classList.remove('show');
-
         if (!validate()) return;
 
-        const name  = inputName.value.trim();
-        const phone = inputPhone.value.trim();
-        const paid  = getPaidValue();
-
-        /* Build FormData */
-        const body = new FormData();
-        body.append('entry.2092238618', name);
-        body.append('entry.1556369182', phone);
-        body.append('entry.2109138769', paid);
-
-        /* Loading state */
         submitBtn.classList.add('loading');
         submitBtn.disabled = true;
 
-        try {
-          /* mode: 'no-cors' returns an opaque response — no body to read.
-             The promise resolves on network success, rejects on failure. */
-          await fetch(FORM_URL, { method: 'POST', mode: 'no-cors', body });
+        const nombre    = inputNombre.value.trim();
+        const apellidos = inputApellidos.value.trim();
+        const telefono  = inputTelefono.value.trim();
+        const ticketId  = generateTicketId();
 
-          /* Populate thank-you summary */
-          document.getElementById('tyName').textContent  = name;
-          document.getElementById('tyPhone').textContent = phone;
-          document.getElementById('tyPaid').textContent  = paid === 'Sí' ? '✓ Pagado' : 'Pendiente';
+        /* Guardar datos en localStorage — success.html los leerá al volver de Stripe */
+        localStorage.setItem('vq_ticketId',  ticketId);
+        localStorage.setItem('vq_nombre',    nombre);
+        localStorage.setItem('vq_apellidos', apellidos);
+        localStorage.setItem('vq_telefono',  telefono);
 
-          /* Swap card for thank-you message */
-          formCard.style.display  = 'none';
-          thankYou.classList.add('show');
-
-          /* Scroll the thank-you into view smoothly */
-          thankYou.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        } catch (_) {
-          /* Network-level error only; don't expose technical details */
-          errorMsg.classList.add('show');
-          submitBtn.classList.remove('loading');
-          submitBtn.disabled = false;
-        }
+        /* Redirigir a Stripe — Stripe redirigirá a success.html?session_id={CHECKOUT_SESSION_ID} */
+        window.location.href = `${STRIPE_PAYMENT_LINK}?client_reference_id=${ticketId}`;
       });
     })();
   </script>

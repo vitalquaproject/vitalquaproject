@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Vitalqua Party</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
+
+  <style>
+    :root {
+      --bg:        #F0F4F8;
+      --bg-soft:   #E8EDF3;
+      --surface:   #FFFFFF;
+      --navy:      #0F1A2E;
+      --navy-dp:   #07101E;
+      --cy:        #4FB3D9;
+      --cy-dk:     #2A85B3;
+      --cy-xdk:    #1B5F85;
+      --ink:       #0F1A2E;
+      --ink-soft:  #3F4F6B;
+      --muted:     #6B7890;
+      --faint:     #A3B5CD;
+      --success:   #1B7A5C;
+      --success-lt:#D1F0E6;
+      --warn:      #92400E;
+      --warn-lt:   #FEF3C7;
+      --radius-sm: 8px;
+      --radius:    14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(15,26,46,.07), 0 4px 12px rgba(15,26,46,.05);
+      --shadow-md: 0 4px 16px rgba(15,26,46,.08), 0 20px 40px rgba(15,26,46,.06);
+      --ease: cubic-bezier(.22,.61,.36,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ============================================================
+       LOGIN OVERLAY
+       ============================================================ */
+    .login-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(79,179,217,.1) 0%, transparent 55%),
+        linear-gradient(160deg, #0A1628 0%, #07101E 100%);
+      padding: 24px;
+    }
+    .login-box {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(18px);
+      padding: clamp(28px, 5vw, 44px);
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+    .login-icon {
+      width: 52px; height: 52px;
+      background: rgba(79,179,217,.12);
+      border-radius: 14px;
+      border: 1px solid rgba(79,179,217,.25);
+      display: grid; place-items: center;
+      margin: 0 auto 20px;
+    }
+    .login-box h1 {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.45rem; font-weight: 700;
+      letter-spacing: -0.02em; color: #fff;
+      margin-bottom: 6px;
+    }
+    .login-box p { font-size: 0.88rem; color: rgba(163,181,205,.7); margin-bottom: 28px; }
+    .login-field { margin-bottom: 14px; text-align: left; }
+    .login-field label {
+      display: block;
+      font-size: 0.74rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(163,181,205,.7); margin-bottom: 8px;
+    }
+    .login-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: #fff; font: inherit; font-size: 0.97rem;
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+    .login-input::placeholder { color: rgba(163,181,205,.4); }
+    .login-input:focus {
+      border-color: var(--cy-dk);
+      box-shadow: 0 0 0 3px rgba(42,133,179,.2);
+    }
+    .login-error {
+      display: none; font-size: 0.82rem; color: #F87171; margin-bottom: 14px;
+    }
+    .login-error.show { display: block; }
+    .btn-login {
+      width: 100%; padding: 13px; border-radius: 999px;
+      background: var(--cy-dk); color: #fff;
+      border: none; font: inherit; font-size: 0.97rem; font-weight: 600;
+      cursor: pointer;
+      transition: background 180ms ease, transform 180ms var(--ease);
+    }
+    .btn-login:hover { background: var(--cy-xdk); transform: translateY(-1px); }
+    .btn-login:active { transform: translateY(0); }
+
+    /* ============================================================
+       DASHBOARD
+       ============================================================ */
+    .dashboard { display: none; }
+    .dashboard.show { display: block; }
+
+    /* Topbar */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--navy-dp);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 0 clamp(18px, 3vw, 36px);
+    }
+    .topbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 58px; gap: 16px;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar-title {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1rem; font-weight: 700; color: #fff;
+    }
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px; border-radius: 999px;
+      background: rgba(27,122,92,.2); border: 1px solid rgba(27,122,92,.35);
+      color: #4ADE80; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .live-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #4ADE80;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+    .btn-logout {
+      padding: 7px 16px; border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,.15); background: transparent;
+      color: rgba(255,255,255,.6); font: inherit; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: border-color 180ms ease, color 180ms ease;
+    }
+    .btn-logout:hover { border-color: rgba(255,255,255,.35); color: #fff; }
+
+    /* Content */
+    .content { padding: clamp(24px, 4vw, 40px) clamp(18px, 3vw, 36px); }
+
+    /* Stats */
+    .stats-bar { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--surface); border-radius: var(--radius);
+      border: 1px solid rgba(15,26,46,.06); box-shadow: var(--shadow-sm);
+      padding: 16px 22px; min-width: 140px; flex: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+    }
+    .stat-value {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 2rem; font-weight: 700; color: var(--navy);
+      letter-spacing: -0.03em; line-height: 1;
+    }
+    .stat-value.green { color: var(--success); }
+
+    /* Toolbar */
+    .table-toolbar {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; }
+    .search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--faint); pointer-events: none;
+    }
+    .search-input {
+      width: 100%; padding: 9px 14px 9px 36px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(15,26,46,.12);
+      background: var(--surface); font: inherit; font-size: 0.9rem; color: var(--ink);
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+    .search-input:focus {
+      border-color: var(--cy-dk); box-shadow: 0 0 0 3px rgba(42,133,179,.1);
+    }
+    .search-input::placeholder { color: var(--faint); }
+
+    /* Table */
+    .table-card {
+      background: var(--surface); border-radius: var(--radius);
+      border: 1px solid rgba(15,26,46,.07); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; min-width: 860px; }
+    thead tr {
+      background: var(--bg-soft);
+      border-bottom: 1.5px solid rgba(15,26,46,.07);
+    }
+    th {
+      padding: 11px 16px; text-align: left;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted); white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid rgba(15,26,46,.05); transition: background 120ms ease; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(79,179,217,.04); }
+    td { padding: 13px 16px; vertical-align: middle; }
+
+    td .ticket-id {
+      font-weight: 700; color: var(--cy-dk); font-size: 0.82rem; letter-spacing: 0.05em;
+    }
+    td .name-main { font-weight: 600; }
+    td .name-sub  { font-size: 0.8rem; color: var(--muted); }
+    td.muted      { color: var(--muted); font-size: 0.84rem; }
+
+    /* Scanned badge / button */
+    .badge-valid {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 999px;
+      background: var(--success-lt); color: var(--success);
+      font-size: 0.74rem; font-weight: 700; white-space: nowrap;
+    }
+    .badge-scanned {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(15,26,46,.07); color: var(--muted);
+      font-size: 0.74rem; font-weight: 700; white-space: nowrap;
+    }
+    .btn-scan {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 13px; border-radius: 999px;
+      font: inherit; font-size: 0.78rem; font-weight: 600;
+      border: 1.5px solid rgba(15,26,46,.15);
+      background: transparent; color: var(--ink-soft);
+      cursor: pointer; white-space: nowrap;
+      transition: all 180ms ease;
+    }
+    .btn-scan:hover { border-color: var(--success); color: var(--success); background: var(--success-lt); }
+    .btn-scan:disabled { opacity: 0.5; cursor: default; }
+
+    /* Empty/loading state */
+    .table-placeholder {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 12px;
+      padding: 56px 24px; color: var(--muted); text-align: center;
+    }
+    .table-placeholder svg { opacity: 0.38; }
+    .table-placeholder p { font-size: 0.92rem; }
+    .spinner-sm {
+      width: 28px; height: 28px;
+      border: 2.5px solid rgba(42,133,179,.18); border-top-color: var(--cy-dk);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Table footer */
+    .table-footer {
+      padding: 11px 16px;
+      border-top: 1px solid rgba(15,26,46,.06);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .table-footer-count { font-size: 0.82rem; color: var(--muted); }
+    .table-footer-count strong { color: var(--ink); }
+
+    /* Toast */
+    .toast-area {
+      position: fixed; bottom: 24px; right: 24px;
+      display: flex; flex-direction: column; gap: 10px; z-index: 999;
+    }
+    .toast {
+      padding: 12px 18px; border-radius: var(--radius-sm);
+      background: var(--navy); color: #fff;
+      font-size: 0.87rem; font-weight: 500;
+      box-shadow: var(--shadow-md); max-width: 300px;
+      animation: slide-in 0.3s var(--ease) both;
+    }
+    @keyframes slide-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       LOGIN
+       ============================================================ -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <div class="login-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4FB3D9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <h1>Panel de Admin</h1>
+      <p>Acceso restringido · Vitalqua Party</p>
+      <form id="loginForm">
+        <div class="login-field">
+          <label for="adminPwd">Contraseña</label>
+          <input type="password" id="adminPwd" class="login-input" placeholder="Introduce la contraseña" autocomplete="current-password" required />
+        </div>
+        <p class="login-error" id="loginError">Contraseña incorrecta.</p>
+        <button type="submit" class="btn-login">Acceder</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       DASHBOARD
+       ============================================================ -->
+  <div class="dashboard" id="dashboard">
+
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="topbar-left">
+          <span class="topbar-title">Vitalqua Party · Admin</span>
+          <span class="live-badge"><span class="live-dot"></span>En vivo</span>
+        </div>
+        <button class="btn-logout" id="btnLogout">Cerrar sesión</button>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-label">Total entradas</div>
+          <div class="stat-value green" id="statTotal">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Escaneadas</div>
+          <div class="stat-value" id="statScanned">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Por escanear</div>
+          <div class="stat-value" id="statPending">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Recaudado</div>
+          <div class="stat-value" id="statRevenue">—</div>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="table-toolbar">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre, apellidos, teléfono o ID…" aria-label="Buscar" />
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Cognoms</th>
+                <th>Telèfon</th>
+                <th>Data de Compra</th>
+                <th>Estat de l'Entrada</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+              <tr>
+                <td colspan="7">
+                  <div class="table-placeholder">
+                    <div class="spinner-sm"></div>
+                    <p>Conectando con la base de datos…</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span class="table-footer-count" id="tableCount">Cargando…</span>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Toasts -->
+  <div class="toast-area" id="toastArea" aria-live="polite"></div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    /* ----------------------------------------------------------------
+       Config
+       ---------------------------------------------------------------- */
+    const firebaseConfig = {
+      apiKey:            "AIzaSyDKic5e9DAU1iw6ZOtsT1gGEEyU8WCtAXE",
+      authDomain:        "vitalqua-project.firebaseapp.com",
+      projectId:         "vitalqua-project",
+      storageBucket:     "vitalqua-project.firebasestorage.app",
+      messagingSenderId: "263061224525",
+      appId:             "1:263061224525:web:9bc179545f515ffac27004",
+      measurementId:     "G-QQRGPXQP38"
+    };
+
+    // ⚠️ Cambia esta contraseña antes de publicar
+    const ADMIN_PASSWORD = "vitalqua2026";
+    const TICKET_PRICE   = 20;
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db   = firebase.firestore();
+
+    function ticketsCol() {
+      return db
+        .collection('artifacts')
+        .doc('vitalqua-party-tickets')
+        .collection('public')
+        .doc('data')
+        .collection('tickets');
+    }
+
+    /* ----------------------------------------------------------------
+       State
+       ---------------------------------------------------------------- */
+    let allTickets = [];
+    let unsubscribe = null;
+
+    /* ----------------------------------------------------------------
+       Helpers
+       ---------------------------------------------------------------- */
+    function toast(msg) {
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = msg;
+      document.getElementById('toastArea').appendChild(el);
+      setTimeout(() => el.remove(), 3200);
+    }
+
+    function esc(str) {
+      return String(str || '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function fmtDate(ts) {
+      if (!ts) return '—';
+      const d = (ts.toDate ? ts.toDate() : new Date(ts));
+      return d.toLocaleDateString('ca-ES', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    /* ----------------------------------------------------------------
+       Render
+       ---------------------------------------------------------------- */
+    function render(tickets) {
+      const tbody = document.getElementById('tbody');
+      const q     = document.getElementById('searchInput').value.toLowerCase().trim();
+
+      const list = q
+        ? tickets.filter(t =>
+            [t.id, t.name, t.surname, t.phone]
+              .some(v => String(v || '').toLowerCase().includes(q))
+          )
+        : tickets;
+
+      /* Stats (always over full set, not filtered) */
+      const scanned = tickets.filter(t => t.scanned).length;
+      document.getElementById('statTotal').textContent   = tickets.length;
+      document.getElementById('statScanned').textContent = scanned;
+      document.getElementById('statPending').textContent = tickets.length - scanned;
+      document.getElementById('statRevenue').textContent = `${(tickets.length * TICKET_PRICE).toLocaleString('es-ES')} €`;
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="table-placeholder">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <p>${q ? 'Sin resultados para ese filtro.' : 'Todavía no hay entradas registradas.'}</p>
+        </div></td></tr>`;
+        document.getElementById('tableCount').innerHTML = 'Sin entradas';
+        return;
+      }
+
+      tbody.innerHTML = list.map(t => {
+        const estatCell = t.scanned
+          ? `<span class="badge-scanned">
+               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+               Escaneada
+             </span>`
+          : `<span class="badge-valid">
+               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+               Vàlida
+             </span>
+             <button class="btn-scan" onclick="markScanned('${esc(t.id)}')" style="margin-left:8px">
+               Marcar escaneada
+             </button>`;
+
+        return `<tr>
+          <td><span class="ticket-id">${esc(t.id)}</span></td>
+          <td><span class="name-main">${esc(t.name)}</span></td>
+          <td>${esc(t.surname)}</td>
+          <td class="muted">${esc(t.phone) || '—'}</td>
+          <td class="muted">${fmtDate(t.createdAt)}</td>
+          <td>${estatCell}</td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('tableCount').innerHTML =
+        `<strong>${list.length}</strong> entrada${list.length !== 1 ? 's' : ''} mostrada${list.length !== 1 ? 's' : ''} · <strong>${scanned}</strong> escaneada${scanned !== 1 ? 's' : ''}`;
+    }
+
+    /* ----------------------------------------------------------------
+       Mark as scanned
+       ---------------------------------------------------------------- */
+    async function markScanned(id) {
+      try {
+        await ticketsCol().doc(id).update({
+          scanned:       true,
+          scanTimestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        toast(`✓ Entrada ${id} marcada como escaneada`);
+      } catch (err) {
+        console.error(err);
+        toast('Error al actualizar. Inténtalo de nuevo.');
+      }
+    }
+    window.markScanned = markScanned;
+
+    /* ----------------------------------------------------------------
+       Firestore real-time listener — all documents, sorted in JS
+       ---------------------------------------------------------------- */
+    function startListener() {
+      if (unsubscribe) unsubscribe();
+
+      unsubscribe = ticketsCol().onSnapshot(
+        snap => {
+          /* Sort by createdAt descending in JS to stay compatible with any Firestore index state */
+          allTickets = snap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => {
+              const ta = a.createdAt?.seconds ?? 0;
+              const tb = b.createdAt?.seconds ?? 0;
+              return tb - ta;
+            });
+          render(allTickets);
+        },
+        err => {
+          console.error('Firestore error:', err);
+          toast('Error de conexión con la base de datos.');
+        }
+      );
+    }
+
+    /* ----------------------------------------------------------------
+       Login
+       ---------------------------------------------------------------- */
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const pwd = document.getElementById('adminPwd').value;
+      const err = document.getElementById('loginError');
+      if (pwd !== ADMIN_PASSWORD) { err.classList.add('show'); document.getElementById('adminPwd').value = ''; return; }
+      err.classList.remove('show');
+      try {
+        await auth.signInAnonymously();
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('dashboard').classList.add('show');
+        startListener();
+      } catch (ex) {
+        err.textContent = 'Error al conectar con Firebase. Revisa la configuración.';
+        err.classList.add('show');
+      }
+    });
+
+    /* Logout */
+    document.getElementById('btnLogout').addEventListener('click', () => {
+      if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+      auth.signOut();
+      document.getElementById('dashboard').classList.remove('show');
+      document.getElementById('loginOverlay').style.display = 'flex';
+      document.getElementById('adminPwd').value = '';
+      allTickets = [];
+    });
+
+    /* Search */
+    document.getElementById('searchInput').addEventListener('input', () => render(allTickets));
+  </script>
+
+</body>
+</html>

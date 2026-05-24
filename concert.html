@@ -698,7 +698,7 @@
       justify-content: center;
     }
     .student-svg {
-      width: 210px;
+      width: 230px;
       height: auto;
       filter: drop-shadow(0 20px 44px rgba(42,133,179,.18));
       animation: student-float 6s ease-in-out infinite;
@@ -721,7 +721,7 @@
         text-align: center;
       }
       .sq-illustration { order: -1; }
-      .student-svg { width: 148px; }
+      .student-svg { width: 160px; }
       .sq-badge { margin: 0 auto 24px; }
       .sq-stats { justify-content: center; }
     }
@@ -923,65 +923,77 @@
 
       <!-- Kenyan student illustration -->
       <div class="sq-illustration" aria-hidden="true">
-        <svg class="student-svg" viewBox="0 0 160 280" xmlns="http://www.w3.org/2000/svg">
-          <!-- HAIR -->
-          <polygon points="62,53 66,37 73,27 80,24 87,27 94,37 98,53 93,46 80,42 67,46" fill="#1A0A04"/>
-          <polygon points="67,46 80,42 93,46 96,54 90,58 80,56 70,58 64,54" fill="#0E0602"/>
-          <!-- FACE -->
-          <polygon points="62,53 66,37 73,27 87,27 94,37 98,53 96,62 90,69 80,72 70,69 64,62" fill="#C07840"/>
-          <polygon points="70,55 80,52 90,55 88,64 80,66 72,64" fill="#CA8448" opacity="0.55"/>
-          <!-- EARS -->
-          <polygon points="62,53 57,57 56,63 58,68 63,69 64,62" fill="#A86028"/>
-          <polygon points="98,53 103,57 104,63 102,68 97,69 96,62" fill="#A86028"/>
-          <!-- NECK -->
-          <polygon points="75,70 85,70 87,82 73,82" fill="#B06830"/>
-          <!-- SHIRT COLLAR -->
-          <polygon points="73,82 87,82 83,96 80,101 77,96" fill="#F0F0F0"/>
-          <polygon points="73,82 63,92 71,99 77,96 76,84" fill="#E4E4E4"/>
-          <polygon points="87,82 97,92 89,99 83,96 84,84" fill="#DCDCDC"/>
-          <!-- SHIRT BODY -->
-          <polygon points="26,96 73,82 76,158 28,158" fill="#1B4F8A"/>
-          <polygon points="134,96 87,82 84,158 132,158" fill="#1E5799"/>
-          <polygon points="78,101 82,101 83,158 77,158" fill="#163C72"/>
-          <!-- LEFT ARM -->
-          <polygon points="26,96 18,132 28,136 36,100" fill="#1B4F8A"/>
-          <polygon points="18,132 28,136 34,154 20,150" fill="#1B4F8A"/>
-          <polygon points="18,148 34,152 36,162 16,158" fill="#B06830"/>
-          <!-- RIGHT ARM -->
-          <polygon points="134,96 142,132 132,136 124,100" fill="#1E5799"/>
-          <polygon points="142,132 132,136 126,154 140,150" fill="#1E5799"/>
-          <polygon points="142,148 126,152 124,162 144,158" fill="#B06830"/>
-          <!-- OPEN BOOK -->
-          <polygon points="18,154 142,154 142,159 18,159" fill="#6A4220"/>
-          <polygon points="18,157 78,157 77,202 17,202" fill="#FFF5E4"/>
-          <polygon points="82,157 142,157 143,202 83,202" fill="#F5ECD8"/>
-          <polygon points="78,154 82,154 83,204 77,204" fill="#7A5030"/>
-          <polygon points="17,202 143,202 144,208 16,208" fill="#5E3418"/>
-          <!-- Page lines LEFT -->
-          <line x1="24" y1="169" x2="74" y2="169" stroke="#D8C8A4" stroke-width="1.5"/>
-          <line x1="24" y1="177" x2="74" y2="177" stroke="#D8C8A4" stroke-width="1.5"/>
-          <line x1="24" y1="185" x2="74" y2="185" stroke="#D8C8A4" stroke-width="1.5"/>
-          <line x1="24" y1="193" x2="74" y2="193" stroke="#D8C8A4" stroke-width="1.5"/>
-          <!-- Page lines RIGHT -->
-          <line x1="86" y1="169" x2="136" y2="169" stroke="#CCC0A0" stroke-width="1.5"/>
-          <line x1="86" y1="177" x2="136" y2="177" stroke="#CCC0A0" stroke-width="1.5"/>
-          <line x1="86" y1="185" x2="136" y2="185" stroke="#CCC0A0" stroke-width="1.5"/>
-          <line x1="86" y1="193" x2="136" y2="193" stroke="#CCC0A0" stroke-width="1.5"/>
-          <!-- PANTS -->
-          <polygon points="32,158 74,158 70,262 28,262" fill="#1C1C32"/>
-          <polygon points="86,158 128,158 132,262 90,262" fill="#222242"/>
-          <polygon points="32,158 44,158 40,262 28,262" fill="#14142A"/>
-          <polygon points="116,158 128,158 132,262 122,262" fill="#1A1A38"/>
-          <polygon points="30,156 130,156 131,164 29,164" fill="#0E1520"/>
-          <!-- SHOES -->
-          <polygon points="24,259 72,259 74,270 22,270" fill="#160A02"/>
-          <polygon points="88,259 136,259 138,270 86,270" fill="#160A02"/>
-          <polygon points="22,268 74,268 76,276 20,276" fill="#0E0600"/>
-          <polygon points="86,268 138,268 140,276 84,276" fill="#0E0600"/>
-          <!-- WATER DROPS (decorative) -->
-          <ellipse cx="148" cy="228" rx="4" ry="6" fill="#4FB3D9" opacity="0.5"/>
-          <ellipse cx="150" cy="210" rx="2.5" ry="3.8" fill="#4FB3D9" opacity="0.35"/>
-          <ellipse cx="12" cy="240" rx="3" ry="4.5" fill="#A3D0E3" opacity="0.4"/>
+        <svg class="student-svg" viewBox="0 0 380 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Estudiante keniata con libro y vaso de agua">
+          <style>
+            .skin        { fill: #3D1F0A; }
+            .skin-mid    { fill: #4A2510; }
+            .uniform-top { fill: #2B4FA0; }
+            .shirt       { fill: #E8E0CC; }
+            .hair        { fill: #0D0800; }
+            .book-cover  { fill: #E8B84B; }
+            .book-page   { fill: #F5EDD6; }
+            .book-spine  { fill: #C9902A; }
+            .glass       { fill: none; stroke: #A8D8F0; stroke-width: 2; }
+            .glass-fill  { fill: #3EA8D8; opacity: 0.35; }
+            .glass-body  { fill: #D6F0FF; opacity: 0.18; }
+            .water-drop  { fill: #4FC3E8; opacity: 0.7; }
+            .shoe        { fill: #0D0D1A; }
+            .trouser     { fill: #16254D; }
+            .shadow      { fill: rgba(10,20,50,.25); }
+          </style>
+          <ellipse cx="190" cy="498" rx="55" ry="10" class="shadow"/>
+          <ellipse cx="173" cy="490" rx="18" ry="8" class="shoe"/>
+          <ellipse cx="207" cy="490" rx="18" ry="8" class="shoe"/>
+          <rect x="163" y="380" width="22" height="112" rx="4" class="trouser"/>
+          <rect x="196" y="380" width="22" height="112" rx="4" class="trouser"/>
+          <rect x="160" y="255" width="60" height="46" rx="5" class="shirt"/>
+          <path d="M148 265 Q155 255 190 252 Q225 255 232 265 L236 380 L144 380 Z" class="uniform-top"/>
+          <path d="M190 258 L179 282 L190 276 Z" fill="#E8E0CC" opacity="0.9"/>
+          <path d="M190 258 L201 282 L190 276 Z" fill="#E8E0CC" opacity="0.9"/>
+          <path d="M148 270 Q128 280 118 320 Q116 340 122 355" stroke="#2B4FA0" stroke-width="22" fill="none" stroke-linecap="round"/>
+          <ellipse cx="122" cy="360" rx="12" ry="10" class="skin"/>
+          <path d="M232 270 Q252 280 260 315 Q262 335 256 350" stroke="#2B4FA0" stroke-width="22" fill="none" stroke-linecap="round"/>
+          <ellipse cx="256" cy="356" rx="12" ry="10" class="skin"/>
+          <rect x="90" y="330" width="60" height="78" rx="3" class="book-cover"/>
+          <rect x="90" y="330" width="8" height="78" rx="2" class="book-spine"/>
+          <rect x="98" y="333" width="49" height="72" rx="1" class="book-page"/>
+          <line x1="104" y1="345" x2="142" y2="345" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="353" x2="142" y2="353" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="361" x2="138" y2="361" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="369" x2="142" y2="369" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="377" x2="136" y2="377" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="385" x2="142" y2="385" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <ellipse cx="148" cy="369" rx="8" ry="8" class="skin"/>
+          <path d="M244 330 L240 400 L272 400 L268 330 Z" class="glass-body"/>
+          <path d="M245 358 L241 400 L271 400 L267 358 Z" class="glass-fill"/>
+          <path d="M244 330 L240 400 L272 400 L268 330 Z" class="glass"/>
+          <line x1="244" y1="330" x2="268" y2="330" stroke="#A8D8F0" stroke-width="2" opacity="0.7"/>
+          <line x1="245" y1="358" x2="267" y2="358" stroke="#5BC8F0" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="252" cy="370" r="2.5" fill="#A8E8FF" opacity="0.7"/>
+          <circle cx="261" cy="378" r="1.8" fill="#A8E8FF" opacity="0.6"/>
+          <circle cx="255" cy="385" r="2" fill="#A8E8FF" opacity="0.5"/>
+          <ellipse cx="244" cy="360" rx="8" ry="8" class="skin"/>
+          <ellipse cx="278" cy="355" rx="4" ry="6" class="water-drop" transform="rotate(-15 278 355)"/>
+          <ellipse cx="285" cy="370" rx="3" ry="5" class="water-drop" opacity="0.5" transform="rotate(10 285 370)"/>
+          <rect x="182" y="220" width="16" height="34" rx="4" class="skin"/>
+          <ellipse cx="190" cy="192" rx="38" ry="42" class="skin"/>
+          <ellipse cx="152" cy="197" rx="7" ry="10" class="skin"/>
+          <ellipse cx="228" cy="197" rx="7" ry="10" class="skin"/>
+          <ellipse cx="190" cy="158" rx="37" ry="16" class="hair"/>
+          <ellipse cx="157" cy="172" rx="10" ry="14" class="hair"/>
+          <ellipse cx="223" cy="172" rx="10" ry="14" class="hair"/>
+          <ellipse cx="190" cy="160" rx="30" ry="13" class="hair"/>
+          <path d="M158 178 Q190 168 222 178" fill="#0D0800"/>
+          <ellipse cx="177" cy="193" rx="6" ry="7" fill="#0A0400"/>
+          <ellipse cx="203" cy="193" rx="6" ry="7" fill="#0A0400"/>
+          <circle cx="179" cy="191" r="2" fill="white" opacity="0.65"/>
+          <circle cx="205" cy="191" r="2" fill="white" opacity="0.65"/>
+          <path d="M184 207 Q190 212 196 207" stroke="#2A0E04" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <ellipse cx="186" cy="207" rx="3.5" ry="2.5" fill="#2A0E04" opacity="0.4"/>
+          <ellipse cx="194" cy="207" rx="3.5" ry="2.5" fill="#2A0E04" opacity="0.4"/>
+          <path d="M181 217 Q190 225 199 217" stroke="#1A0800" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <path d="M171 184 Q177 181 183 183" stroke="#0A0400" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M197 183 Q203 181 209 184" stroke="#0A0400" stroke-width="2.5" fill="none" stroke-linecap="round"/>
         </svg>
       </div>
 

@@ -622,6 +622,109 @@
       .event-pills { gap: 8px; }
       .pill { font-size: 0.78rem; padding: 7px 12px; }
     }
+
+    /* ============================================================
+       ¿SABÍAS QUE? SECTION
+       ============================================================ */
+    .sabiasque-section {
+      position: relative;
+      background:
+        radial-gradient(ellipse at 72% 50%, rgba(42,133,179,.09) 0%, transparent 55%),
+        linear-gradient(160deg, #071830 0%, #0D1E38 55%, #071018 100%);
+      padding: clamp(72px, 10vw, 110px) 0 clamp(90px, 12vw, 130px);
+      overflow: hidden;
+    }
+
+    .sq-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: clamp(40px, 6vw, 88px);
+      align-items: center;
+    }
+
+    .sq-text { max-width: 560px; }
+
+    .sq-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      border-radius: 999px;
+      background: rgba(212,175,55,.14);
+      border: 1px solid rgba(212,175,55,.38);
+      color: #D4AF37;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .sq-badge svg { flex-shrink: 0; }
+
+    .sq-body {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(1.45rem, 3.2vw, 2.3rem);
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      line-height: 1.28;
+      color: rgba(255,255,255,.75);
+      margin-bottom: 40px;
+    }
+    .sq-body strong { color: #fff; font-weight: 700; }
+
+    .sq-stats {
+      display: flex;
+      gap: 36px;
+      flex-wrap: wrap;
+    }
+    .sq-stat { display: flex; flex-direction: column; gap: 3px; }
+    .sq-number {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--cy-lt);
+      line-height: 1;
+    }
+    .sq-stat-label {
+      font-size: 0.78rem;
+      color: rgba(163,181,205,.58);
+    }
+
+    .sq-illustration {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .student-svg {
+      width: 210px;
+      height: auto;
+      filter: drop-shadow(0 20px 44px rgba(42,133,179,.18));
+      animation: student-float 6s ease-in-out infinite;
+    }
+    @keyframes student-float {
+      0%, 100% { transform: translateY(0px) rotate(-0.5deg); }
+      50%       { transform: translateY(-11px) rotate(0.5deg); }
+    }
+
+    .sq-wave {
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      line-height: 0;
+    }
+    .sq-wave svg { width: 100%; height: 72px; display: block; }
+
+    @media (max-width: 700px) {
+      .sq-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .sq-illustration { order: -1; }
+      .student-svg { width: 148px; }
+      .sq-badge { margin: 0 auto 24px; }
+      .sq-stats { justify-content: center; }
+    }
   </style>
 </head>
 <body>
@@ -784,6 +887,111 @@
     <div class="scroll-hint" aria-hidden="true">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
       Compra tu entrada
+    </div>
+  </section>
+
+  <!-- ================================================================
+       ¿SABÍAS QUE? SECTION
+       ================================================================ -->
+  <section class="sabiasque-section">
+    <div class="sq-inner wrap">
+
+      <!-- Text -->
+      <div class="sq-text reveal">
+        <div class="sq-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          ¿Sabías que?
+        </div>
+
+        <p class="sq-body">
+          Comprando esta entrada <strong>financias que un estudiante keniata tenga agua limpia durante 20 años.</strong>
+        </p>
+
+        <div class="sq-stats">
+          <div class="sq-stat">
+            <span class="sq-number">20 años</span>
+            <span class="sq-stat-label">de agua garantizada</span>
+          </div>
+          <div class="sq-stat">
+            <span class="sq-number">500+</span>
+            <span class="sq-stat-label">estudiantes en Narok, Kenia</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kenyan student illustration -->
+      <div class="sq-illustration" aria-hidden="true">
+        <svg class="student-svg" viewBox="0 0 160 280" xmlns="http://www.w3.org/2000/svg">
+          <!-- HAIR -->
+          <polygon points="62,53 66,37 73,27 80,24 87,27 94,37 98,53 93,46 80,42 67,46" fill="#1A0A04"/>
+          <polygon points="67,46 80,42 93,46 96,54 90,58 80,56 70,58 64,54" fill="#0E0602"/>
+          <!-- FACE -->
+          <polygon points="62,53 66,37 73,27 87,27 94,37 98,53 96,62 90,69 80,72 70,69 64,62" fill="#C07840"/>
+          <polygon points="70,55 80,52 90,55 88,64 80,66 72,64" fill="#CA8448" opacity="0.55"/>
+          <!-- EARS -->
+          <polygon points="62,53 57,57 56,63 58,68 63,69 64,62" fill="#A86028"/>
+          <polygon points="98,53 103,57 104,63 102,68 97,69 96,62" fill="#A86028"/>
+          <!-- NECK -->
+          <polygon points="75,70 85,70 87,82 73,82" fill="#B06830"/>
+          <!-- SHIRT COLLAR -->
+          <polygon points="73,82 87,82 83,96 80,101 77,96" fill="#F0F0F0"/>
+          <polygon points="73,82 63,92 71,99 77,96 76,84" fill="#E4E4E4"/>
+          <polygon points="87,82 97,92 89,99 83,96 84,84" fill="#DCDCDC"/>
+          <!-- SHIRT BODY -->
+          <polygon points="26,96 73,82 76,158 28,158" fill="#1B4F8A"/>
+          <polygon points="134,96 87,82 84,158 132,158" fill="#1E5799"/>
+          <polygon points="78,101 82,101 83,158 77,158" fill="#163C72"/>
+          <!-- LEFT ARM -->
+          <polygon points="26,96 18,132 28,136 36,100" fill="#1B4F8A"/>
+          <polygon points="18,132 28,136 34,154 20,150" fill="#1B4F8A"/>
+          <polygon points="18,148 34,152 36,162 16,158" fill="#B06830"/>
+          <!-- RIGHT ARM -->
+          <polygon points="134,96 142,132 132,136 124,100" fill="#1E5799"/>
+          <polygon points="142,132 132,136 126,154 140,150" fill="#1E5799"/>
+          <polygon points="142,148 126,152 124,162 144,158" fill="#B06830"/>
+          <!-- OPEN BOOK -->
+          <polygon points="18,154 142,154 142,159 18,159" fill="#6A4220"/>
+          <polygon points="18,157 78,157 77,202 17,202" fill="#FFF5E4"/>
+          <polygon points="82,157 142,157 143,202 83,202" fill="#F5ECD8"/>
+          <polygon points="78,154 82,154 83,204 77,204" fill="#7A5030"/>
+          <polygon points="17,202 143,202 144,208 16,208" fill="#5E3418"/>
+          <!-- Page lines LEFT -->
+          <line x1="24" y1="169" x2="74" y2="169" stroke="#D8C8A4" stroke-width="1.5"/>
+          <line x1="24" y1="177" x2="74" y2="177" stroke="#D8C8A4" stroke-width="1.5"/>
+          <line x1="24" y1="185" x2="74" y2="185" stroke="#D8C8A4" stroke-width="1.5"/>
+          <line x1="24" y1="193" x2="74" y2="193" stroke="#D8C8A4" stroke-width="1.5"/>
+          <!-- Page lines RIGHT -->
+          <line x1="86" y1="169" x2="136" y2="169" stroke="#CCC0A0" stroke-width="1.5"/>
+          <line x1="86" y1="177" x2="136" y2="177" stroke="#CCC0A0" stroke-width="1.5"/>
+          <line x1="86" y1="185" x2="136" y2="185" stroke="#CCC0A0" stroke-width="1.5"/>
+          <line x1="86" y1="193" x2="136" y2="193" stroke="#CCC0A0" stroke-width="1.5"/>
+          <!-- PANTS -->
+          <polygon points="32,158 74,158 70,262 28,262" fill="#1C1C32"/>
+          <polygon points="86,158 128,158 132,262 90,262" fill="#222242"/>
+          <polygon points="32,158 44,158 40,262 28,262" fill="#14142A"/>
+          <polygon points="116,158 128,158 132,262 122,262" fill="#1A1A38"/>
+          <polygon points="30,156 130,156 131,164 29,164" fill="#0E1520"/>
+          <!-- SHOES -->
+          <polygon points="24,259 72,259 74,270 22,270" fill="#160A02"/>
+          <polygon points="88,259 136,259 138,270 86,270" fill="#160A02"/>
+          <polygon points="22,268 74,268 76,276 20,276" fill="#0E0600"/>
+          <polygon points="86,268 138,268 140,276 84,276" fill="#0E0600"/>
+          <!-- WATER DROPS (decorative) -->
+          <ellipse cx="148" cy="228" rx="4" ry="6" fill="#4FB3D9" opacity="0.5"/>
+          <ellipse cx="150" cy="210" rx="2.5" ry="3.8" fill="#4FB3D9" opacity="0.35"/>
+          <ellipse cx="12" cy="240" rx="3" ry="4.5" fill="#A3D0E3" opacity="0.4"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- Wave divider → light form section -->
+    <div class="sq-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,36 C360,72 1080,0 1440,36 L1440,72 L0,72 Z" fill="#F6F8FB"/>
+      </svg>
     </div>
   </section>
 

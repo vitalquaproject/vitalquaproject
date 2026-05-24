@@ -624,6 +624,269 @@
     }
 
     /* ============================================================
+       SOLD-OUT BANNER
+       ============================================================ */
+    .soldout-banner {
+      display: none;
+      margin-bottom: 28px;
+      padding: 20px 24px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #7F1D1D 0%, #991B1B 100%);
+      border: 1.5px solid rgba(239,68,68,.45);
+      box-shadow: 0 4px 28px rgba(127,29,29,.3), 0 1px 4px rgba(0,0,0,.15);
+    }
+    .soldout-banner.show {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      animation: banner-in 400ms cubic-bezier(.22,.61,.36,1) both;
+    }
+    @keyframes banner-in {
+      from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);    }
+    }
+    .soldout-banner-icon { flex-shrink: 0; margin-top: 2px; color: #FCA5A5; }
+    .soldout-banner-body { flex: 1; }
+    .soldout-banner-title {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #FEE2E2;
+      margin-bottom: 7px;
+    }
+    .soldout-banner-text {
+      font-size: 0.9rem;
+      line-height: 1.58;
+      color: #FECACA;
+    }
+
+    /* Greyed-out state for the submit button when sold out */
+    .btn-submit.soldout {
+      background: linear-gradient(135deg, #374151 0%, #1F2937 100%) !important;
+      box-shadow: none !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+      letter-spacing: 0.04em;
+      font-size: 0.9rem;
+    }
+    .btn-submit.soldout:hover {
+      transform: none !important;
+      box-shadow: none !important;
+      opacity: 1 !important;
+    }
+
+    /* ============================================================
+       FORM LAYOUT — two-column: tank widget + form card
+       ============================================================ */
+    .form-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: clamp(22px, 4vw, 40px);
+      align-items: start;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+    }
+    @media (max-width: 740px) {
+      .form-layout { grid-template-columns: 1fr; }
+    }
+
+    .form-col { display: flex; flex-direction: column; gap: 0; }
+
+    /* ---- Tank widget card ---- */
+    .tank-widget {
+      position: sticky;
+      top: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    @media (max-width: 740px) {
+      .tank-widget { position: static; max-width: 300px; margin: 0 auto; }
+    }
+
+    /* Top badge / counter */
+    .tank-badge {
+      padding: 14px 16px 12px;
+      background: linear-gradient(160deg, #071830 0%, #0D2040 100%);
+      border: 1px solid rgba(79,179,217,.25);
+      border-bottom: none;
+      text-align: center;
+    }
+    .tank-eyebrow {
+      display: block;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--cy-lt);
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+    .tank-nums {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 5px;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .tank-num {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: #fff;
+      transition: color 500ms ease;
+    }
+    .tank-denom {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--cy-lt);
+    }
+    .tank-sublabel {
+      display: block;
+      font-size: 0.62rem;
+      color: rgba(163,208,227,.55);
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+    }
+    .tank-pct {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 14px;
+      border-radius: 999px;
+      background: rgba(79,179,217,.15);
+      border: 1px solid rgba(79,179,217,.3);
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--cy);
+      letter-spacing: 0.03em;
+      transition: background 500ms ease, color 500ms ease, border-color 500ms ease;
+    }
+    .tank-pct.full {
+      background: rgba(127,29,29,.45);
+      border-color: rgba(239,68,68,.55);
+      color: #FCA5A5;
+    }
+
+    /* SVG wrapper */
+    .tank-svg-wrap {
+      background: linear-gradient(180deg, #07111F 0%, #0C1A30 100%);
+      border-left:  1px solid rgba(79,179,217,.22);
+      border-right: 1px solid rgba(79,179,217,.22);
+      line-height: 0;
+    }
+    .tank-svg-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+    /* Bottom caption */
+    .tank-caption {
+      padding: 8px 14px 10px;
+      background: linear-gradient(160deg, #071830 0%, #0D2040 100%);
+      border: 1px solid rgba(79,179,217,.25);
+      border-top: none;
+      text-align: center;
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(163,208,227,.5);
+    }
+
+    /* Bubble float animation */
+    @keyframes vq-bubble-rise {
+      0%   { transform: translateY(0)     scale(1);    opacity: 0.5;  }
+      60%  { transform: translateY(-55px) scale(1.08); opacity: 0.65; }
+      100% { transform: translateY(-110px) scale(0.7);  opacity: 0;    }
+    }
+    .vq-bubble  { animation: vq-bubble-rise  linear infinite; }
+    .comm-bubble{ animation: comm-bubble-rise linear infinite; }
+    @keyframes comm-bubble-rise {
+      0%   { transform: translateY(0)      scale(1);   opacity: 0.45; }
+      60%  { transform: translateY(-60px)  scale(1.1); opacity: 0.62; }
+      100% { transform: translateY(-120px) scale(0.7); opacity: 0;    }
+    }
+
+    /* ============================================================
+       COMMUNITY PROGRESS SECTION — Dipòsit Vitalqua (bottom)
+       ============================================================ */
+    .community-section {
+      background:
+        radial-gradient(ellipse at 50% 85%, rgba(42,133,179,.13) 0%, transparent 58%),
+        linear-gradient(180deg, #071830 0%, #040D1C 100%);
+      padding: clamp(64px, 9vw, 104px) 0 clamp(72px, 10vw, 116px);
+      text-align: center;
+    }
+    .comm-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .comm-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(163,208,227,.65);
+      margin-bottom: 32px;
+    }
+    .comm-eyebrow::before,
+    .comm-eyebrow::after {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: rgba(163,208,227,.35);
+    }
+    .comm-tank-svg {
+      width: clamp(150px, 22vw, 200px);
+      filter:
+        drop-shadow(0 14px 40px rgba(79,179,217,.28))
+        drop-shadow(0 0 90px rgba(27,95,133,.14));
+    }
+    .comm-tank-svg svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .comm-pct-block {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .comm-pct-num {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(3.2rem, 9vw, 5.2rem);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: #fff;
+    }
+    #commPctNum { transition: color 700ms ease; }
+    .comm-pct-sym {
+      font-size: 0.52em;
+      font-weight: 500;
+      color: rgba(163,208,227,.65);
+      vertical-align: super;
+    }
+    .comm-pct-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(163,181,205,.38);
+    }
+
+    /* ============================================================
        ¿SABÍAS QUE? SECTION
        ============================================================ */
     .sabiasque-section {
@@ -1016,7 +1279,23 @@
       <div class="form-heading reveal">
         <div class="form-eyebrow">Compra tu entrada</div>
         <h2 class="form-title">Asegura tu plaza</h2>
-        <p class="form-sub">Rellena tus datos y paga de forma segura con Stripe. Recibirás tu entrada digital al instante.</p>
+        <p class="form-sub">Omple les teves dades i paga de forma segura amb Stripe. Rebràs la teva entrada digital a l'instant.</p>
+      </div>
+
+
+      <!-- SOLD OUT BANNER (injected by JS when 100+ paid tickets) -->
+      <div class="soldout-banner" id="soldoutBanner" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="soldout-banner-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div class="soldout-banner-body">
+          <p class="soldout-banner-title">Aforament complet · Sold Out</p>
+          <p class="soldout-banner-text">Ho sentim, s'ha assolit l'aforament màxim de 100 persones per a la festa de Sant Joan. Gràcies pel vostre suport!</p>
+        </div>
       </div>
 
       <!-- FORM CARD -->
@@ -1110,6 +1389,89 @@
         </form>
       </div>
 
+    </div><!-- /form-wrap -->
+  </section>
+
+  <!-- ================================================================
+       COMMUNITY PROGRESS — Dipòsit Vitalqua
+       ================================================================ -->
+  <section class="community-section" id="comunitat">
+    <div class="wrap comm-wrap">
+
+      <div class="comm-eyebrow">La comunitat Vitalqua</div>
+
+      <!-- SVG tank — no markers, constant wave -->
+      <div class="comm-tank-svg">
+        <svg viewBox="0 0 180 380" xmlns="http://www.w3.org/2000/svg"
+             role="img" aria-label="Dipòsit d'aforament Vitalqua">
+          <defs>
+            <clipPath id="comm-tank-clip">
+              <rect x="30" y="22" width="120" height="320" rx="10"/>
+            </clipPath>
+          </defs>
+
+          <!-- Back wall -->
+          <rect x="30" y="22" width="120" height="320" rx="10"
+                fill="#060D1C" opacity="0.97"/>
+
+          <!-- Water fill — JS controls y + height -->
+          <rect id="commWaterFill" x="30" y="342" width="120" height="0"
+                fill="#1A6FA8" opacity="0.78"
+                clip-path="url(#comm-tank-clip)"/>
+
+          <!-- Wave — always running even when empty -->
+          <path id="commWaterWave" d=""
+                fill="#4FB3D9" opacity="0"
+                clip-path="url(#comm-tank-clip)"/>
+
+          <!-- Ripple lines -->
+          <path id="commRipple1" d="" fill="none" stroke="#A3D0E3"
+                stroke-width="1" opacity="0.35" clip-path="url(#comm-tank-clip)"/>
+          <path id="commRipple2" d="" fill="none" stroke="#A3D0E3"
+                stroke-width="0.8" opacity="0.22" clip-path="url(#comm-tank-clip)"/>
+
+          <!-- Bubbles -->
+          <g clip-path="url(#comm-tank-clip)">
+            <circle class="comm-bubble" cx="55"  cy="322" r="3.5" fill="#A3D0E3" opacity="0.45" style="animation-duration:3.6s;animation-delay:0s"/>
+            <circle class="comm-bubble" cx="90"  cy="308" r="2.5" fill="#A3D0E3" opacity="0.38" style="animation-duration:4.4s;animation-delay:0.8s"/>
+            <circle class="comm-bubble" cx="124" cy="328" r="3"   fill="#A3D0E3" opacity="0.42" style="animation-duration:4.0s;animation-delay:1.5s"/>
+            <circle class="comm-bubble" cx="145" cy="312" r="2"   fill="#A3D0E3" opacity="0.35" style="animation-duration:5.3s;animation-delay:0.3s"/>
+            <circle class="comm-bubble" cx="70"  cy="338" r="1.8" fill="#A3D0E3" opacity="0.3"  style="animation-duration:4.8s;animation-delay:2.1s"/>
+          </g>
+
+          <!-- Front glass overlay -->
+          <rect x="30" y="22" width="120" height="320" rx="10"
+                fill="#D6EEF6" opacity="0.05" stroke="#4FB3D9" stroke-width="1.8"/>
+
+          <!-- Glass highlights -->
+          <rect x="32" y="32" width="7" height="302" rx="4" fill="white" opacity="0.11"/>
+          <ellipse cx="90" cy="26" rx="42" ry="6" fill="white" opacity="0.15"/>
+
+          <!-- Top rim -->
+          <rect x="21" y="14" width="138" height="16" rx="7"
+                fill="#2A85B3" opacity="0.88" stroke="#4FB3D9" stroke-width="1.1"/>
+          <rect x="26" y="16" width="128" height="5" rx="2.5" fill="white" opacity="0.14"/>
+
+          <!-- Bottom rim -->
+          <rect x="21" y="338" width="138" height="15" rx="7"
+                fill="#2A85B3" opacity="0.88" stroke="#4FB3D9" stroke-width="1.1"/>
+
+          <!-- Inlet pipe -->
+          <rect x="80" y="2"  width="20" height="14" rx="4"
+                fill="#1B5F85" opacity="0.9" stroke="#4FB3D9" stroke-width="0.8"/>
+          <rect x="74" y="0"  width="32" height="9"  rx="4"
+                fill="#2A85B3" opacity="0.9" stroke="#4FB3D9" stroke-width="0.8"/>
+        </svg>
+      </div>
+
+      <!-- % counter below the tank -->
+      <div class="comm-pct-block">
+        <div class="comm-pct-num">
+          <span id="commPctNum">—</span><span class="comm-pct-sym">%</span>
+        </div>
+        <div class="comm-pct-label">de l'aforament cobert</div>
+      </div>
+
     </div>
   </section>
 
@@ -1140,7 +1502,187 @@
   <!-- ================================================================
        SCRIPTS
        ================================================================ -->
+
+  <!-- Firebase SDK (compat) — needed only for the sold-out check -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
   <script>
+    /* ----------------------------------------------------------------
+       VQ_TANK — Dipòsit d'aforament animat
+       Singleton that drives the water-level SVG.
+       Public API:  VQ_TANK.setCount(n)  — call with 0–100
+       ---------------------------------------------------------------- */
+    const VQ_TANK = (function () {
+      /* Community-section tank geometry (viewBox 0 0 180 380)
+         Tank body: x=30, y=22, w=120, h=320  → bottom at y=342 */
+      const TK_BOTTOM = 342;
+      const TK_H      = 320;
+
+      var targetCount = 0;
+      var animStart   = null;
+      var wavePhase   = 0;
+      var running     = false;
+
+      var $ = function (id) { return document.getElementById(id); };
+      var easeOut = function (t) { return 1 - Math.pow(1 - t, 3); };
+
+      function tick(now) {
+        wavePhase += 0.026;   /* constant — wave always moves */
+
+        if (animStart === null) animStart = now;
+        var t      = Math.min((now - animStart) / 1900, 1);
+        var waterH = (targetCount / 100) * TK_H * easeOut(t);
+        var waterY = TK_BOTTOM - waterH;
+
+        /* Water body */
+        var wf = $('commWaterFill');
+        if (wf) {
+          wf.setAttribute('y',      waterY.toFixed(1));
+          wf.setAttribute('height', Math.max(0, waterH).toFixed(1));
+        }
+
+        /* Wave — always rendered; tiny amplitude when nearly empty */
+        var ww = $('commWaterWave');
+        if (ww) {
+          var a  = waterH > 12 ? 4 : 1.5;
+          var wy = waterH > 5  ? waterY : TK_BOTTOM - 5;
+          ww.setAttribute('d',
+            'M30 '   + (wy + Math.sin(wavePhase)             * a).toFixed(2) +
+            ' Q55 '  + (wy - a * 1.4 + Math.sin(wavePhase + 0.9) * a * 2).toFixed(2) +
+            ' 90 '   + (wy + Math.sin(wavePhase + 1.8)       * a).toFixed(2) +
+            ' Q125 ' + (wy + a + Math.sin(wavePhase + 2.7)   * a * 1.6).toFixed(2) +
+            ' 150 '  + (wy + Math.sin(wavePhase + 3.6)       * a).toFixed(2) +
+            ' L150 ' + (wy - a - 2).toFixed(2) +
+            ' L30 '  + (wy - a - 2).toFixed(2) + ' Z'
+          );
+          ww.setAttribute('opacity', waterH > 5 ? '0.52' : '0.18');
+        }
+
+        /* Ripple 1 */
+        var r1 = $('commRipple1');
+        if (r1 && waterH > 26) {
+          var ry1 = waterY + 26;
+          r1.setAttribute('d',
+            'M36 '   + (ry1 + Math.sin(wavePhase * 0.6 + 0.5) * 1.8).toFixed(2) +
+            ' Q63 '  + (ry1 - 3).toFixed(2) +
+            ' 90 '   + (ry1 + Math.sin(wavePhase * 0.6)        * 1.8).toFixed(2) +
+            ' Q117 ' + (ry1 + 3).toFixed(2) +
+            ' 144 '  + (ry1 + Math.sin(wavePhase * 0.6 + 1)    * 1.8).toFixed(2)
+          );
+        }
+
+        /* Ripple 2 */
+        var r2 = $('commRipple2');
+        if (r2 && waterH > 56) {
+          var ry2 = waterY + 56;
+          r2.setAttribute('d',
+            'M36 '   + (ry2 + Math.sin(wavePhase * 0.4 + 1)   * 1.3).toFixed(2) +
+            ' Q64 '  + (ry2 - 2.2).toFixed(2) +
+            ' 90 '   + (ry2 + Math.sin(wavePhase * 0.4)        * 1.3).toFixed(2) +
+            ' Q116 ' + (ry2 + 2.2).toFixed(2) +
+            ' 144 '  + (ry2 + Math.sin(wavePhase * 0.4 + 2)    * 1.3).toFixed(2)
+          );
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      function setCount(n) {
+        targetCount = Math.min(100, Math.max(0, n));
+        animStart   = null;   /* restart fill animation */
+        var el = $('commPctNum');
+        if (el) el.textContent = n;
+        /* no need to start rAF — already running from page load */
+      }
+
+      /* Start the wave loop immediately so the tank is always animated */
+      running = true;
+      requestAnimationFrame(tick);
+
+      return { setCount: setCount };
+    })();
+
+    /* ----------------------------------------------------------------
+       SOLD-OUT CHECK
+       Queries Firestore on page load and locks the form if 100 or more
+       tickets with status === "paid" already exist.
+       ---------------------------------------------------------------- */
+    (function () {
+      const TICKET_LIMIT  = 100;
+      const TICKETS_COLL  = 'artifacts/vitalqua-party-tickets/public/data/tickets';
+
+      const firebaseConfig = {
+        apiKey:            "AIzaSyDKic5e9DAU1iw6ZOtsT1gGEEyU8WCtAXE",
+        authDomain:        "vitalqua-project.firebaseapp.com",
+        projectId:         "vitalqua-project",
+        storageBucket:     "vitalqua-project.firebasestorage.app",
+        messagingSenderId: "263061224525",
+        appId:             "1:263061224525:web:9bc179545f515ffac27004",
+      };
+
+      /* Re-use any existing Firebase app to avoid duplicate-app errors */
+      const app = firebase.apps.length
+        ? firebase.app()
+        : firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore(app);
+
+      function lockForm() {
+        /* Show the sold-out banner */
+        const banner = document.getElementById('soldoutBanner');
+        if (banner) banner.classList.add('show');
+
+        /* Disable every input inside the form */
+        document.querySelectorAll('#concertForm input').forEach(function (inp) {
+          inp.disabled = true;
+        });
+
+        /* Restyle and disable the submit button */
+        const btn     = document.getElementById('submitBtn');
+        const btnText = btn && btn.querySelector('.btn-text');
+        const lockIcon = btn && btn.querySelector('.lock-icon');
+
+        if (btn) {
+          btn.disabled = true;
+          btn.classList.add('soldout');
+          if (lockIcon) lockIcon.style.display = 'none';
+          if (btnText)  btnText.textContent = 'ENTRADES EXHAURIDES (SOLD OUT)';
+        }
+      }
+
+      async function checkTicketLimit() {
+        try {
+          /* Limit to TICKET_LIMIT docs — if we receive that many the
+             cap is reached.  Avoids reading the full collection. */
+          const snap = await db
+            .collection(TICKETS_COLL)
+            .where('status', '==', 'paid')
+            .limit(TICKET_LIMIT)
+            .get();
+
+          const count = snap.size;
+
+          /* Drive the water-tank visual with the real count */
+          VQ_TANK.setCount(count);
+
+          if (count >= TICKET_LIMIT) {
+            lockForm();
+          }
+        } catch (err) {
+          /* Fail open: if Firestore is unreachable the user can still
+             attempt the purchase; the backend will enforce the limit. */
+          console.warn('[Vitalqua] No s\'ha pogut verificar l\'aforament:', err);
+          VQ_TANK.setCount(0);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkTicketLimit);
+      } else {
+        checkTicketLimit();
+      }
+    })();
+
     /* ----------------------------------------------------------------
        ⚙️  Stripe Payment Link
        Configura la URL de éxito en Stripe como:

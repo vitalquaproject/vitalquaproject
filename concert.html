@@ -264,21 +264,6 @@
       color: #F2D49A;
     }
 
-    .scroll-hint {
-      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      color: rgba(163,181,205,.45);
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      z-index: 2;
-      animation: hint-bounce 2.4s ease-in-out infinite;
-    }
-    @keyframes hint-bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.45; }
-      50%       { transform: translateX(-50%) translateY(6px); opacity: 0.75; }
-    }
-    .scroll-hint svg { opacity: 0.55; }
 
     .guitar-col {
       display: flex;
@@ -927,40 +912,41 @@
       gap: 6px;
     }
     .water-drop {
-      width: 36px;
-      height: 44px;
-      animation: drop-fall 1.8s cubic-bezier(.45,0,.55,1) infinite;
+      width: 52px;
+      height: 64px;
+      animation: drop-fall 2s cubic-bezier(.45,0,.55,1) infinite;
+      filter: drop-shadow(0 4px 12px rgba(79,179,217,0.45));
     }
     .water-chevrons {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0px;
-      margin-top: 2px;
+      gap: 2px;
+      margin-top: 4px;
     }
-    .water-chevrons svg:nth-child(1) { animation: chevron-fade 1.8s ease-in-out infinite 0s;   opacity: 0; }
-    .water-chevrons svg:nth-child(2) { animation: chevron-fade 1.8s ease-in-out infinite 0.3s; opacity: 0; }
-    .water-chevrons svg:nth-child(3) { animation: chevron-fade 1.8s ease-in-out infinite 0.6s; opacity: 0; }
+    .water-chevrons svg:nth-child(1) { animation: chevron-fade 2s ease-in-out infinite 0s;    opacity: 0; }
+    .water-chevrons svg:nth-child(2) { animation: chevron-fade 2s ease-in-out infinite 0.35s; opacity: 0; }
+    .water-chevrons svg:nth-child(3) { animation: chevron-fade 2s ease-in-out infinite 0.7s;  opacity: 0; }
     @keyframes drop-fall {
-      0%   { transform: translateY(-4px) scaleY(0.92); opacity: 0.5; }
-      45%  { transform: translateY(4px)  scaleY(1.06); opacity: 1;   }
-      80%  { transform: translateY(10px) scaleY(0.95); opacity: 0.7; }
-      100% { transform: translateY(-4px) scaleY(0.92); opacity: 0.5; }
+      0%   { transform: translateY(-6px) scaleY(0.90); opacity: 0.45; }
+      45%  { transform: translateY(5px)  scaleY(1.08); opacity: 1;    }
+      80%  { transform: translateY(12px) scaleY(0.94); opacity: 0.65; }
+      100% { transform: translateY(-6px) scaleY(0.90); opacity: 0.45; }
     }
     @keyframes chevron-fade {
-      0%   { opacity: 0;    transform: translateY(-6px); }
-      40%  { opacity: 0.65; transform: translateY(0px);  }
-      80%  { opacity: 0;    transform: translateY(6px);  }
-      100% { opacity: 0;    transform: translateY(6px);  }
+      0%   { opacity: 0;    transform: translateY(-8px); }
+      40%  { opacity: 0.8;  transform: translateY(0px);  }
+      80%  { opacity: 0;    transform: translateY(8px);  }
+      100% { opacity: 0;    transform: translateY(8px);  }
     }
     .water-arrow-label {
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--cy-dk);
-      opacity: 0.65;
-      margin-top: 10px;
+      opacity: 0.8;
+      margin-top: 12px;
       margin-bottom: 28px;
     }
 
@@ -1323,25 +1309,19 @@
 
     </div>
 
-    <div class="scroll-hint" aria-hidden="true">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-      Compra tu entrada
-    </div>
   </section>
 
   <!-- Water drop scroll indicator -->
   <div class="water-arrow" aria-hidden="true">
     <div class="water-drop-wrap">
       <svg class="water-drop" viewBox="0 0 36 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- drop body -->
-        <path d="M18 2 C18 2 4 18 4 27 a14 14 0 0 0 28 0 C32 18 18 2 18 2 Z" fill="#4FB3D9" opacity="0.82"/>
-        <!-- inner shine -->
-        <ellipse cx="13" cy="22" rx="3.5" ry="5.5" fill="white" opacity="0.28" transform="rotate(-18 13 22)"/>
+        <path d="M18 2 C18 2 4 18 4 27 a14 14 0 0 0 28 0 C32 18 18 2 18 2 Z" fill="#4FB3D9" opacity="0.9"/>
+        <ellipse cx="13" cy="22" rx="3.5" ry="5.5" fill="white" opacity="0.35" transform="rotate(-18 13 22)"/>
       </svg>
       <div class="water-chevrons">
-        <svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="#4FB3D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 11 10 20 2"/></svg>
-        <svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="#4FB3D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 11 10 20 2"/></svg>
-        <svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="#4FB3D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 11 10 20 2"/></svg>
+        <svg width="28" height="14" viewBox="0 0 28 14" fill="none" stroke="#4FB3D9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 14 12 26 2"/></svg>
+        <svg width="28" height="14" viewBox="0 0 28 14" fill="none" stroke="#4FB3D9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 14 12 26 2"/></svg>
+        <svg width="28" height="14" viewBox="0 0 28 14" fill="none" stroke="#4FB3D9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 14 12 26 2"/></svg>
       </div>
     </div>
     <span class="water-arrow-label">Sigue bajando</span>

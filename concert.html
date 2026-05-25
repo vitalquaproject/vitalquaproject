@@ -887,6 +887,104 @@
     }
 
     /* ============================================================
+       QUÉ INCLUYE / HORARIO SECTION
+       ============================================================ */
+    .info-section {
+      background: var(--surface);
+      padding: clamp(52px, 8vw, 88px) 0;
+      border-bottom: 1px solid var(--bg-soft);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .info-card {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      padding: clamp(24px, 4vw, 36px);
+      border: 1.5px solid var(--cy-xlt);
+    }
+    .info-card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+    .info-card-title svg {
+      flex-shrink: 0;
+      color: var(--cy-dk);
+    }
+    .schedule-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .schedule-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--cy-xlt);
+    }
+    .schedule-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .schedule-item:first-child { padding-top: 0; }
+    .schedule-time {
+      flex-shrink: 0;
+      min-width: 90px;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--cy-dk);
+      background: var(--cy-xlt);
+      border-radius: 6px;
+      padding: 3px 8px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .schedule-desc {
+      font-size: 0.92rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      padding-top: 2px;
+    }
+    .includes-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .includes-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+    .includes-dot {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--cy-xlt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .includes-dot svg { color: var(--cy-dk); }
+    @media (max-width: 640px) {
+      .info-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
        ¿SABÍAS QUE? SECTION
        ============================================================ */
     .sabiasque-section {
@@ -1150,6 +1248,71 @@
     <div class="scroll-hint" aria-hidden="true">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
       Compra tu entrada
+    </div>
+  </section>
+
+  <!-- ================================================================
+       QUÉ INCLUYE / HORARIO SECTION
+       ================================================================ -->
+  <section class="info-section">
+    <div class="wrap">
+      <div class="info-grid">
+
+        <!-- HORARIO -->
+        <div class="info-card reveal">
+          <div class="info-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Horario de la noche
+          </div>
+          <ul class="schedule-list">
+            <li class="schedule-item">
+              <span class="schedule-time">21:00 – 23:00</span>
+              <span class="schedule-desc">Tardeo con música ambiente en directo</span>
+            </li>
+            <li class="schedule-item">
+              <span class="schedule-time">23:00 – 23:30</span>
+              <span class="schedule-desc">Cena</span>
+            </li>
+            <li class="schedule-item">
+              <span class="schedule-time">00:00 – 03:00</span>
+              <span class="schedule-desc">Fiesta con DJ</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- QUÉ INCLUYE -->
+        <div class="info-card reveal">
+          <div class="info-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            Qué incluye tu entrada
+          </div>
+          <ul class="includes-list">
+            <li class="includes-item">
+              <span class="includes-dot">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              Barra libre toda la noche
+            </li>
+            <li class="includes-item">
+              <span class="includes-dot">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              Cena incluida
+            </li>
+            <li class="includes-item">
+              <span class="includes-dot">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              Música en directo + DJ
+            </li>
+          </ul>
+        </div>
+
+      </div>
     </div>
   </section>
 
@@ -1683,11 +1846,11 @@
     })();
 
     /* ----------------------------------------------------------------
-       ⚙️  Stripe Payment Link
-       Configura la URL de éxito en Stripe como:
+       ⚙️  Stripe Payment Link (LIVE)
+       Configura la URL de éxito en el dashboard de Stripe como:
        https://TU_SITIO/success.html?session_id={CHECKOUT_SESSION_ID}
        ---------------------------------------------------------------- */
-    const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/test_eVqdRb75y2svbv890rdfG00";
+    const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B628r28U1dn3o85qs8EM00";
 
     /* ----------------------------------------------------------------
        Genera un ID único de ticket: VTQ-XXXXXX

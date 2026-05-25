@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flyer — The Vitalqua Party</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+
+  <style>
+    /* =====================================================================
+       Vitalqua Party · Flyer PDF
+       Todo el layout en mm → lo que ves en pantalla = lo que se imprime.
+       Ctrl/Cmd + P → A4 · Sin márgenes · Gráficos de fondo activados
+       ===================================================================== */
+
+    /* Forzar impresión de fondos y colores */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+
+    :root {
+      --gold:    #D4AF37;
+      --gold-lt: #F2D49A;
+      --cy:      #4FB3D9;
+      --cy-lt:   #A3D0E3;
+      --cy-dk:   #2A85B3;
+      --navy:    #07101E;
+    }
+
+    /* ---- Pantalla: centra el folio ---- */
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #0C1018;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 48px;
+    }
+
+    .hint {
+      width: 210mm;
+      max-width: calc(100vw - 32px);
+      margin-bottom: 14px;
+      padding: 9px 16px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px;
+      font-size: 12px;
+      color: rgba(163,181,205,.7);
+      text-align: center;
+      line-height: 1.6;
+    }
+    .hint strong { color: #fff; }
+
+    /* ---- El folio: exactamente A4 ---- */
+    .page {
+      width:  210mm;
+      height: 297mm;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 20% 18%, rgba(79,179,217,.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 75%, rgba(27,95,133,.18)  0%, transparent 50%),
+        linear-gradient(168deg, #0A1628 0%, #07101E 55%, #0D1E38 100%);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,.55);
+    }
+
+    /* ---- Manchas de color (luces de discoteca) ---- */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: blob-pulse ease-in-out infinite alternate;
+    }
+    @keyframes blob-pulse {
+      from { opacity: var(--lo); }
+      to   { opacity: var(--hi); }
+    }
+
+    /* ---- Barra superior ---- */
+    .top-bar {
+      position: relative; z-index: 3;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4.5mm 8mm 3.5mm;
+      border-bottom: 0.3mm solid rgba(79,179,217,.12);
+    }
+    .brand {
+      display: flex; align-items: center; gap: 2.5mm;
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 10pt;
+      font-weight: 600;
+      color: rgba(255,255,255,.82);
+      letter-spacing: -0.01em;
+    }
+    .brand img { height: 7mm; width: auto; }
+    .event-tag {
+      font-size: 6pt;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--cy-lt);
+      opacity: 0.78;
+    }
+
+    /* ---- Zona de la bola de discoteca ---- */
+    .disco-zone {
+      position: relative; z-index: 2;
+      flex-shrink: 0;
+      height: 62mm;
+    }
+    #discoSvg {
+      display: block;
+      width: 100%; height: 100%;
+      overflow: visible;
+    }
+
+    /* ---- Cuerpo principal ---- */
+    .body {
+      position: relative; z-index: 3;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 4mm 12mm 5mm;
+      text-align: center;
+    }
+
+    .concert-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 9.5pt;
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.38);
+    }
+
+    .your-night {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 84pt;
+      letter-spacing: 0.08em;
+      line-height: 0.88;
+      color: var(--gold);
+      text-shadow:
+        0 0 3mm  rgba(212,175,55,1),
+        0 0 10mm rgba(212,175,55,.65),
+        0 0 22mm rgba(212,175,55,.28);
+    }
+    .sep-line {
+      display: block;
+      width: 16mm; height: 0.45mm;
+      background: rgba(163,208,227,.32);
+      margin: 4mm auto;
+    }
+    .their-water {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 30pt;
+      font-weight: 300;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--cy-lt);
+    }
+
+    .rule {
+      width: 100%;
+      height: 0.25mm;
+      background: rgba(79,179,217,.18);
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 3mm;
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 2.2mm;
+      padding: 3mm 6.5mm;
+      border-radius: 999mm;
+      background: rgba(79,179,217,.1);
+      border: 0.3mm solid rgba(79,179,217,.22);
+      color: var(--cy-lt);
+      font-size: 10pt;
+      font-weight: 500;
+    }
+    .pill strong { color: #fff; font-weight: 600; }
+    .pill svg { flex-shrink: 0; opacity: 0.72; width: 11px; height: 11px; }
+
+    .price-block {
+      display: inline-flex; align-items: center; gap: 4.5mm;
+      padding: 5mm 13mm;
+      border-radius: 5mm;
+      background: rgba(200,148,100,.1);
+      border: 0.35mm solid rgba(200,148,100,.28);
+    }
+    .price-amount {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 42pt;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--gold-lt);
+      line-height: 1;
+    }
+    .price-detail {
+      display: flex; flex-direction: column;
+      text-align: left; gap: 1.5mm;
+    }
+    .pd-main { font-size: 11pt; font-weight: 600; color: rgba(255,255,255,.8); }
+    .pd-sub  { font-size: 8.5pt; color: rgba(163,181,205,.55); }
+
+    /* ---- Barra inferior (QR) ---- */
+    .bottom-bar {
+      position: relative; z-index: 3;
+      flex-shrink: 0;
+      background: #040a16;
+      border-top: 0.3mm solid rgba(79,179,217,.15);
+      padding: 5mm 8mm 6.5mm;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 5mm;
+      align-items: center;
+    }
+    .qr-wrap {
+      background: #fff;
+      padding: 1.5mm;
+      border-radius: 2mm;
+      width: 22mm; height: 22mm;
+      flex-shrink: 0;
+    }
+    .qr-wrap svg { display: block; width: 100%; height: 100%; }
+    .link-block { display: flex; flex-direction: column; gap: 1.2mm; }
+    .link-label {
+      font-size: 5.5pt; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--cy-lt); opacity: 0.7;
+    }
+    .link-url {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 8pt; font-weight: 600;
+      color: rgba(255,255,255,.75);
+      line-height: 1.35;
+    }
+    .link-email {
+      font-size: 7.5pt;
+      color: rgba(163,181,205,.45);
+    }
+
+    /* ---- Print ---- */
+    @page { size: A4 portrait; margin: 0; }
+    @media print {
+      body { margin: 0; padding: 0; background: #07101E; display: block; }
+      .hint { display: none; }
+      .page {
+        position: fixed; inset: 0;
+        width: 100%; height: 100%;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hint">
+    <strong>Ctrl/Cmd + P</strong> → Tamaño <strong>A4</strong> · Márgenes <strong>Ninguno</strong> · Gráficos de fondo <strong>Activados</strong>
+  </div>
+
+  <div class="page">
+
+    <!-- Manchas de luz de discoteca -->
+    <div class="blob" style="width:62mm;height:62mm;left:-18mm;top:28mm; background:radial-gradient(circle,#FF69B4,transparent 70%);filter:blur(12mm);--lo:.16;--hi:.30;animation-duration:3.1s;"></div>
+    <div class="blob" style="width:55mm;height:55mm;right:-12mm;top:48mm;background:radial-gradient(circle,#4FB3D9,transparent 70%);filter:blur(11mm);--lo:.18;--hi:.32;animation-duration:2.7s;"></div>
+    <div class="blob" style="width:50mm;height:50mm;left:18mm; top:135mm;background:radial-gradient(circle,#4ADE80,transparent 70%);filter:blur(10mm);--lo:.12;--hi:.22;animation-duration:3.8s;"></div>
+    <div class="blob" style="width:52mm;height:52mm;right:12mm; top:158mm;background:radial-gradient(circle,#D4AF37,transparent 70%);filter:blur(11mm);--lo:.14;--hi:.25;animation-duration:4.2s;"></div>
+    <div class="blob" style="width:46mm;height:46mm;left:38mm; top:240mm;background:radial-gradient(circle,#C084FC,transparent 70%);filter:blur(10mm);--lo:.12;--hi:.20;animation-duration:3.5s;"></div>
+    <div class="blob" style="width:40mm;height:40mm;right:22mm; top:258mm;background:radial-gradient(circle,#FB923C,transparent 70%);filter:blur(9mm);--lo:.12;--hi:.20;animation-duration:2.9s;"></div>
+
+    <!-- Barra superior -->
+    <div class="top-bar">
+      <div class="brand">
+        <img src="img/logo.svg" alt="" />
+        Vitalqua Project
+      </div>
+      <div class="event-tag">Concierto Benéfico</div>
+    </div>
+
+    <!-- Bola de discoteca (SVG estático generado por JS) -->
+    <div class="disco-zone">
+      <!-- viewBox 0 0 210 72 → 1 unidad = 1 mm, igual que el folio -->
+      <svg id="discoSvg" xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 210 72" preserveAspectRatio="xMidYMid meet">
+      </svg>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="body">
+      <div class="concert-name">The Vitalqua Party</div>
+
+      <div>
+        <span class="your-night">YOUR NIGHT</span>
+        <span class="sep-line"></span>
+        <span class="their-water">THEIR WATER</span>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="pills">
+        <span class="pill">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <strong>23 de junio</strong>
+        </span>
+        <span class="pill">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <strong>21:00h</strong>
+        </span>
+        <span class="pill">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <strong>Ubicación sorpresa</strong>
+        </span>
+      </div>
+
+      <div class="price-block">
+        <span class="price-amount">20&nbsp;€</span>
+        <div class="price-detail">
+          <span class="pd-main">Entrada general</span>
+          <span class="pd-sub">Todo va al proyecto · Kenia</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra inferior: QR + link -->
+    <div class="bottom-bar">
+      <div class="qr-wrap">
+        <svg id="qrSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="link-block">
+        <span class="link-label">Compra tu entrada</span>
+        <span class="link-url">vitalquaproject.github.io/vitalquaproject/concert.html</span>
+        <span class="link-email">vitalquaproject@gmail.com</span>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+  <script>
+    /* =================================================================
+       QR code
+       ================================================================= */
+    (function () {
+      const TARGET = 'https://vitalquaproject.github.io/vitalquaproject/concert.html';
+      const qr = qrcode(0, 'M');
+      qr.addData(TARGET); qr.make();
+      const sz  = qr.getModuleCount();
+      const PAD = 2, total = sz + PAD * 2;
+      const svg = document.getElementById('qrSvg');
+      const NS  = 'http://www.w3.org/2000/svg';
+      svg.setAttribute('viewBox', `0 0 ${total} ${total}`);
+      function el(tag, a) {
+        const e = document.createElementNS(NS, tag);
+        for (const k in a) e.setAttribute(k, a[k]);
+        return e;
+      }
+      svg.appendChild(el('rect', { x:0, y:0, width:total, height:total, fill:'#fff' }));
+      for (let r = 0; r < sz; r++)
+        for (let c = 0; c < sz; c++)
+          if (qr.isDark(r, c))
+            svg.appendChild(el('rect', { x:c+PAD, y:r+PAD, width:1, height:1,
+              fill:'#07101E', 'shape-rendering':'crispEdges' }));
+    })();
+
+    /* =================================================================
+       Bola de discoteca — SVG estático (1 unidad = 1 mm)
+       viewBox 0 0 210 72  →  bola centrada en (105, 55), radio 24 mm
+       ================================================================= */
+    (function () {
+      const svg = document.getElementById('discoSvg');
+      const NS  = 'http://www.w3.org/2000/svg';
+      const CX = 105, CY = 55, R = 24;  /* mm */
+
+      function el(tag, a, parent) {
+        const e = document.createElementNS(NS, tag);
+        for (const k in a) e.setAttribute(k, a[k]);
+        if (parent) parent.appendChild(e);
+        return e;
+      }
+
+      /* ---- Destellos de luz proyectados (detrás de todo) ---- */
+      const spots = [
+        { x:28,  y:58, r:20, col:'#FF69B4', op:.28 },
+        { x:182, y:50, r:16, col:'#4FB3D9', op:.30 },
+        { x:18,  y:32, r:14, col:'#4ADE80', op:.22 },
+        { x:192, y:28, r:15, col:'#D4AF37', op:.25 },
+        { x:78,  y:68, r:17, col:'#C084FC', op:.24 },
+        { x:138, y:65, r:14, col:'#FB923C', op:.22 },
+      ];
+      const defsEl = el('defs', {}, svg);
+      spots.forEach((s, i) => {
+        const gid = `sg${i}`;
+        const rg = el('radialGradient', { id:gid, cx:'50%', cy:'50%', r:'50%' }, defsEl);
+        el('stop', { offset:'0%',   'stop-color':s.col, 'stop-opacity': s.op  }, rg);
+        el('stop', { offset:'100%', 'stop-color':s.col, 'stop-opacity': 0     }, rg);
+        el('ellipse', { cx:s.x, cy:s.y, rx:s.r*1.8, ry:s.r,
+          fill:`url(#${gid})` }, svg);
+      });
+
+      /* ---- Clip para la esfera ---- */
+      const clipId = 'bc';
+      const clip = el('clipPath', { id:clipId }, defsEl);
+      el('circle', { cx:CX, cy:CY, r:R - 0.3 }, clip);
+
+      /* ---- Cable de colgar ---- */
+      el('line', { x1:CX, y1:0, x2:CX, y2:CY - R,
+        stroke:'rgba(200,210,230,0.35)', 'stroke-width':0.5 }, svg);
+
+      /* ---- Sombra debajo ---- */
+      const shId = 'sh';
+      const shG = el('radialGradient', { id:shId, cx:'50%', cy:'30%', r:'50%' }, defsEl);
+      el('stop', { offset:'0%',   'stop-color':'#000', 'stop-opacity':0.35 }, shG);
+      el('stop', { offset:'100%', 'stop-color':'#000', 'stop-opacity':0    }, shG);
+      el('ellipse', { cx:CX, cy:CY + R + 1.5, rx:R * 0.65, ry:3.5,
+        fill:`url(#${shId})` }, svg);
+
+      /* ---- Esfera base ---- */
+      const bgId = 'bg';
+      const bgG = el('radialGradient', {
+        id:bgId, cx:'38%', cy:'35%', r:'62%',
+        gradientUnits:'objectBoundingBox'
+      }, defsEl);
+      el('stop', { offset:'0%',   'stop-color':'#4A4A5C' }, bgG);
+      el('stop', { offset:'55%',  'stop-color':'#181828' }, bgG);
+      el('stop', { offset:'100%', 'stop-color':'#08080E' }, bgG);
+      el('circle', { cx:CX, cy:CY, r:R, fill:`url(#${bgId})` }, svg);
+
+      /* ---- Teselas espejo ---- */
+      const COLORS = [
+        '#FFFFFF','#FFFFFF','#FF69B4','#4FB3D9',
+        '#4ADE80','#D4AF37','#C084FC','#FB923C','#FFFFFF'
+      ];
+      const ROWS = 12;
+      const ROT  = 0.38; /* ángulo fijo */
+      const LX = -0.55, LY = -0.65, LZ = 0.52;
+
+      const tilesG = el('g', { 'clip-path':`url(#${clipId})` }, svg);
+
+      for (let row = 1; row < ROWS - 1; row++) {
+        const theta  = (row / (ROWS - 1)) * Math.PI;
+        const sinT   = Math.sin(theta), cosT = Math.cos(theta);
+        const ringR  = sinT * R;
+        const count  = Math.max(4, Math.round(ringR * 0.62));
+        const tileW  = Math.min(2.2, (2 * Math.PI * ringR) / count * 0.80);
+        const tileH  = Math.min(1.8, (Math.PI * R / ROWS) * 0.76);
+
+        for (let col = 0; col < count; col++) {
+          const phi    = (col / count) * Math.PI * 2 + ROT;
+          const cosPhi = Math.cos(phi), sinPhi = Math.sin(phi);
+          const nx = sinT * cosPhi, ny = -cosT, nz = sinT * sinPhi;
+
+          if (nz < -0.08) continue; /* cara trasera, no visible */
+
+          const px = CX + nx * R;
+          const py = CY + ny * R;
+          const diff = Math.max(0, nx*LX + ny*LY + nz*LZ);
+          const lit  = diff > 0.42;
+          const ci   = (row * 5 + col * 11) % COLORS.length;
+          const fillColor = lit ? (diff > 0.70 ? '#FFFFFF' : COLORS[ci]) : '#1C1C2C';
+          const op        = (lit ? (0.65 + diff * 0.35) : 0.55).toFixed(2);
+          const deg       = (phi * 180 / Math.PI).toFixed(1);
+
+          el('rect', {
+            x: (px - tileW/2).toFixed(3),
+            y: (py - tileH/2).toFixed(3),
+            width:  tileW.toFixed(3),
+            height: tileH.toFixed(3),
+            transform: `rotate(${deg},${px.toFixed(2)},${py.toFixed(2)})`,
+            fill:    fillColor,
+            opacity: op,
+          }, tilesG);
+        }
+      }
+
+      /* ---- Reflejo especular (brillo blanco) ---- */
+      const hlId = 'hl';
+      const hlG = el('radialGradient', {
+        id:hlId, cx:'36%', cy:'33%', r:'45%',
+        gradientUnits:'objectBoundingBox'
+      }, defsEl);
+      el('stop', { offset:'0%',   'stop-color':'#fff', 'stop-opacity':0.28 }, hlG);
+      el('stop', { offset:'100%', 'stop-color':'#fff', 'stop-opacity':0    }, hlG);
+      el('circle', { cx:CX, cy:CY, r:R, fill:`url(#${hlId})` }, svg);
+
+    })();
+  </script>
+
+</body>
+</html>

@@ -302,11 +302,31 @@
     @media (max-width: 820px) {
       .hero-inner {
         grid-template-columns: 1fr;
-        gap: 36px;
+        gap: 0;
+        position: relative;
       }
-      .guitar-col { order: -1; }
-      .guitar-svg { max-width: 160px; }
-      .hero-text { align-items: center; text-align: center; }
+      /* Guitar goes behind the text as a faded background element */
+      .guitar-col {
+        position: absolute;
+        right: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 210px;
+        opacity: 0.13;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .guitar-svg {
+        max-width: 210px;
+        filter: drop-shadow(0 0 0 transparent);
+      }
+      /* Text sits above the ghost guitar */
+      .hero-text {
+        position: relative;
+        z-index: 1;
+        align-items: center;
+        text-align: center;
+      }
       .event-pills { justify-content: center; }
       .eyebrow-concert { justify-content: center; }
       .tagline-sep { margin: 10px auto; }

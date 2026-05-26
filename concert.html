@@ -1836,11 +1836,16 @@
         requestAnimationFrame(tick);
       }
 
+
+
       function setCount(n) {
-        targetCount = Math.min(100, Math.max(0, n));
+        var visualCount = n + 10;
+        
+        targetCount = Math.min(100, Math.max(0, visualCount));
         animStart   = null;   /* restart fill animation */
+               
         var el = $('commPctNum');
-        if (el) el.textContent = n;
+        if (el) el.textContent = targetCount;
         /* no need to start rAF — already running from page load */
       }
 

@@ -1563,6 +1563,7 @@
                 class="input"
                 placeholder="Ej. Leopoldo"
                 autocomplete="given-name"
+                autocapitalize="words"
                 required
                 aria-required="true"
                 aria-describedby="hint-nombre"
@@ -1580,6 +1581,7 @@
                 class="input"
                 placeholder="Ej. Ferrer-Bonsoms Castán"
                 autocomplete="family-name"
+                autocapitalize="words"
                 required
                 aria-required="true"
                 aria-describedby="hint-apellidos"
@@ -1597,7 +1599,7 @@
               type="tel"
               id="inputTelefono"
               class="input"
-              placeholder="Ej. 612 345 678"
+              placeholder="Ej. 612 34 56 78"
               autocomplete="tel"
               required
               aria-required="true"
@@ -2053,6 +2055,31 @@
       clearError(inputNombre,    hintNombre);
       clearError(inputApellidos, hintApellidos);
       clearError(inputTelefono,  hintTelefono, isValidSpanishPhone);
+
+      /* Auto title-case: primera letra de cada palabra en mayúscula
+         Funciona con espacios y guiones (Ferrer-Bonsoms → Ferrer-Bonsoms) */
+      function applyTitleCase(inp) {
+        inp.addEventListener('input', function () {
+          const pos    = this.selectionStart;
+          const titled = this.value.replace(/(?:^|[\s\-])(\S)/g, m => m.toUpperCase());
+          if (this.value !== titled) {
+            this.value = titled;
+            this.setSelectionRange(pos, pos);
+          }
+        });
+      }
+      applyTitleCase(inputNombre);
+      applyTitleCase(inputApellidos);
+
+      /* Auto-formato de teléfono: 6XX XX XX XX */
+      inputTelefono.addEventListener('input', function () {
+        const digits = this.value.replace(/\D/g, '').slice(0, 9);
+        let formatted = digits.slice(0, 3);
+        if (digits.length > 3) formatted += ' ' + digits.slice(3, 5);
+        if (digits.length > 5) formatted += ' ' + digits.slice(5, 7);
+        if (digits.length > 7) formatted += ' ' + digits.slice(7, 9);
+        this.value = formatted;
+      });
 
       function validate() {
         let ok = true;

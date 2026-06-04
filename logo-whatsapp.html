@@ -18,6 +18,9 @@
       min-height: 100vh;
       gap: 16px;
     }
+    @media (max-width: 540px) {
+      body { justify-content: flex-start; padding-top: 10px; }
+    }
     .hint {
       font-family: 'Inter', sans-serif;
       font-size: 12px;
@@ -30,6 +33,7 @@
       position: relative;
       width: 512px;
       height: 512px;
+      flex-shrink: 0;
       overflow: hidden;
       border-radius: 24px;
       background:
@@ -321,6 +325,26 @@
   </div>
 
   <p class="hint">Abre en navegador → captura el cuadrado → recorta a 512×512</p>
+
+  <script>
+    /* Escala la tarjeta para que quepa en pantallas pequeñas */
+    function fitCard() {
+      var card = document.querySelector('.card');
+      if (!card) return;
+      var maxSide = Math.min(window.innerWidth - 20, window.innerHeight - 72, 512);
+      var scale   = maxSide / 512;
+      if (scale < 1) {
+        card.style.transformOrigin = 'top center';
+        card.style.transform       = 'scale(' + scale.toFixed(4) + ')';
+        card.style.marginBottom    = Math.round((scale - 1) * 512) + 'px';
+      } else {
+        card.style.transform    = '';
+        card.style.marginBottom = '';
+      }
+    }
+    fitCard();
+    window.addEventListener('resize', fitCard);
+  </script>
 
   <script>
     /* Same triangle animation as concert.html hero */

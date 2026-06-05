@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¡Donación confirmada! — The Vitalqua Show</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
+
+  <style>
+    :root {
+      --navy:      #0F1A2E;
+      --navy-dp:   #07101E;
+      --cy-dk:     #2A85B3;
+      --ink-soft:  #3F4F6B;
+      --muted:     #6B7890;
+      --faint:     #A3B5CD;
+      --success:   #1B7A5C;
+      --success-lt:#D1F0E6;
+      --gold:      #D4AF37;
+      --radius-lg: 24px;
+      --shadow-lg: 0 8px 28px rgba(15,26,46,.12), 0 36px 60px rgba(15,26,46,.08);
+      --ease: cubic-bezier(.22,.61,.36,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(79,179,217,.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(42,133,179,.07) 0%, transparent 50%),
+        linear-gradient(160deg, #0A1628 0%, #07101E 60%, #0D1E38 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(32px, 8vw, 80px) clamp(20px, 5vw, 48px);
+      -webkit-font-smoothing: antialiased;
+      color: #fff;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Loading ring */
+    .loading-ring {
+      width: 52px; height: 52px;
+      border: 3px solid rgba(163,208,227,.2);
+      border-top-color: var(--cy-dk);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Card */
+    .card {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-lg);
+      padding: clamp(36px, 6vw, 60px) clamp(28px, 5vw, 56px);
+      max-width: 500px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      animation: fade-up .65s var(--ease) both;
+    }
+    .card.show { display: flex; }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Check circle */
+    .check-circle {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(27,122,92,.18);
+      border: 2px solid rgba(27,122,92,.4);
+      display: grid; place-items: center;
+      margin-bottom: 28px;
+      animation: pop .5s .2s var(--ease) both;
+    }
+    @keyframes pop {
+      from { opacity: 0; transform: scale(.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Eyebrow */
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #4ADE80;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #4ADE80;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,.45); }
+      50%       { box-shadow: 0 0 0 7px rgba(74,222,128,0); }
+    }
+
+    /* Heading */
+    h1 {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    /* Body text */
+    .body-text {
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      color: rgba(163,181,205,.8);
+      line-height: 1.7;
+      max-width: 38ch;
+      margin-bottom: 32px;
+    }
+    .body-text strong { color: var(--gold); }
+
+    /* Donation pill */
+    .donation-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(42,133,179,.15);
+      border: 1px solid rgba(42,133,179,.4);
+      color: #7DCFF0;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+    }
+
+    /* WhatsApp CTA */
+    .wa-block {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .wa-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,190,0,.18);
+      border: 1px solid rgba(255,190,0,.5);
+      color: #FFD060;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 999px;
+    }
+    .wa-heading {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+    .wa-text {
+      font-size: 0.88rem;
+      color: rgba(163,181,205,.85);
+      line-height: 1.55;
+    }
+    .wa-fab-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0 2px;
+    }
+    .wa-fab {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: #25D366;
+      display: grid; place-items: center;
+      color: #fff;
+      box-shadow:
+        0 0 0 8px rgba(37,211,102,.18),
+        0 0 0 16px rgba(37,211,102,.08),
+        0 8px 32px rgba(37,211,102,.55);
+      animation: wa-fab-pulse 2.2s ease-in-out infinite;
+      transition: transform 200ms ease, background 180ms ease;
+    }
+    @keyframes wa-fab-pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 8px rgba(37,211,102,.18), 0 0 0 16px rgba(37,211,102,.08), 0 8px 32px rgba(37,211,102,.55);
+      }
+      50% {
+        box-shadow: 0 0 0 12px rgba(37,211,102,.22), 0 0 0 24px rgba(37,211,102,.10), 0 8px 44px rgba(37,211,102,.70);
+      }
+    }
+    .wa-fab:hover  { background: #1ebe5a; transform: scale(1.08); animation: none; }
+    .wa-fab:active { transform: scale(0.97); }
+    .wa-fab-label {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #25D366;
+      letter-spacing: 0.04em;
+    }
+
+    /* Error card */
+    .card-error {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 420px;
+      gap: 16px;
+    }
+    .card-error.show { display: flex; animation: fade-up .5s var(--ease) both; }
+    .card-error h2 {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.5rem; font-weight: 700;
+    }
+    .card-error p { color: rgba(163,181,205,.8); font-size: 0.95rem; line-height: 1.65; }
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 24px; border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,.2); color: rgba(255,255,255,.75);
+      font-size: 0.9rem; font-weight: 600;
+      transition: border-color 180ms ease, color 180ms ease;
+    }
+    .btn-back:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="loading-ring" id="loader" aria-label="Verificando pago…"></div>
+
+  <!-- Success card -->
+  <div class="card" id="cardOk">
+    <div class="check-circle">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+
+    <div class="eyebrow"><span class="live-dot"></span>Donación confirmada</div>
+
+    <h1>¡Gracias por tu apoyo!</h1>
+
+    <p class="body-text">
+      Tu aportación para <strong>The Vitalqua Show</strong> ha sido registrada con éxito.
+      Cada euro va directamente a garantizar agua limpia en Kenia durante 20 años.
+    </p>
+
+    <div class="donation-pill" id="donationPill" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 22C12 22 3 17 3 11V5l9-3 9 3v6c0 6-9 11-9 11z"/>
+      </svg>
+      <span id="donationAmount"></span>
+    </div>
+
+    <div class="wa-block">
+      <span class="wa-badge">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        ¡Importante!
+      </span>
+      <p class="wa-heading">Únete al grupo de WhatsApp</p>
+      <p class="wa-text">Recibirás toda la información del evento:<br>hora, lugar, novedades y sorpresas.</p>
+
+      <div class="wa-fab-wrap">
+        <a class="wa-fab" href="https://chat.whatsapp.com/CnE79zheUX4K1YRTtgP14Y" target="_blank" rel="noopener" aria-label="Unirse al grupo de WhatsApp de The Vitalqua Show">
+          <svg width="46" height="46" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.82 1.9 6.87L2 30l7.35-1.87A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.5a11.44 11.44 0 0 1-5.82-1.59l-.42-.25-4.36 1.11 1.14-4.23-.27-.44A11.44 11.44 0 0 1 4.5 16C4.5 9.6 9.6 4.5 16 4.5S27.5 9.6 27.5 16 22.4 27.5 16 27.5zm6.27-8.57c-.34-.17-2.02-1-2.34-1.11-.31-.11-.54-.17-.77.17-.23.34-.88 1.11-1.08 1.34-.2.23-.4.26-.74.09-.34-.17-1.44-.53-2.74-1.69-1.01-.9-1.7-2.01-1.9-2.35-.2-.34-.02-.52.15-.69.15-.15.34-.4.51-.6.17-.2.23-.34.34-.57.11-.23.06-.43-.03-.6-.09-.17-.77-1.85-1.05-2.54-.28-.67-.56-.58-.77-.59H10.8c-.2 0-.54.07-.82.37-.28.3-1.08 1.05-1.08 2.56 0 1.51 1.1 2.97 1.26 3.17.17.2 2.17 3.31 5.25 4.64.73.32 1.3.5 1.75.64.73.23 1.4.2 1.93.12.59-.09 2.02-.82 2.3-1.62.29-.8.29-1.48.2-1.62-.08-.14-.3-.23-.63-.4z"/>
+          </svg>
+        </a>
+        <span class="wa-fab-label">Pulsa para unirte</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error card -->
+  <div class="card-error" id="cardErr">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(248,113,113,.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <h2>Algo ha fallado</h2>
+    <p id="errMsg">No hemos podido confirmar tu donación. Si crees que el pago se ha procesado correctamente, escríbenos a <strong>vitalquaproject@gmail.com</strong>.</p>
+    <a href="show.html" class="btn-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver a la página del evento
+    </a>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey:            "AIzaSyDKic5e9DAU1iw6ZOtsT1gGEEyU8WCtAXE",
+      authDomain:        "vitalqua-project.firebaseapp.com",
+      projectId:         "vitalqua-project",
+      storageBucket:     "vitalqua-project.firebasestorage.app",
+      messagingSenderId: "263061224525",
+      appId:             "1:263061224525:web:9bc179545f515ffac27004",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db   = firebase.firestore();
+
+    function ticketsCol() {
+      return db
+        .collection('artifacts')
+        .doc('vitalqua-show-tickets')
+        .collection('public')
+        .doc('data')
+        .collection('tickets');
+    }
+
+    function showOk() {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('cardOk').classList.add('show');
+    }
+
+    function showErr(msg) {
+      document.getElementById('loader').style.display = 'none';
+      if (msg) document.getElementById('errMsg').innerHTML = msg;
+      document.getElementById('cardErr').classList.add('show');
+    }
+
+    (async function () {
+      // Stripe appends ?payment_intent=pi_xxx&redirect_status=succeeded to the return_url
+      const params          = new URLSearchParams(window.location.search);
+      const paymentIntentId = params.get('payment_intent');
+      const redirectStatus  = params.get('redirect_status');
+
+      if (!paymentIntentId) {
+        showErr('No se recibió la confirmación de pago. Si acabas de pagar, recarga la página en unos segundos.');
+        return;
+      }
+
+      if (redirectStatus !== 'succeeded') {
+        const statusMessages = {
+          processing:        'Tu pago está siendo procesado. Recarga la página en unos segundos.',
+          requires_action:   'Tu pago requiere una acción adicional. Vuelve a intentarlo.',
+          requires_payment_method: 'El pago no se ha completado. Por favor vuelve a intentarlo.',
+        };
+        showErr(statusMessages[redirectStatus] || `Estado del pago: ${redirectStatus}. Contacta con <strong>vitalquaproject@gmail.com</strong>.`);
+        return;
+      }
+
+      // Read registration data stored in localStorage before the Stripe redirect
+      const ticketId  = localStorage.getItem('vq_show_ticketId')  || paymentIntentId;
+      const nombre    = localStorage.getItem('vq_show_nombre')    || '';
+      const apellidos = localStorage.getItem('vq_show_apellidos') || '';
+      const telefono  = localStorage.getItem('vq_show_telefono')  || '';
+      const email     = localStorage.getItem('vq_show_email')     || '';
+      const qty       = parseInt(localStorage.getItem('vq_show_qty') || '1', 10);
+      const total     = parseFloat(localStorage.getItem('vq_show_total') || '0');
+
+      // Show donation amount pill if we have the data
+      if (total > 0) {
+        var pill   = document.getElementById('donationPill');
+        var amount = document.getElementById('donationAmount');
+        if (pill && amount) {
+          amount.textContent = total.toLocaleString('es-ES') + ' € donados · ' + qty + (qty === 1 ? ' entrada' : ' entradas');
+          pill.style.display = 'inline-flex';
+        }
+      }
+
+      try {
+        await auth.signInAnonymously();
+
+        // Idempotent write — safe to call on page reload
+        const snap = await ticketsCol().doc(ticketId).get();
+        if (!snap.exists) {
+          await ticketsCol().doc(ticketId).set({
+            name:             nombre,
+            surname:          apellidos,
+            phone:            telefono,
+            email:            email,
+            quantity:         qty,
+            totalEur:         total,
+            paymentIntentId:  paymentIntentId,
+            status:           'paid',
+            scanned:          false,
+            scanTimestamp:    null,
+            createdAt:        firebase.firestore.FieldValue.serverTimestamp(),
+          });
+        }
+
+        // Clean up localStorage
+        [
+          'vq_show_ticketId', 'vq_show_nombre', 'vq_show_apellidos',
+          'vq_show_telefono', 'vq_show_email',
+          'vq_show_amount',   'vq_show_qty',    'vq_show_total',
+        ].forEach(k => localStorage.removeItem(k));
+
+        showOk();
+
+      } catch (err) {
+        console.error('[Vitalqua Show] Firestore error:', err);
+        if (err.code === 'unavailable') {
+          showErr('Sin conexión a internet. Conéctate y recarga la página.');
+        } else if (err.code === 'permission-denied') {
+          showErr('Error de permisos. Contacta con <strong>vitalquaproject@gmail.com</strong>.');
+        } else {
+          // Payment succeeded even if Firestore write fails — still show success
+          console.warn('[Vitalqua Show] Firestore write failed but payment succeeded. ticketId:', ticketId);
+          showOk();
+        }
+      }
+    })();
+  </script>
+
+</body>
+</html>

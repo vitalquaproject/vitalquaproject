@@ -1,0 +1,2728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vitalqua Show — Vitalqua Project</title>
+  <meta name="description" content="Inscríbete en el Vitalqua Show. Con tu aportación financias agua limpia para estudiantes en Kenia durante 20 años." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
+
+  <style>
+    /* ================================================================
+       Vitalqua — show.html
+       Paleta: blanco / azul claro — evento formal para adultos
+       ================================================================ */
+    :root {
+      --bg:        #F5F9FC;
+      --bg-soft:   #EBF4FA;
+      --surface:   #FFFFFF;
+      --navy:      #0F1A2E;
+      --navy-dp:   #07101E;
+
+      --cy-xlt:    #D6EEF6;
+      --cy-lt:     #A3D0E3;
+      --cy:        #4FB3D9;
+      --cy-dk:     #2A85B3;
+      --cy-xdk:    #1B5F85;
+
+      --ink:       #0F1A2E;
+      --ink-soft:  #3F4F6B;
+      --muted:     #6B7890;
+      --faint:     #A3B5CD;
+
+      --success:   #1B7A5C;
+      --success-lt:#D1F0E6;
+
+      --stripe:    #635BFF;
+      --stripe-dk: #4B44D9;
+
+      --radius-sm: 10px;
+      --radius:    16px;
+      --radius-lg: 24px;
+
+      --shadow-sm: 0 1px 2px rgba(15,26,46,.05), 0 4px 14px rgba(15,26,46,.04);
+      --shadow-md: 0 4px 16px rgba(15,26,46,.08), 0 20px 40px rgba(15,26,46,.06);
+      --shadow-lg: 0 8px 28px rgba(15,26,46,.10), 0 32px 56px rgba(15,26,46,.07);
+
+      --ease: cubic-bezier(.22,.61,.36,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.58;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+    button, input { font: inherit; }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+    }
+
+    /* ============================================================
+       HEADER — transparent → white on scroll
+       ============================================================ */
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 0;
+      background: rgba(255,255,255,0);
+      backdrop-filter: blur(0);
+      border-bottom: 1px solid transparent;
+      transition:
+        background 280ms var(--ease),
+        backdrop-filter 280ms var(--ease),
+        border-color 280ms var(--ease),
+        box-shadow 280ms var(--ease),
+        padding 280ms var(--ease);
+    }
+    .site-header.scrolled {
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(18px) saturate(1.3);
+      border-bottom-color: rgba(42,133,179,.14);
+      box-shadow: 0 2px 24px rgba(15,26,46,.07);
+      padding: 12px 0;
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      transition: opacity 180ms ease;
+    }
+    .logo:hover { opacity: 0.72; }
+    .logo-mark { width: auto; height: 32px; display: block; flex-shrink: 0; }
+
+    /* ============================================================
+       HERO — light blue/white gradient, formal
+       ============================================================ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 130px 0 80px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 18% 28%, rgba(79,179,217,.16) 0%, transparent 52%),
+        radial-gradient(ellipse at 82% 72%, rgba(42,133,179,.10) 0%, transparent 50%),
+        linear-gradient(155deg, #E4F3FB 0%, #F5F9FC 45%, #EDF6FC 100%);
+    }
+
+    /* Floating particle canvas */
+    .hero-canvas {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 0;
+      overflow: visible;
+    }
+    .hero-canvas svg { width: 100%; height: 100%; display: block; }
+
+    .hero-inner {
+      position: relative; z-index: 2;
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: clamp(28px, 5vw, 72px);
+      align-items: center;
+    }
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .eyebrow-show {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--cy-dk);
+      margin-bottom: 20px;
+    }
+    .eyebrow-show::before {
+      content: ""; flex-shrink: 0;
+      width: 22px; height: 1px;
+      background: var(--cy-dk);
+      opacity: 0.55;
+    }
+
+    .show-name {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: clamp(1.15rem, 2.4vw, 1.75rem);
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.1;
+      color: var(--ink-soft);
+      margin-bottom: 22px;
+    }
+    .show-name em {
+      font-style: normal;
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .tagline-block {
+      margin-bottom: 28px;
+      line-height: 1;
+    }
+    .tu-velada {
+      display: block;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(3.6rem, 8.5vw, 6.8rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      line-height: 0.92;
+      color: var(--cy-xdk);
+    }
+    .tagline-sep {
+      display: block;
+      width: 36px;
+      height: 1.5px;
+      background: var(--cy-lt);
+      margin: 12px 0;
+      opacity: 0.7;
+    }
+    .su-agua {
+      display: block;
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: clamp(2.6rem, 6vw, 4.8rem);
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      line-height: 1;
+      color: var(--cy);
+    }
+
+    .hero-lede {
+      font-size: clamp(0.93rem, 1.6vw, 1.05rem);
+      color: var(--ink-soft);
+      max-width: 48ch;
+      margin-bottom: 32px;
+      line-height: 1.68;
+    }
+
+    .event-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-start;
+      margin-bottom: 28px;
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(79,179,217,.1);
+      border: 1px solid rgba(79,179,217,.28);
+      color: var(--cy-xdk);
+      font-size: 0.84rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .pill svg { flex-shrink: 0; opacity: 0.7; }
+    .pill strong { color: var(--navy); font-weight: 700; }
+
+    .impact-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 24px;
+      border-radius: var(--radius);
+      background: rgba(79,179,217,.08);
+      border: 1.5px solid rgba(79,179,217,.28);
+      color: var(--cy-xdk);
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.96rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
+    }
+    .impact-badge .amount-em {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--cy-dk);
+    }
+
+    /* Right: crystal water drop illustration */
+    .crystal-col {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+    .crystal-svg {
+      width: 100%;
+      max-width: 260px;
+      height: auto;
+      filter:
+        drop-shadow(0 18px 44px rgba(42,133,179,.22))
+        drop-shadow(0 4px 12px rgba(79,179,217,.15));
+      animation: crystal-float 6s ease-in-out infinite;
+    }
+    @keyframes crystal-float {
+      0%, 100% { transform: translateY(0px) rotate(-0.6deg); }
+      50%       { transform: translateY(-14px) rotate(0.6deg); }
+    }
+
+    @media (max-width: 820px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 0;
+        position: relative;
+      }
+      .crystal-col {
+        position: absolute;
+        right: clamp(8px, 4vw, 32px);
+        top: 50%;
+        transform: translateY(-50%);
+        width: 160px;
+        opacity: 0.18;
+        z-index: 0;
+      }
+      .hero-text {
+        position: relative;
+        z-index: 1;
+      }
+    }
+    @media (max-width: 580px) {
+      .crystal-col { display: none; }
+      .hero-text { align-items: center; text-align: center; }
+      .event-pills { justify-content: center; }
+      .eyebrow-show { justify-content: center; }
+      .tagline-sep { margin: 12px auto; }
+    }
+
+    /* ============================================================
+       WATER ARROW
+       ============================================================ */
+    .water-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 26px 0 0;
+      background: var(--surface);
+      overflow: hidden;
+    }
+    .water-drop-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .water-drop {
+      width: 48px; height: 60px;
+      animation: drop-fall 2s cubic-bezier(.45,0,.55,1) infinite;
+      filter: drop-shadow(0 4px 10px rgba(79,179,217,.35));
+    }
+    .water-chevrons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      margin-top: 4px;
+    }
+    .water-chevrons svg:nth-child(1) { animation: chevron-fade 2s ease-in-out infinite 0s;    opacity: 0; }
+    .water-chevrons svg:nth-child(2) { animation: chevron-fade 2s ease-in-out infinite 0.35s; opacity: 0; }
+    .water-chevrons svg:nth-child(3) { animation: chevron-fade 2s ease-in-out infinite 0.7s;  opacity: 0; }
+    @keyframes drop-fall {
+      0%   { transform: translateY(-6px) scaleY(0.90); opacity: 0.45; }
+      45%  { transform: translateY(5px)  scaleY(1.08); opacity: 1;    }
+      80%  { transform: translateY(12px) scaleY(0.94); opacity: 0.65; }
+      100% { transform: translateY(-6px) scaleY(0.90); opacity: 0.45; }
+    }
+    @keyframes chevron-fade {
+      0%   { opacity: 0;    transform: translateY(-8px); }
+      40%  { opacity: 0.65; transform: translateY(0px);  }
+      80%  { opacity: 0;    transform: translateY(8px);  }
+      100% { opacity: 0;    transform: translateY(8px);  }
+    }
+    .water-arrow-label {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cy-dk);
+      opacity: 0.7;
+      margin-top: 10px;
+      margin-bottom: 26px;
+    }
+
+    /* ============================================================
+       INFO SECTION — horario + incluye
+       ============================================================ */
+    .info-section {
+      background: var(--surface);
+      padding: clamp(52px, 8vw, 88px) 0;
+      border-bottom: 1px solid var(--bg-soft);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .info-card {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      padding: clamp(22px, 4vw, 34px);
+      border: 1.5px solid var(--cy-xlt);
+    }
+    .info-card-title {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+    .info-card-title svg { flex-shrink: 0; color: var(--cy-dk); }
+    .schedule-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .schedule-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--cy-xlt);
+    }
+    .schedule-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .schedule-item:first-child { padding-top: 0; }
+    .schedule-time {
+      flex-shrink: 0;
+      min-width: 100px;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--cy-dk);
+      background: var(--cy-xlt);
+      border-radius: 6px;
+      padding: 3px 8px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .schedule-desc {
+      font-size: 0.91rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+    .includes-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 13px;
+    }
+    .includes-item {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.93rem;
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+    .includes-dot {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--cy-xlt);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .includes-dot svg { color: var(--cy-dk); }
+    @media (max-width: 640px) { .info-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       IMPACT SECTION — ¿Sabías que? (light version)
+       ============================================================ */
+    .impact-section {
+      position: relative;
+      background:
+        radial-gradient(ellipse at 68% 48%, rgba(42,133,179,.09) 0%, transparent 55%),
+        linear-gradient(155deg, #EBF5FB 0%, #F5F9FC 55%, #E4F0F8 100%);
+      padding: clamp(64px, 9vw, 104px) 0 clamp(80px, 11vw, 124px);
+      overflow: hidden;
+    }
+    .impact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 5vw, 64px);
+      align-items: center;
+    }
+    .impact-text { max-width: 560px; }
+
+    .impact-badge-section {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 20px;
+      border-radius: 999px;
+      background: rgba(79,179,217,.12);
+      border: 1px solid rgba(79,179,217,.32);
+      color: var(--cy-xdk);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .impact-badge-section svg { flex-shrink: 0; }
+
+    .impact-body {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      line-height: 1.3;
+      color: var(--ink-soft);
+      margin-bottom: 38px;
+    }
+    .impact-body strong { color: var(--navy); font-weight: 700; }
+    .impact-body .cy-em { color: var(--cy-dk); font-weight: 700; }
+
+    .impact-stats {
+      display: flex; gap: 32px; flex-wrap: wrap;
+    }
+    .impact-stat { display: flex; flex-direction: column; gap: 3px; }
+    .impact-number {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--cy-dk);
+      line-height: 1;
+    }
+    .impact-stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* Impact illustration: stacked students */
+    .impact-illustration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .student-svg {
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      filter: drop-shadow(0 16px 38px rgba(42,133,179,.14));
+      animation: student-float 7s ease-in-out infinite;
+    }
+    @keyframes student-float {
+      0%, 100% { transform: translateY(0px) rotate(-0.4deg); }
+      50%       { transform: translateY(-10px) rotate(0.4deg); }
+    }
+
+    /* Wave divider down to form */
+    .impact-wave {
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      line-height: 0;
+    }
+    .impact-wave svg { width: 100%; height: 60px; display: block; }
+
+    @media (max-width: 700px) {
+      .impact-inner { grid-template-columns: 1fr; text-align: center; }
+      .impact-illustration { order: -1; }
+      .student-svg { max-width: 220px; }
+      .impact-badge-section { margin: 0 auto 22px; }
+      .impact-stats { justify-content: center; }
+    }
+
+    /* ============================================================
+       FORM SECTION
+       ============================================================ */
+    .form-section {
+      background: var(--bg);
+      padding: clamp(60px, 9vw, 100px) 0 clamp(72px, 10vw, 120px);
+    }
+    .form-wrap {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+    }
+    .form-heading {
+      text-align: center;
+      margin-bottom: 38px;
+    }
+    .form-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cy-dk);
+      margin-bottom: 14px;
+    }
+    .form-eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--cy-dk); }
+    .form-title {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: clamp(1.7rem, 4vw, 2.3rem);
+      font-weight: 700;
+      letter-spacing: -0.028em;
+      color: var(--navy);
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .form-sub {
+      font-size: 0.97rem;
+      color: var(--ink-soft);
+      line-height: 1.62;
+    }
+
+    .form-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(42,133,179,.12);
+      box-shadow: var(--shadow-lg);
+      padding: clamp(26px, 5vw, 40px);
+    }
+
+    /* ---- Fields ---- */
+    .field { margin-bottom: 20px; }
+    .field:last-of-type { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 0.81rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 8px;
+    }
+    label .req { color: var(--cy-dk); margin-left: 2px; }
+    label .opt {
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.02em; text-transform: none;
+      color: var(--faint); margin-left: 6px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(15,26,46,.13);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 0.97rem;
+      line-height: 1.4;
+      outline: none;
+      transition:
+        border-color 180ms ease,
+        background 180ms ease,
+        box-shadow 180ms ease;
+      appearance: none; -webkit-appearance: none;
+    }
+    .input::placeholder { color: var(--faint); }
+    .input:focus {
+      border-color: var(--cy-dk);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(42,133,179,.12);
+    }
+    .input.invalid {
+      border-color: #C0392B;
+      box-shadow: 0 0 0 3px rgba(192,57,43,.1);
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .field-row .field { margin-bottom: 0; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .field-hint {
+      display: none;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: #C0392B;
+    }
+    .field-hint.show { display: block; }
+
+    /* ---- Tier selector ---- */
+    .tier-section {
+      margin-bottom: 24px;
+    }
+    .tier-label-row {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap; gap: 6px;
+    }
+    .tier-label-title {
+      font-size: 0.81rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .tier-label-hint {
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .tier-hint-error {
+      display: none;
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: #C0392B;
+    }
+    .tier-hint-error.show { display: block; }
+
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 540px) {
+      .tier-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .tier-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 14px 8px 12px;
+      border-radius: var(--radius);
+      background: var(--bg);
+      border: 1.5px solid rgba(42,133,179,.16);
+      color: var(--ink);
+      cursor: pointer;
+      text-align: center;
+      transition:
+        border-color 180ms ease,
+        background 180ms ease,
+        box-shadow 180ms ease,
+        transform 150ms var(--ease);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tier-card:hover {
+      border-color: var(--cy-dk);
+      background: rgba(79,179,217,.05);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(42,133,179,.12);
+    }
+    .tier-card.selected {
+      border-color: var(--cy-dk);
+      background: rgba(79,179,217,.09);
+      box-shadow: 0 0 0 3px rgba(42,133,179,.15), 0 4px 18px rgba(42,133,179,.1);
+    }
+    .tier-card.selected .tier-check { opacity: 1; transform: scale(1); }
+
+    /* Check mark badge */
+    .tier-check {
+      position: absolute;
+      top: 7px; right: 7px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--cy-dk);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 160ms ease, transform 160ms var(--ease);
+    }
+    .tier-check svg { color: #fff; }
+
+    /* Person icons */
+    .tier-persons {
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 2px;
+      height: 28px;
+      margin-bottom: 2px;
+    }
+    .tier-person {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1px;
+      flex-shrink: 0;
+    }
+    .tier-person-head {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--cy-dk);
+    }
+    .tier-person-body {
+      width: 13px; height: 13px;
+      border-radius: 4px 4px 0 0;
+      background: var(--cy-dk);
+    }
+    .tier-person.half .tier-person-head,
+    .tier-person.half .tier-person-body {
+      opacity: 0.38;
+      background: var(--cy);
+    }
+
+    .tier-amount {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .tier-students {
+      font-size: 0.71rem;
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+    .tier-tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--cy-xlt);
+      color: var(--cy-xdk);
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    /* Custom tier card */
+    .tier-card.tier-custom {
+      grid-column: span 2;
+    }
+    @media (max-width: 540px) {
+      .tier-card.tier-custom { grid-column: span 2; }
+    }
+    .custom-input-wrap {
+      display: none;
+      width: 100%;
+      margin-top: 8px;
+      position: relative;
+    }
+    .tier-card.selected .custom-input-wrap { display: block; }
+    .custom-input {
+      width: 100%;
+      padding: 8px 40px 8px 28px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(42,133,179,.28);
+      background: #fff;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--navy);
+      text-align: center;
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+    .custom-input:focus {
+      border-color: var(--cy-dk);
+      box-shadow: 0 0 0 3px rgba(42,133,179,.12);
+    }
+    .custom-input.invalid {
+      border-color: #C0392B;
+      box-shadow: 0 0 0 3px rgba(192,57,43,.1);
+    }
+    .custom-euro-prefix {
+      position: absolute;
+      left: 10px; top: 50%; transform: translateY(-50%);
+      font-weight: 700; font-size: 1rem;
+      color: var(--cy-dk); pointer-events: none;
+    }
+    .custom-min-note {
+      font-size: 0.67rem;
+      color: var(--muted);
+      margin-top: 4px;
+      display: block;
+    }
+    .custom-hint-error {
+      display: none;
+      font-size: 0.74rem;
+      color: #C0392B;
+      margin-top: 4px;
+      text-align: center;
+    }
+    .custom-hint-error.show { display: block; }
+
+    /* ---- Price summary ---- */
+    .price-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, rgba(79,179,217,.07) 0%, rgba(42,133,179,.04) 100%);
+      border: 1.5px solid rgba(79,179,217,.22);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .price-summary-label {
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .ps-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+    .ps-sub {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+    .price-summary-amount {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--cy-dk);
+      letter-spacing: -0.03em;
+    }
+    .price-summary-amount.empty {
+      color: var(--faint);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .form-divider {
+      height: 1px;
+      background: rgba(15,26,46,.07);
+      margin: 22px 0;
+    }
+
+    /* ---- Submit button ---- */
+    .btn-submit {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 16px 28px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--cy-dk) 0%, var(--cy-xdk) 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+      border: none;
+      cursor: pointer;
+      transition:
+        opacity 180ms ease,
+        transform 180ms var(--ease),
+        box-shadow 180ms ease;
+      box-shadow: 0 4px 20px rgba(42,133,179,.38), var(--shadow-sm);
+    }
+    .btn-submit:hover {
+      opacity: 0.92;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(42,133,179,.48), var(--shadow-md);
+    }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-submit .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-text { opacity: 0.7; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .stripe-trust {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin-top: 12px;
+      font-size: 0.76rem;
+      color: var(--faint);
+    }
+
+    .form-error {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      background: #FEF0EE;
+      border: 1px solid rgba(192,57,43,.2);
+      color: #9B2318;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+    .form-error.show { display: flex; gap: 10px; align-items: flex-start; }
+    .form-error svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* Sold-out banner */
+    .soldout-banner {
+      display: none;
+      margin-bottom: 28px;
+      padding: 20px 24px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(127,29,29,.08) 0%, rgba(153,27,27,.05) 100%);
+      border: 1.5px solid rgba(239,68,68,.3);
+    }
+    .soldout-banner.show {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      animation: banner-in 400ms var(--ease) both;
+    }
+    @keyframes banner-in {
+      from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .soldout-banner-icon { flex-shrink: 0; margin-top: 2px; color: #C0392B; }
+    .soldout-banner-body { flex: 1; }
+    .soldout-banner-title {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.9rem; font-weight: 800;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: #9B2318; margin-bottom: 5px;
+    }
+    .soldout-banner-text { font-size: 0.88rem; line-height: 1.55; color: var(--ink-soft); }
+
+    .btn-submit.soldout {
+      background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%) !important;
+      box-shadow: none !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+      font-size: 0.9rem; letter-spacing: 0.04em;
+    }
+    .btn-submit.soldout:hover {
+      transform: none !important;
+      box-shadow: none !important;
+      opacity: 1 !important;
+    }
+
+    /* ============================================================
+       QUANTITY STEPPER
+       ============================================================ */
+    .qty-section {
+      margin-bottom: 24px;
+    }
+    .qty-label-row {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap; gap: 6px;
+    }
+    .qty-label-title {
+      font-size: 0.81rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .qty-label-hint {
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .qty-stepper {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(42,133,179,.22);
+      background: var(--bg);
+      overflow: hidden;
+    }
+    .qty-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px;
+      background: transparent;
+      border: none;
+      color: var(--cy-dk);
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease;
+      flex-shrink: 0;
+    }
+    .qty-btn:hover { background: rgba(79,179,217,.1); }
+    .qty-btn:active { background: rgba(79,179,217,.18); }
+    .qty-btn:disabled { color: var(--faint); cursor: not-allowed; }
+    .qty-display {
+      min-width: 52px;
+      text-align: center;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      border-left: 1px solid rgba(42,133,179,.16);
+      border-right: 1px solid rgba(42,133,179,.16);
+      padding: 0 8px;
+      line-height: 44px;
+      user-select: none;
+    }
+
+    /* ============================================================
+       SPLIT-EMAIL CHECKBOX + GUEST CARDS
+       ============================================================ */
+    .split-email-wrap {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 1.5px solid rgba(42,133,179,.16);
+      display: none;
+    }
+    .split-email-wrap.visible { display: block; }
+    .split-email-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .split-email-label input[type="checkbox"] { display: none; }
+    .split-checkbox-box {
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--cy-lt);
+      background: #fff;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+    .split-email-label:hover .split-checkbox-box { border-color: var(--cy-dk); }
+    .split-email-label input:checked ~ .split-checkbox-box,
+    .split-email-label input:checked + .split-checkbox-box {
+      background: var(--cy); border-color: var(--cy);
+    }
+    .split-checkbox-check {
+      display: none;
+      color: #fff;
+    }
+    .split-email-label input:checked ~ .split-checkbox-box .split-checkbox-check,
+    .split-email-label input:checked + .split-checkbox-box .split-checkbox-check {
+      display: block;
+    }
+    .split-email-text { display: flex; flex-direction: column; gap: 2px; }
+    .split-email-text strong { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+    .split-email-text span { font-size: 0.78rem; color: var(--muted); }
+
+    .guests-section {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .guests-section.visible { display: flex; }
+    .guests-section-title {
+      font-size: 0.81rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .guests-section-title::before {
+      content: "";
+      width: 22px; height: 1px;
+      background: var(--cy-dk);
+    }
+    .guest-card {
+      border: 1.5px solid rgba(42,133,179,.18);
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .guest-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .guest-number {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--cy);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .guest-card-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+    .guest-field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 520px) {
+      .guest-field-row { grid-template-columns: 1fr; }
+    }
+    .guest-field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      margin-bottom: 5px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .site-footer {
+      background: var(--navy);
+      padding: 26px 0;
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-inner span { font-size: 0.78rem; color: var(--muted); }
+    .footer-inner a {
+      font-size: 0.78rem; color: var(--faint);
+      transition: color 160ms ease;
+    }
+    .footer-inner a:hover { color: #fff; }
+
+    /* ============================================================
+       REVEAL on scroll
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       COLLAB HERO BLOCK — ADESCI × Vitalqua · The Vitalqua Show
+       ============================================================ */
+    .collab-hero-block {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+    .collab-hero-orgs {
+      display: flex;
+      align-items: center;
+      gap: clamp(10px, 2.5vw, 22px);
+      flex-wrap: wrap;
+    }
+    .collab-hero-org-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+      transition: opacity 180ms ease;
+    }
+    .collab-hero-org-link:hover { opacity: 0.72; }
+    .collab-hero-org-img {
+      height: clamp(42px, 7vw, 64px);
+      width: auto;
+      display: block;
+    }
+    .collab-hero-org-img--vq {
+      height: clamp(28px, 4vw, 40px);
+      opacity: 0.65;
+    }
+    .collab-hero-org-name--vq {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(0.9rem, 2vw, 1.3rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink-soft);
+      opacity: 0.75;
+      white-space: nowrap;
+    }
+    .collab-hero-x {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(1.2rem, 2.8vw, 2rem);
+      font-weight: 300;
+      color: var(--cy);
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+    .collab-hero-show {
+      font-family: 'Bebas Neue', 'Inter Tight', sans-serif;
+      font-size: clamp(3.8rem, 10vw, 7.5rem);
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      line-height: 0.92;
+      color: var(--cy-xdk);
+      text-transform: uppercase;
+    }
+    @media (max-width: 580px) {
+      .collab-hero-orgs { justify-content: center; }
+      .collab-hero-show { text-align: center; }
+    }
+
+    /* ---- Stripe Payment Element container ---- */
+    .vq-payment-wrap {
+      margin-top: 8px;
+    }
+    .vq-payment-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 14px;
+    }
+    .vq-payment-label svg { color: var(--cy-dk); flex-shrink: 0; }
+    #vqPaymentElement {
+      min-height: 60px;
+    }
+    .vq-payment-error {
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+      background: #FFF1F0;
+      border: 1px solid rgba(220,38,38,.25);
+      border-radius: 12px;
+      padding: 13px 16px;
+      margin-top: 12px;
+      color: #B91C1C;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .vq-payment-error.show { display: flex; }
+    .vq-payment-error svg { flex-shrink: 0; margin-top: 2px; }
+  </style>
+
+  <!-- Stripe.js — must load before any Stripe Elements code -->
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+
+  <!-- ================================================================
+       HEADER
+       ================================================================ -->
+  <header class="site-header" id="siteHeader">
+    <div class="wrap nav">
+      <a href="index.html" class="logo" aria-label="Vitalqua Project — ir al inicio">
+        <img src="img/logo.svg" alt="" width="32" height="32" class="logo-mark" />
+        Vitalqua Project
+      </a>
+    </div>
+  </header>
+
+  <!-- ================================================================
+       HERO
+       ================================================================ -->
+  <section class="hero" id="top">
+
+    <div class="hero-canvas" aria-hidden="true">
+      <svg id="heroBg" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+        <g id="hero-drops"></g>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+
+      <div class="hero-text">
+
+        <div class="collab-hero-block">
+          <div class="collab-hero-orgs">
+            <a href="https://www.adesci.es" target="_blank" rel="noopener noreferrer" class="collab-hero-org-link" aria-label="ADESCI">
+              <img src="img/adesci.png" alt="ADESCI" class="collab-hero-org-img" />
+            </a>
+            <span class="collab-hero-x" aria-hidden="true">×</span>
+            <a href="https://www.uic.es" target="_blank" rel="noopener noreferrer" class="collab-hero-org-link" aria-label="UIC Barcelona">
+              <img src="img/uic_logo.png" alt="UIC Barcelona" class="collab-hero-org-img" />
+            </a>
+            <span class="collab-hero-x" aria-hidden="true">×</span>
+            <a href="index.html" class="collab-hero-org-link collab-hero-org-link--vq" aria-label="Vitalqua Project">
+              <img src="img/logo.svg" alt="" aria-hidden="true" class="collab-hero-org-img collab-hero-org-img--vq" />
+              <span class="collab-hero-org-name--vq">Vitalqua Project</span>
+            </a>
+          </div>
+          <div class="collab-hero-show">The Vitalqua Show</div>
+        </div>
+
+        <p class="hero-lede">
+          Una noche especial donde cada euro transforma vidas reales.
+          Tu aportación financia agua potable para estudiantes en Kenia durante los próximos 20 años.
+        </p>
+
+        <div class="event-pills">
+          <span class="pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <strong>16 de julio</strong>
+          </span>
+          <span class="pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <strong>19 – 23h</strong>
+          </span>
+          <span class="pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <strong>UIC Barcelona</strong>
+          </span>
+          <span class="pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <strong>Aforo limitado</strong>
+          </span>
+        </div>
+
+        <div class="impact-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/>
+          </svg>
+          Solo <span class="amount-em">20&nbsp;€</span> = 1 estudiante con agua limpia&nbsp;20&nbsp;años
+        </div>
+      </div>
+
+      <!-- RIGHT: Crystal water drop SVG -->
+      <div class="crystal-col" aria-hidden="true">
+        <svg class="crystal-svg" viewBox="0 0 220 310" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="dropGrad" cx="42%" cy="35%" r="60%">
+              <stop offset="0%"   stop-color="#9ED8F0"/>
+              <stop offset="50%"  stop-color="#4FB3D9"/>
+              <stop offset="100%" stop-color="#1B6FA0"/>
+            </radialGradient>
+            <radialGradient id="dropGrad2" cx="50%" cy="50%" r="55%">
+              <stop offset="0%"   stop-color="#D6EEF6" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#4FB3D9" stop-opacity="0.3"/>
+            </radialGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Main water drop body -->
+          <path d="M110 14 C110 14 36 110 36 178 a74 74 0 0 0 148 0 C184 110 110 14 110 14 Z"
+                fill="url(#dropGrad)" opacity="0.92"/>
+
+          <!-- Facet lines — crystal effect -->
+          <path d="M110 14 L70 130 L110 175" fill="rgba(255,255,255,0.12)"/>
+          <path d="M110 14 L150 130 L110 175" fill="rgba(27,95,133,0.18)"/>
+          <path d="M70 130 L110 175 L110 252" fill="rgba(255,255,255,0.07)"/>
+          <path d="M150 130 L110 175 L110 252" fill="rgba(27,95,133,0.10)"/>
+          <path d="M36 178 L110 175 L184 178" fill="rgba(255,255,255,0.06)"/>
+
+          <!-- Front edge highlight -->
+          <path d="M110 14 C110 14 36 110 36 178 a74 74 0 0 0 148 0 C184 110 110 14 110 14 Z"
+                fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+
+          <!-- Glass highlight (top-left) -->
+          <ellipse cx="85" cy="140" rx="18" ry="32"
+                   fill="white" opacity="0.22"
+                   transform="rotate(-20 85 140)"/>
+          <ellipse cx="90" cy="108" rx="8" ry="14"
+                   fill="white" opacity="0.35"
+                   transform="rotate(-18 90 108)"/>
+
+          <!-- Inner glow -->
+          <ellipse cx="110" cy="190" rx="52" ry="52"
+                   fill="url(#dropGrad2)" opacity="0.3"/>
+
+          <!-- Small water bubble inside -->
+          <circle cx="130" cy="170" r="10" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <circle cx="92" cy="200" r="7" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.28)" stroke-width="0.8"/>
+
+          <!-- Sparkle stars around the drop -->
+          <g filter="url(#glow)">
+            <!-- Star 1 (top right) -->
+            <g transform="translate(172,52)">
+              <line x1="0" y1="-9" x2="0" y2="9" stroke="#4FB3D9" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="-9" y1="0" x2="9" y2="0" stroke="#4FB3D9" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="-6" y1="-6" x2="6" y2="6" stroke="#4FB3D9" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+              <line x1="6" y1="-6" x2="-6" y2="6" stroke="#4FB3D9" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+            </g>
+            <!-- Star 2 (left) -->
+            <g transform="translate(24,145)">
+              <line x1="0" y1="-7" x2="0" y2="7" stroke="#A3D0E3" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="-7" y1="0" x2="7" y2="0" stroke="#A3D0E3" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="-4.5" y1="-4.5" x2="4.5" y2="4.5" stroke="#A3D0E3" stroke-width="0.9" stroke-linecap="round" opacity="0.55"/>
+              <line x1="4.5" y1="-4.5" x2="-4.5" y2="4.5" stroke="#A3D0E3" stroke-width="0.9" stroke-linecap="round" opacity="0.55"/>
+            </g>
+            <!-- Star 3 (top center-right) -->
+            <g transform="translate(162,28)">
+              <line x1="0" y1="-5" x2="0" y2="5" stroke="#D6EEF6" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="-5" y1="0" x2="5" y2="0" stroke="#D6EEF6" stroke-width="1.2" stroke-linecap="round"/>
+            </g>
+            <!-- Star 4 (bottom right) -->
+            <g transform="translate(190,240)">
+              <line x1="0" y1="-6" x2="0" y2="6" stroke="#4FB3D9" stroke-width="1.4" stroke-linecap="round"/>
+              <line x1="-6" y1="0" x2="6" y2="0" stroke="#4FB3D9" stroke-width="1.4" stroke-linecap="round"/>
+              <line x1="-4" y1="-4" x2="4" y2="4" stroke="#4FB3D9" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+              <line x1="4" y1="-4" x2="-4" y2="4" stroke="#4FB3D9" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+            </g>
+            <!-- Star 5 (left bottom) -->
+            <g transform="translate(14,270)">
+              <line x1="0" y1="-5" x2="0" y2="5" stroke="#A3D0E3" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="-5" y1="0" x2="5" y2="0" stroke="#A3D0E3" stroke-width="1.2" stroke-linecap="round"/>
+            </g>
+          </g>
+
+          <!-- Small floating satellite drops -->
+          <!-- Drop top-left -->
+          <path d="M32 70 C32 70 24 84 24 90 a8 8 0 0 0 16 0 C40 84 32 70 32 70 Z"
+                fill="#A3D0E3" opacity="0.65"/>
+          <!-- Drop right -->
+          <path d="M196 120 C196 120 190 131 190 136 a6 6 0 0 0 12 0 C202 131 196 120 196 120 Z"
+                fill="#4FB3D9" opacity="0.5"/>
+          <!-- Drop bottom-left -->
+          <path d="M22 230 C22 230 16 240 16 244 a6 6 0 0 0 12 0 C28 240 22 230 22 230 Z"
+                fill="#D6EEF6" opacity="0.7"/>
+        </svg>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Water drop scroll indicator -->
+  <div class="water-arrow" aria-hidden="true">
+    <div class="water-drop-wrap">
+      <svg class="water-drop" viewBox="0 0 36 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 2 C18 2 4 18 4 27 a14 14 0 0 0 28 0 C32 18 18 2 18 2 Z" fill="#4FB3D9" opacity="0.85"/>
+        <ellipse cx="13" cy="22" rx="3.5" ry="5.5" fill="white" opacity="0.3" transform="rotate(-18 13 22)"/>
+      </svg>
+      <div class="water-chevrons">
+        <svg width="26" height="13" viewBox="0 0 28 14" fill="none" stroke="#4FB3D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 14 12 26 2"/></svg>
+        <svg width="26" height="13" viewBox="0 0 28 14" fill="none" stroke="#4FB3D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 14 12 26 2"/></svg>
+        <svg width="26" height="13" viewBox="0 0 28 14" fill="none" stroke="#4FB3D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 14 12 26 2"/></svg>
+      </div>
+    </div>
+    <span class="water-arrow-label">Sigue bajando</span>
+  </div>
+
+  <!-- ================================================================
+       INFO SECTION — horario + qué incluye
+       ================================================================ -->
+  <section class="info-section">
+    <div class="wrap">
+      <div class="info-grid">
+
+        <!-- HORARIO -->
+        <div class="info-card reveal">
+          <div class="info-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Programa de la velada
+          </div>
+          <ul class="schedule-list">
+            <li class="schedule-item">
+              <span class="schedule-time">19:00 – 20:00</span>
+              <span class="schedule-desc">Cóctel de bienvenida y networking</span>
+            </li>
+            <li class="schedule-item">
+              <span class="schedule-time">20:00 – 21:30</span>
+              <span class="schedule-desc">Cena de gala</span>
+            </li>
+            <li class="schedule-item">
+              <span class="schedule-time">21:30 – 22:00</span>
+              <span class="schedule-desc">Presentación del proyecto Vitalqua</span>
+            </li>
+            <li class="schedule-item">
+              <span class="schedule-time">22:00 – 00:00</span>
+              <span class="schedule-desc">Show en directo y actuaciones</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- QUÉ INCLUYE -->
+        <div class="info-card reveal">
+          <div class="info-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            Qué incluye tu inscripción
+          </div>
+          <ul class="includes-list">
+            <li class="includes-item">
+              <span class="includes-dot">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8 22h8"/><path d="M12 11v11"/><path d="M5 3h14l-2 7a5 5 0 0 1-10 0L5 3z"/>
+                </svg>
+              </span>
+              Cóctel de bienvenida
+            </li>
+            <li class="includes-item">
+              <span class="includes-dot">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 11h18"/><path d="M3 15h18"/><path d="M5 19h14a2 2 0 0 0 2-2v-1H3v1a2 2 0 0 0 2 2z"/><path d="M3 11a7 7 0 0 1 14 0"/>
+                </svg>
+              </span>
+              Cena de gala incluida
+            </li>
+            <li class="includes-item">
+              <span class="includes-dot">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                </svg>
+              </span>
+              Show en directo
+            </li>
+            <li class="includes-item">
+              <span class="includes-dot">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+              </span>
+              Impacto real: agua para Kenia
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       IMPACT SECTION — ¿Sabías que?
+       ================================================================ -->
+  <section class="impact-section">
+    <div class="impact-inner wrap">
+
+      <!-- Text -->
+      <div class="impact-text reveal">
+        <div class="impact-badge-section">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          ¿Sabías que?
+        </div>
+
+        <p class="impact-body">
+          Proveer a <strong>un estudiante</strong> con agua limpia
+          durante <strong>20 años</strong> tiene un coste de
+          solo <span class="cy-em">20&nbsp;€</span>.
+          Con tu presencia esta noche, ese estudiante bebe agua segura
+          el resto de su vida escolar.
+        </p>
+
+        <div class="impact-stats">
+          <div class="impact-stat">
+            <span class="impact-number">20 años</span>
+            <span class="impact-stat-label">de agua garantizada por estudiante</span>
+          </div>
+          <div class="impact-stat">
+            <span class="impact-number">20&nbsp;€</span>
+            <span class="impact-stat-label">es todo lo que cuesta</span>
+          </div>
+          <div class="impact-stat">
+            <span class="impact-number">500+</span>
+            <span class="impact-stat-label">estudiantes en Narok, Kenia</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Illustration -->
+      <div class="impact-illustration" aria-hidden="true">
+        <svg class="student-svg" viewBox="0 0 380 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Estudiante con agua limpia">
+          <style>
+            .skin        { fill: #3D1F0A; }
+            .skin-mid    { fill: #4A2510; }
+            .uniform-top { fill: #2B4FA0; }
+            .shirt       { fill: #E8E0CC; }
+            .hair        { fill: #0D0800; }
+            .book-cover  { fill: #E8B84B; }
+            .book-page   { fill: #F5EDD6; }
+            .book-spine  { fill: #C9902A; }
+            .glass       { fill: none; stroke: #4FB3D9; stroke-width: 2; }
+            .glass-fill  { fill: #3EA8D8; opacity: 0.35; }
+            .glass-body  { fill: #D6F0FF; opacity: 0.18; }
+            .water-drop  { fill: #4FB3D9; opacity: 0.7; }
+            .shoe        { fill: #0D0D1A; }
+            .trouser     { fill: #16254D; }
+            .shadow-el   { fill: rgba(42,133,179,.12); }
+          </style>
+          <ellipse cx="190" cy="498" rx="55" ry="10" class="shadow-el"/>
+          <ellipse cx="173" cy="490" rx="18" ry="8" class="shoe"/>
+          <ellipse cx="207" cy="490" rx="18" ry="8" class="shoe"/>
+          <rect x="163" y="380" width="22" height="112" rx="4" class="trouser"/>
+          <rect x="196" y="380" width="22" height="112" rx="4" class="trouser"/>
+          <rect x="160" y="255" width="60" height="46" rx="5" class="shirt"/>
+          <path d="M148 265 Q155 255 190 252 Q225 255 232 265 L236 380 L144 380 Z" class="uniform-top"/>
+          <path d="M190 258 L179 282 L190 276 Z" fill="#E8E0CC" opacity="0.9"/>
+          <path d="M190 258 L201 282 L190 276 Z" fill="#E8E0CC" opacity="0.9"/>
+          <path d="M148 270 Q128 280 118 320 Q116 340 122 355" stroke="#2B4FA0" stroke-width="22" fill="none" stroke-linecap="round"/>
+          <ellipse cx="122" cy="360" rx="12" ry="10" class="skin"/>
+          <path d="M232 270 Q252 280 260 315 Q262 335 256 350" stroke="#2B4FA0" stroke-width="22" fill="none" stroke-linecap="round"/>
+          <ellipse cx="256" cy="356" rx="12" ry="10" class="skin"/>
+          <rect x="90" y="330" width="60" height="78" rx="3" class="book-cover"/>
+          <rect x="90" y="330" width="8" height="78" rx="2" class="book-spine"/>
+          <rect x="98" y="333" width="49" height="72" rx="1" class="book-page"/>
+          <line x1="104" y1="345" x2="142" y2="345" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="353" x2="142" y2="353" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="361" x2="138" y2="361" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="369" x2="142" y2="369" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="377" x2="136" y2="377" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <line x1="104" y1="385" x2="142" y2="385" stroke="#B0A070" stroke-width="1.5" opacity="0.5"/>
+          <ellipse cx="148" cy="369" rx="8" ry="8" class="skin"/>
+          <path d="M244 330 L240 400 L272 400 L268 330 Z" class="glass-body"/>
+          <path d="M245 358 L241 400 L271 400 L267 358 Z" class="glass-fill"/>
+          <path d="M244 330 L240 400 L272 400 L268 330 Z" class="glass"/>
+          <line x1="244" y1="330" x2="268" y2="330" stroke="#4FB3D9" stroke-width="2" opacity="0.7"/>
+          <line x1="245" y1="358" x2="267" y2="358" stroke="#5BC8F0" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="252" cy="370" r="2.5" fill="#A8E8FF" opacity="0.7"/>
+          <circle cx="261" cy="378" r="1.8" fill="#A8E8FF" opacity="0.6"/>
+          <circle cx="255" cy="385" r="2" fill="#A8E8FF" opacity="0.5"/>
+          <ellipse cx="244" cy="360" rx="8" ry="8" class="skin"/>
+          <ellipse cx="278" cy="355" rx="4" ry="6" class="water-drop" transform="rotate(-15 278 355)"/>
+          <ellipse cx="285" cy="370" rx="3" ry="5" class="water-drop" opacity="0.5" transform="rotate(10 285 370)"/>
+          <rect x="182" y="220" width="16" height="34" rx="4" class="skin"/>
+          <ellipse cx="190" cy="192" rx="38" ry="42" class="skin"/>
+          <ellipse cx="152" cy="197" rx="7" ry="10" class="skin"/>
+          <ellipse cx="228" cy="197" rx="7" ry="10" class="skin"/>
+          <ellipse cx="190" cy="158" rx="37" ry="16" class="hair"/>
+          <ellipse cx="157" cy="172" rx="10" ry="14" class="hair"/>
+          <ellipse cx="223" cy="172" rx="10" ry="14" class="hair"/>
+          <ellipse cx="190" cy="160" rx="30" ry="13" class="hair"/>
+          <path d="M158 178 Q190 168 222 178" fill="#0D0800"/>
+          <ellipse cx="177" cy="193" rx="6" ry="7" fill="#0A0400"/>
+          <ellipse cx="203" cy="193" rx="6" ry="7" fill="#0A0400"/>
+          <circle cx="179" cy="191" r="2" fill="white" opacity="0.65"/>
+          <circle cx="205" cy="191" r="2" fill="white" opacity="0.65"/>
+          <path d="M184 207 Q190 212 196 207" stroke="#2A0E04" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- Wave → form section -->
+    <div class="impact-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#F5F9FC"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       FORM SECTION
+       ================================================================ -->
+  <section class="form-section" id="inscripcion">
+    <div class="form-wrap">
+
+      <div class="form-heading reveal">
+        <div class="form-eyebrow">Reserva tu plaza</div>
+        <h2 class="form-title">Confirma tu inscripción</h2>
+        <p class="form-sub">
+          Elige cuántos estudiantes quieres financiar, rellena tus datos
+          y completa el pago de forma segura con Stripe.
+        </p>
+      </div>
+
+      <!-- SOLD OUT BANNER -->
+      <div class="soldout-banner" id="soldoutBanner" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="soldout-banner-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div class="soldout-banner-body">
+          <p class="soldout-banner-title">Aforo completo</p>
+          <p class="soldout-banner-text">Lo sentimos, se ha alcanzado el aforo máximo. ¡Gracias a todos por vuestro apoyo!</p>
+        </div>
+      </div>
+
+      <!-- FORM CARD -->
+      <div class="form-card reveal" id="formCard">
+        <form id="showForm" novalidate>
+
+          <!-- Nombre + Apellidos -->
+          <div class="field-row">
+            <div class="field" id="field-nombre">
+              <label for="inputNombre">
+                Nombre <span class="req" aria-hidden="true">*</span>
+              </label>
+              <input type="text" id="inputNombre" class="input"
+                placeholder="Ej. Carmen"
+                autocomplete="given-name" autocapitalize="words"
+                required aria-required="true" aria-describedby="hint-nombre"/>
+              <span class="field-hint" id="hint-nombre">Introduce tu nombre.</span>
+            </div>
+            <div class="field" id="field-apellidos">
+              <label for="inputApellidos">
+                Apellidos <span class="req" aria-hidden="true">*</span>
+              </label>
+              <input type="text" id="inputApellidos" class="input"
+                placeholder="Ej. Martínez García"
+                autocomplete="family-name" autocapitalize="words"
+                required aria-required="true" aria-describedby="hint-apellidos"/>
+              <span class="field-hint" id="hint-apellidos">Introduce tus apellidos.</span>
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="field" id="field-telefono">
+            <label for="inputTelefono">
+              Teléfono <span class="req" aria-hidden="true">*</span>
+            </label>
+            <input type="tel" id="inputTelefono" class="input"
+              placeholder="Ej. 612 34 56 78"
+              autocomplete="tel"
+              required aria-required="true" aria-describedby="hint-telefono"/>
+            <span class="field-hint" id="hint-telefono">Número español no válido (ej. 612 345 678).</span>
+          </div>
+
+          <!-- Email -->
+          <div class="field" id="field-email">
+            <label for="inputEmail">
+              Correo electrónico <span class="req" aria-hidden="true">*</span>
+            </label>
+            <input type="email" id="inputEmail" class="input"
+              placeholder="Ej. carmen@gmail.com"
+              autocomplete="email"
+              required aria-required="true" aria-describedby="hint-email"/>
+            <span class="field-hint" id="hint-email">Introduce un correo válido. Te enviaremos la invitación.</span>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <!-- NÚMERO DE ENTRADAS -->
+          <div class="qty-section">
+            <div class="qty-label-row">
+              <span class="qty-label-title">
+                Número de entradas <span class="req" style="color:var(--cy-dk);margin-left:2px" aria-hidden="true">*</span>
+              </span>
+              <span class="qty-label-hint">Podéis apuntaros varios juntos</span>
+            </div>
+            <div class="qty-stepper" role="group" aria-label="Número de entradas">
+              <button type="button" class="qty-btn" id="qtyMinus" aria-label="Reducir entradas">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <span class="qty-display" id="qtyDisplay" aria-live="polite" aria-atomic="true">1</span>
+              <button type="button" class="qty-btn" id="qtyPlus" aria-label="Aumentar entradas">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- SPLIT-EMAIL CHECKBOX (hidden until qty > 1) -->
+          <div class="split-email-wrap" id="splitEmailWrap">
+            <label class="split-email-label" for="splitEmailCheck">
+              <input type="checkbox" id="splitEmailCheck" />
+              <div class="split-checkbox-box" aria-hidden="true">
+                <svg class="split-checkbox-check" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="2 6 5 9 10 3"/>
+                </svg>
+              </div>
+              <div class="split-email-text">
+                <strong>¿Enviar entradas a correos diferentes?</strong>
+                <span>Cada acompañante recibirá su entrada directamente.</span>
+              </div>
+            </label>
+          </div>
+
+          <!-- DYNAMIC GUEST CARDS (injected by JS) -->
+          <div class="guests-section" id="guestsSection" aria-live="polite"></div>
+
+          <div class="form-divider"></div>
+
+          <!-- TIER SELECTOR -->
+          <div class="tier-section">
+            <div class="tier-label-row">
+              <span class="tier-label-title">
+                Tu aportación <span class="req" style="color:var(--cy-dk);margin-left:2px" aria-hidden="true">*</span>
+              </span>
+              <span class="tier-label-hint">20&nbsp;€ = agua para 1 estudiante durante 20&nbsp;años</span>
+            </div>
+
+            <div class="tier-grid" id="tierGrid" role="radiogroup" aria-label="Selecciona tu aportación">
+
+              <!-- 10 € — ½ estudiante -->
+              <button type="button" class="tier-card" data-amount="10" aria-pressed="false">
+                <div class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </div>
+                <div class="tier-persons">
+                  <div class="tier-person half">
+                    <div class="tier-person-head"></div>
+                    <div class="tier-person-body"></div>
+                  </div>
+                </div>
+                <div class="tier-amount">10&nbsp;€</div>
+                <div class="tier-students">½ estudiante</div>
+                <div class="tier-tag">Mínimo</div>
+              </button>
+
+              <!-- 20 € — 1 estudiante -->
+              <button type="button" class="tier-card" data-amount="20" aria-pressed="false">
+                <div class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </div>
+                <div class="tier-persons">
+                  <div class="tier-person">
+                    <div class="tier-person-head"></div>
+                    <div class="tier-person-body"></div>
+                  </div>
+                </div>
+                <div class="tier-amount">20&nbsp;€</div>
+                <div class="tier-students">1 estudiante</div>
+              </button>
+
+              <!-- 40 € — 2 estudiantes -->
+              <button type="button" class="tier-card" data-amount="40" aria-pressed="false">
+                <div class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </div>
+                <div class="tier-persons">
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <div class="tier-amount">40&nbsp;€</div>
+                <div class="tier-students">2 estudiantes</div>
+              </button>
+
+              <!-- 60 € — 3 estudiantes -->
+              <button type="button" class="tier-card" data-amount="60" aria-pressed="false">
+                <div class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </div>
+                <div class="tier-persons">
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <div class="tier-amount">60&nbsp;€</div>
+                <div class="tier-students">3 estudiantes</div>
+              </button>
+
+              <!-- 80 € — 4 estudiantes -->
+              <button type="button" class="tier-card" data-amount="80" aria-pressed="false">
+                <div class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </div>
+                <div class="tier-persons">
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <div class="tier-amount">80&nbsp;€</div>
+                <div class="tier-students">4 estudiantes</div>
+              </button>
+
+              <!-- 100 € — 5 estudiantes -->
+              <button type="button" class="tier-card" data-amount="100" aria-pressed="false">
+                <div class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </div>
+                <div class="tier-persons">
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <div class="tier-amount">100&nbsp;€</div>
+                <div class="tier-students">5 estudiantes</div>
+                <div class="tier-tag">Popular</div>
+              </button>
+
+              <!-- Precio personalizado — ocupa 2 columnas -->
+              <button type="button" class="tier-card tier-custom" data-amount="custom" aria-pressed="false">
+                <div class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--cy-dk);flex-shrink:0">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  <span class="tier-amount" style="font-size:1rem">Importe personalizado</span>
+                </div>
+                <div class="tier-students" style="margin-bottom:6px">Tú decides cuánto contribuyes (mínimo 10&nbsp;€)</div>
+                <!-- Input only visible when selected -->
+                <div class="custom-input-wrap" id="customInputWrap">
+                  <span class="custom-euro-prefix">€</span>
+                  <input type="number" id="customAmountInput" class="custom-input"
+                    min="10" step="1" placeholder="Importe"
+                    aria-label="Introduce tu importe personalizado (mínimo 10 euros)"
+                    aria-describedby="custom-hint-error"/>
+                  <span class="custom-min-note">Mínimo 10&nbsp;€ · Todo va al proyecto</span>
+                  <span class="custom-hint-error" id="custom-hint-error">El importe mínimo es 10&nbsp;€.</span>
+                </div>
+              </button>
+
+            </div>
+
+            <span class="tier-hint-error" id="tierHintError">Selecciona un importe para continuar.</span>
+          </div>
+
+          <!-- Price summary (updates dynamically) -->
+          <div class="price-summary" id="priceSummary" aria-label="Resumen de aportación">
+            <div class="price-summary-label">
+              <span class="ps-title" id="psSummaryTitle">Selecciona tu aportación</span>
+              <span class="ps-sub" id="psSummarySub">Todo va directamente al proyecto · Kenia</span>
+            </div>
+            <span class="price-summary-amount empty" id="psSummaryAmount">—</span>
+          </div>
+
+          <!-- Stripe Payment Element (shown after backend creates PaymentIntent) -->
+          <div class="vq-payment-wrap" id="vqPaymentWrap" hidden>
+            <div class="form-divider"></div>
+            <div class="vq-payment-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                <line x1="1" y1="10" x2="23" y2="10"/>
+              </svg>
+              Datos de pago
+            </div>
+            <div id="vqPaymentElement"></div>
+            <div class="vq-payment-error" id="vqPaymentError" role="alert" aria-live="polite">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span id="vqPaymentErrorText"></span>
+            </div>
+          </div>
+
+          <!-- Pay button -->
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <div class="spinner" aria-hidden="true"></div>
+            <svg class="lock-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <span class="btn-text" id="submitBtnText">Selecciona tu aportación</span>
+          </button>
+
+          <p class="stripe-trust">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            Pago seguro procesado por Stripe
+          </p>
+
+          <div class="form-error" id="formError" role="alert" aria-live="polite">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span id="formErrorText">Algo ha fallado. Por favor inténtalo de nuevo o escríbenos a <strong>vitalquaproject@gmail.com</strong>.</span>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       FOOTER
+       ================================================================ -->
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>© Vitalqua Project · Kenia</span>
+      <a href="mailto:vitalquaproject@gmail.com">vitalquaproject@gmail.com</a>
+    </div>
+  </footer>
+
+  <!-- ================================================================
+       SCRIPTS
+       ================================================================ -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    /* ----------------------------------------------------------------
+       Stripe Publishable Key — safe to embed in the frontend.
+       Replace with your real pk_test_* or pk_live_* key.
+       The secret key lives ONLY in .env / server.js.
+       ---------------------------------------------------------------- */
+    var VQ_STRIPE_PK = 'pk_test_REPLACE_WITH_YOUR_PUBLISHABLE_KEY';
+
+    /* ----------------------------------------------------------------
+       FIREBASE — sold-out check y conteo de participantes
+       ---------------------------------------------------------------- */
+    (function () {
+      const TICKET_LIMIT  = 200;
+      const TICKETS_COLL  = 'artifacts/vitalqua-show-tickets/public/data/tickets';
+
+      const firebaseConfig = {
+        apiKey:            "AIzaSyDKic5e9DAU1iw6ZOtsT1gGEEyU8WCtAXE",
+        authDomain:        "vitalqua-project.firebaseapp.com",
+        projectId:         "vitalqua-project",
+        storageBucket:     "vitalqua-project.firebasestorage.app",
+        messagingSenderId: "263061224525",
+        appId:             "1:263061224525:web:9bc179545f515ffac27004",
+      };
+
+      const app = firebase.apps.length
+        ? firebase.app()
+        : firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore(app);
+
+      function lockForm() {
+        var banner = document.getElementById('soldoutBanner');
+        if (banner) banner.classList.add('show');
+
+        document.querySelectorAll('#showForm input').forEach(function (inp) {
+          inp.disabled = true;
+        });
+        document.querySelectorAll('.tier-card').forEach(function (btn) {
+          btn.disabled = true;
+        });
+
+        var btn      = document.getElementById('submitBtn');
+        var btnText  = btn && btn.querySelector('.btn-text');
+        var lockIcon = btn && btn.querySelector('.lock-icon');
+        if (btn) {
+          btn.disabled = true;
+          btn.classList.add('soldout');
+          if (lockIcon) lockIcon.style.display = 'none';
+          if (btnText)  btnText.textContent = 'AFORO COMPLETO';
+        }
+      }
+
+      async function checkTicketLimit() {
+        try {
+          var snap = await db
+            .collection(TICKETS_COLL)
+            .limit(TICKET_LIMIT)
+            .get();
+          var count = snap.size;
+          if (count >= TICKET_LIMIT) lockForm();
+        } catch (err) {
+          console.warn('[Vitalqua Show] No se ha podido verificar el aforo:', err);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkTicketLimit);
+      } else {
+        checkTicketLimit();
+      }
+    })();
+
+    /* ----------------------------------------------------------------
+       QUANTITY STEPPER
+       ---------------------------------------------------------------- */
+    (function () {
+      var MAX_QTY  = 10;
+      var qty      = 1;
+      var btnMinus = document.getElementById('qtyMinus');
+      var btnPlus  = document.getElementById('qtyPlus');
+      var display  = document.getElementById('qtyDisplay');
+
+      function render() {
+        display.textContent = qty;
+        btnMinus.disabled   = qty <= 1;
+        btnPlus.disabled    = qty >= MAX_QTY;
+        if (window._VQ_SHOW)   window._VQ_SHOW.refreshSummary();
+        if (window._VQ_GUESTS) window._VQ_GUESTS.onQtyChange(qty);
+      }
+
+      btnMinus.addEventListener('click', function () {
+        if (qty > 1)       { qty--; render(); }
+      });
+      btnPlus.addEventListener('click', function () {
+        if (qty < MAX_QTY) { qty++; render(); }
+      });
+
+      render();
+
+      window._VQ_QTY = {
+        get:    function () { return qty; },
+        getMax: function () { return MAX_QTY; }
+      };
+    })();
+
+    /* ----------------------------------------------------------------
+       SPLIT-EMAIL / GUEST MANAGEMENT
+       ---------------------------------------------------------------- */
+    (function () {
+      var splitWrap    = document.getElementById('splitEmailWrap');
+      var splitCheck   = document.getElementById('splitEmailCheck');
+      var guestsSection = document.getElementById('guestsSection');
+
+      /* guest state: array of {name, email} objects mirroring the DOM */
+      var guestData = [];
+
+      /* --- Build one guest card node for index i --- */
+      function buildCard(i) {
+        var card = document.createElement('div');
+        card.className = 'guest-card';
+        card.dataset.guestIndex = i;
+        card.innerHTML =
+          '<div class="guest-card-header">' +
+            '<div class="guest-number">' + (i + 1) + '</div>' +
+            '<span class="guest-card-title">Acompañante ' + (i + 1) + '</span>' +
+          '</div>' +
+          '<div class="guest-field-row">' +
+            '<div class="field guest-field" id="guest-field-nombre-' + i + '">' +
+              '<label for="guestNombre' + i + '">Nombre completo <span class="req" aria-hidden="true">*</span></label>' +
+              '<input type="text" id="guestNombre' + i + '" class="input" placeholder="Ej. Laura Sánchez"' +
+                ' autocomplete="off" autocapitalize="words" data-guest="' + i + '" data-field="name" />' +
+              '<span class="field-hint" id="hint-guest-nombre-' + i + '">Introduce el nombre del acompañante.</span>' +
+            '</div>' +
+            '<div class="field guest-field" id="guest-field-email-' + i + '">' +
+              '<label for="guestEmail' + i + '">Correo electrónico <span class="req" aria-hidden="true">*</span></label>' +
+              '<input type="email" id="guestEmail' + i + '" class="input" placeholder="Ej. laura@gmail.com"' +
+                ' autocomplete="off" data-guest="' + i + '" data-field="email" />' +
+              '<span class="field-hint" id="hint-guest-email-' + i + '">Introduce un correo válido.</span>' +
+            '</div>' +
+          '</div>';
+
+        /* Live-sync inputs to guestData */
+        card.querySelectorAll('input').forEach(function (inp) {
+          inp.addEventListener('input', function () {
+            var idx   = parseInt(this.dataset.guest, 10);
+            var field = this.dataset.field;
+            guestData[idx][field] = this.value;
+            /* clear error on typing */
+            this.classList.remove('invalid');
+            var hint = document.getElementById('hint-guest-' + field.replace('name','nombre') + '-' + idx);
+            if (hint) hint.classList.remove('show');
+          });
+        });
+
+        return card;
+      }
+
+      /* --- Re-render guest cards to match qty - 1 --- */
+      function renderGuests() {
+        var needed = splitCheck.checked ? (window._VQ_QTY ? window._VQ_QTY.get() - 1 : 0) : 0;
+
+        /* Grow */
+        while (guestData.length < needed) {
+          guestData.push({ name: '', email: '' });
+          guestsSection.appendChild(buildCard(guestData.length - 1));
+        }
+        /* Shrink */
+        while (guestData.length > needed) {
+          guestData.pop();
+          var last = guestsSection.lastElementChild;
+          if (last) guestsSection.removeChild(last);
+        }
+
+        /* Section title */
+        var title = guestsSection.querySelector('.guests-section-title');
+        if (needed > 0 && !title) {
+          var t = document.createElement('div');
+          t.className = 'guests-section-title';
+          t.textContent = 'Datos de los acompañantes';
+          guestsSection.insertBefore(t, guestsSection.firstChild);
+        } else if (needed === 0 && title) {
+          guestsSection.removeChild(title);
+        }
+
+        guestsSection.classList.toggle('visible', needed > 0);
+      }
+
+      /* --- Checkbox toggle --- */
+      splitCheck.addEventListener('change', renderGuests);
+
+      /* --- Called by the stepper when qty changes --- */
+      function onQtyChange(qty) {
+        /* Show/hide the checkbox row */
+        splitWrap.classList.toggle('visible', qty > 1);
+        if (qty <= 1) {
+          splitCheck.checked = false;
+        }
+        /* Resize guest list if split is active */
+        renderGuests();
+      }
+
+      /* --- Validation --- */
+      function validate() {
+        if (!splitCheck.checked) return true;
+        var ok = true;
+        var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        guestData.forEach(function (g, i) {
+          var nomInput   = document.getElementById('guestNombre' + i);
+          var emailInput = document.getElementById('guestEmail' + i);
+          var hintNom    = document.getElementById('hint-guest-nombre-' + i);
+          var hintEmail  = document.getElementById('hint-guest-email-' + i);
+
+          if (!g.name.trim()) {
+            nomInput.classList.add('invalid');
+            hintNom.classList.add('show');
+            if (ok) nomInput.focus();
+            ok = false;
+          }
+          if (!EMAIL_RE.test(g.email.trim())) {
+            emailInput.classList.add('invalid');
+            hintEmail.classList.add('show');
+            if (ok) emailInput.focus();
+            ok = false;
+          }
+        });
+        return ok;
+      }
+
+      /* --- Public API --- */
+      window._VQ_GUESTS = {
+        onQtyChange:  onQtyChange,
+        validate:     validate,
+        getData:      function () {
+          if (!splitCheck.checked) return [];
+          return guestData.map(function (g) {
+            return { name: g.name.trim(), email: g.email.trim() };
+          });
+        }
+      };
+    })();
+
+    /* ----------------------------------------------------------------
+       TIER SELECTOR — lógica de selección e impacto
+       ---------------------------------------------------------------- */
+    (function () {
+      var selectedAmount = null;
+
+      var tierGrid       = document.getElementById('tierGrid');
+      var tierHintError  = document.getElementById('tierHintError');
+      var psSummaryTitle  = document.getElementById('psSummaryTitle');
+      var psSummarySub    = document.getElementById('psSummarySub');
+      var psSummaryAmount = document.getElementById('psSummaryAmount');
+      var submitBtnText   = document.getElementById('submitBtnText');
+      var customInput     = document.getElementById('customAmountInput');
+      var customHintError = document.getElementById('custom-hint-error');
+
+      function studentsLabel(totalEuros) {
+        var n = totalEuros / 20;
+        if (n < 1)              return '½ estudiante';
+        if (n === 1)            return '1 estudiante';
+        if (n % 1 === 0.5)     return n.toFixed(1).replace('.', ',') + ' estudiantes';
+        return Math.floor(n) + (n % 1 ? '+' : '') + ' estudiante' + (n > 1 ? 's' : '');
+      }
+
+      function updateSummary(euros) {
+        var qty   = window._VQ_QTY ? window._VQ_QTY.get() : 1;
+        var total = euros ? euros * qty : null;
+
+        if (!total || isNaN(total) || total <= 0) {
+          psSummaryTitle.textContent  = 'Selecciona tu aportación';
+          psSummarySub.textContent    = 'Todo va directamente al proyecto · Kenia';
+          psSummaryAmount.textContent = '—';
+          psSummaryAmount.classList.add('empty');
+          submitBtnText.textContent   = 'Selecciona tu aportación';
+          return;
+        }
+
+        var entradas = qty === 1 ? '1 entrada' : qty + ' entradas';
+        var label    = studentsLabel(total);
+        psSummaryTitle.textContent  = entradas + ' · ' + euros.toLocaleString('es-ES') + '\u00A0€/persona';
+        psSummarySub.textContent    = label + ' · 20 años de agua limpia garantizada';
+        psSummaryAmount.textContent = total.toLocaleString('es-ES') + '\u00A0€';
+        psSummaryAmount.classList.remove('empty');
+        submitBtnText.textContent   = 'Pagar ' + total.toLocaleString('es-ES') + '\u00A0€';
+      }
+
+      tierGrid.addEventListener('click', function (e) {
+        var card = e.target.closest('.tier-card');
+        if (!card || card.disabled) return;
+
+        /* Deselect all */
+        tierGrid.querySelectorAll('.tier-card').forEach(function (c) {
+          c.classList.remove('selected');
+          c.setAttribute('aria-pressed', 'false');
+        });
+
+        /* Select this one */
+        card.classList.add('selected');
+        card.setAttribute('aria-pressed', 'true');
+        tierHintError.classList.remove('show');
+
+        var amount = card.dataset.amount;
+        if (amount === 'custom') {
+          selectedAmount = null;
+          updateSummary(null);
+          setTimeout(function () {
+            if (customInput) customInput.focus();
+          }, 80);
+        } else {
+          selectedAmount = parseInt(amount, 10);
+          updateSummary(selectedAmount);
+          customHintError.classList.remove('show');
+        }
+      });
+
+      /* Custom amount input → update summary live */
+      if (customInput) {
+        customInput.addEventListener('input', function () {
+          customHintError.classList.remove('show');
+          customInput.classList.remove('invalid');
+          var val = parseFloat(this.value);
+          if (!isNaN(val) && val >= 10) {
+            selectedAmount = val;
+            updateSummary(val);
+          } else {
+            selectedAmount = null;
+            updateSummary(null);
+          }
+        });
+        customInput.addEventListener('click', function (e) { e.stopPropagation(); });
+      }
+
+      /* Expose to global scope */
+      window._VQ_SHOW = {
+        getAmount:      function () { return selectedAmount; },
+        isCustom:       function () {
+          var sel = tierGrid.querySelector('.tier-card.selected');
+          return sel && sel.dataset.amount === 'custom';
+        },
+        refreshSummary: function () { updateSummary(selectedAmount); },
+        showTierError:  function () { tierHintError.classList.add('show'); },
+        showCustomError: function () {
+          if (customInput) {
+            customInput.classList.add('invalid');
+            customHintError.classList.add('show');
+          }
+        }
+      };
+    })();
+
+    /* ----------------------------------------------------------------
+       Genera un ID único: VSW-XXXXXX
+       ---------------------------------------------------------------- */
+    function generateTicketId() {
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      var id = 'VSW-';
+      for (var i = 0; i < 6; i++) {
+        id += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return id;
+    }
+
+    /* ---- Header scroll ---- */
+    (function () {
+      var header = document.getElementById('siteHeader');
+      var update = function () {
+        header.classList.toggle('scrolled', window.scrollY > 60);
+      };
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    /* ---- Hero floating drops animation ---- */
+    (function () {
+      var g = document.getElementById('hero-drops');
+      if (!g) return;
+      var NS = 'http://www.w3.org/2000/svg';
+      var COUNT = 22;
+      var drops = [];
+      var rand = function (i, salt) {
+        var x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
+        return x - Math.floor(x);
+      };
+      for (var i = 0; i < COUNT; i++) {
+        var p  = document.createElementNS(NS, 'ellipse');
+        var cx = 4 + rand(i, 1) * 152;
+        var cy = 4 + rand(i, 2) * 82;
+        var rx = 0.5 + rand(i, 3) * 1.8;
+        var ry = rx * (1.3 + rand(i, 8) * 0.5);
+        p.setAttribute('cx', cx); p.setAttribute('cy', cy);
+        p.setAttribute('rx', rx); p.setAttribute('ry', ry);
+        p.setAttribute('fill', rand(i, 4) > 0.5 ? '#4FB3D9' : '#A3D0E3');
+        p.setAttribute('opacity', (0.06 + rand(i, 5) * 0.14).toFixed(2));
+        g.appendChild(p);
+        drops.push({ el: p, cx: cx, cy: cy, phase: rand(i, 6) * Math.PI * 2, sp: 0.15 + rand(i, 7) * 0.4 });
+      }
+      function animate(now) {
+        var t = now / 1000;
+        for (var d of drops) {
+          var dy = Math.sin(t * d.sp + d.phase) * 2.2;
+          d.el.setAttribute('cy', (d.cy + dy).toFixed(2));
+        }
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    })();
+
+    /* ---- Reveal on scroll ---- */
+    (function () {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    })();
+
+    /* ----------------------------------------------------------------
+       FORMULARIO — validación, Payment Intent y Stripe Elements
+       Flujo de dos pasos:
+         1. El usuario rellena sus datos y selecciona su aportación
+            → "Proceder al pago" llama al backend para crear el
+              PaymentIntent y monta el Payment Element inline.
+         2. El usuario introduce sus datos de tarjeta
+            → "Confirmar pago" llama a stripe.confirmPayment()
+              que redirige a success-show.html.
+       ---------------------------------------------------------------- */
+    (function () {
+      var form        = document.getElementById('showForm');
+      var submitBtn   = document.getElementById('submitBtn');
+      var submitText  = document.getElementById('submitBtnText');
+      var errorMsg    = document.getElementById('formError');
+      var errorText   = document.getElementById('formErrorText');
+
+      var inputNombre    = document.getElementById('inputNombre');
+      var inputApellidos = document.getElementById('inputApellidos');
+      var inputTelefono  = document.getElementById('inputTelefono');
+      var inputEmail     = document.getElementById('inputEmail');
+
+      var hintNombre    = document.getElementById('hint-nombre');
+      var hintApellidos = document.getElementById('hint-apellidos');
+      var hintTelefono  = document.getElementById('hint-telefono');
+      var hintEmail     = document.getElementById('hint-email');
+
+      /* State */
+      var flowStep = 'form'; // 'form' | 'payment'
+      var stripeInstance = null;
+      var stripeElements = null;
+
+      /* ---- Helpers ---- */
+      function isValidSpanishPhone(raw) {
+        var cleaned = raw.replace(/[\s\-\.]/g, '');
+        return /^(\+34|0034)?[6789]\d{8}$/.test(cleaned);
+      }
+
+      function isValidEmail(val) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+      }
+
+      function clearErrorOn(input, hint, extraCheck) {
+        input.addEventListener('input', function () {
+          var ok = extraCheck ? extraCheck(input.value) : input.value.trim().length > 0;
+          if (ok) {
+            input.classList.remove('invalid');
+            hint.classList.remove('show');
+          }
+        });
+      }
+      clearErrorOn(inputNombre,    hintNombre);
+      clearErrorOn(inputApellidos, hintApellidos);
+      clearErrorOn(inputTelefono,  hintTelefono, isValidSpanishPhone);
+      clearErrorOn(inputEmail,     hintEmail,    isValidEmail);
+
+      function applyTitleCase(inp) {
+        inp.addEventListener('input', function () {
+          var pos    = this.selectionStart;
+          var titled = this.value.replace(/(?:^|[\s\-])(\S)/g, function (m) { return m.toUpperCase(); });
+          if (this.value !== titled) {
+            this.value = titled;
+            this.setSelectionRange(pos, pos);
+          }
+        });
+      }
+      applyTitleCase(inputNombre);
+      applyTitleCase(inputApellidos);
+
+      inputTelefono.addEventListener('input', function () {
+        var digits = this.value.replace(/\D/g, '').slice(0, 9);
+        var f = digits.slice(0, 3);
+        if (digits.length > 3) f += ' ' + digits.slice(3, 5);
+        if (digits.length > 5) f += ' ' + digits.slice(5, 7);
+        if (digits.length > 7) f += ' ' + digits.slice(7, 9);
+        this.value = f;
+      });
+
+      function validateForm() {
+        var ok = true;
+        var setErr = function (inp, hint) {
+          inp.classList.add('invalid');
+          hint.classList.add('show');
+          if (ok) inp.focus();
+          ok = false;
+        };
+        if (!inputNombre.value.trim())                  setErr(inputNombre,    hintNombre);
+        if (!inputApellidos.value.trim())               setErr(inputApellidos, hintApellidos);
+        if (!isValidSpanishPhone(inputTelefono.value))  setErr(inputTelefono,  hintTelefono);
+        if (!isValidEmail(inputEmail.value))            setErr(inputEmail,     hintEmail);
+
+        var vq = window._VQ_SHOW;
+        if (!vq) return false;
+        if (vq.getAmount() === null) {
+          if (vq.isCustom()) { vq.showCustomError(); } else { vq.showTierError(); }
+          ok = false;
+        }
+
+        /* Validate guest fields if split-email is active */
+        if (window._VQ_GUESTS && !window._VQ_GUESTS.validate()) ok = false;
+
+        return ok;
+      }
+
+      function showFormError(msg) {
+        errorText.textContent = msg;
+        errorMsg.classList.add('show');
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+      }
+
+      function lockFormFields() {
+        document.querySelectorAll('#showForm input').forEach(function (inp) { inp.disabled = true; });
+        document.querySelectorAll('.tier-card').forEach(function (btn) { btn.disabled = true; });
+        var qtyMinus = document.getElementById('qtyMinus');
+        var qtyPlus  = document.getElementById('qtyPlus');
+        if (qtyMinus) qtyMinus.disabled = true;
+        if (qtyPlus)  qtyPlus.disabled  = true;
+      }
+
+      /* ---- Step 1: Create PaymentIntent on the backend ---- */
+      async function initPayment() {
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+        errorMsg.classList.remove('show');
+
+        var vq       = window._VQ_SHOW;
+        var amount   = vq.getAmount();
+        var isCustom = vq.isCustom();
+        var qty      = window._VQ_QTY ? window._VQ_QTY.get() : 1;
+        var nombre    = inputNombre.value.trim();
+        var apellidos = inputApellidos.value.trim();
+        var telefono  = inputTelefono.value.trim();
+        var email     = inputEmail.value.trim().toLowerCase();
+        var ticketId  = generateTicketId();
+
+        var guests = window._VQ_GUESTS ? window._VQ_GUESTS.getData() : [];
+
+        /* Persist registration data before the Stripe redirect */
+        localStorage.setItem('vq_show_ticketId',  ticketId);
+        localStorage.setItem('vq_show_nombre',    nombre);
+        localStorage.setItem('vq_show_apellidos', apellidos);
+        localStorage.setItem('vq_show_telefono',  telefono);
+        localStorage.setItem('vq_show_email',     email);
+        localStorage.setItem('vq_show_amount',    amount);
+        localStorage.setItem('vq_show_qty',       qty);
+        localStorage.setItem('vq_show_total',     amount * qty);
+        if (guests.length) {
+          localStorage.setItem('vq_show_guests', JSON.stringify(guests));
+        }
+
+        try {
+          var resp = await fetch('/api/create-payment-intent', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              option_id:     isCustom ? 'custom' : String(amount),
+              quantity:      qty,
+              custom_amount: isCustom ? amount : undefined,
+              metadata: {
+                ticket_id: ticketId,
+                nombre:    nombre,
+                apellidos: apellidos,
+                telefono:  telefono,
+                email:     email,
+                guests:    guests.length ? JSON.stringify(guests) : undefined,
+              },
+            }),
+          });
+
+          var data = await resp.json();
+
+          if (!resp.ok) {
+            showFormError(data.error || 'Error al iniciar el pago. Inténtalo de nuevo.');
+            return;
+          }
+
+          /* Mount Stripe Payment Element */
+          stripeInstance = Stripe(VQ_STRIPE_PK);
+          stripeElements = stripeInstance.elements({
+            clientSecret: data.clientSecret,
+            locale: 'es',
+            appearance: {
+              theme: 'stripe',
+              variables: {
+                colorPrimary:       '#2A85B3',
+                colorBackground:    '#ffffff',
+                colorText:          '#1A2B42',
+                colorDanger:        '#DC2626',
+                fontFamily:         'Inter, system-ui, sans-serif',
+                borderRadius:       '10px',
+                spacingUnit:        '4px',
+              },
+              rules: {
+                '.Input': { border: '1.5px solid #D0DFF0', boxShadow: 'none' },
+                '.Input:focus': { border: '1.5px solid #2A85B3', boxShadow: '0 0 0 3px rgba(42,133,179,.15)' },
+                '.Label': { fontWeight: '600', fontSize: '13px' },
+              },
+            },
+          });
+
+          var paymentElement = stripeElements.create('payment');
+          paymentElement.mount('#vqPaymentElement');
+
+          /* Reveal payment section */
+          document.getElementById('vqPaymentWrap').hidden = false;
+          document.getElementById('vqPaymentWrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+          /* Freeze form fields — amount is now locked server-side */
+          lockFormFields();
+
+          /* Transition to step 2 */
+          flowStep = 'payment';
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+          var total = amount * qty;
+          submitText.textContent = 'Confirmar pago · ' + total.toLocaleString('es-ES') + '\u00A0€';
+
+        } catch (err) {
+          console.error('[Vitalqua] Error creating payment intent:', err);
+          showFormError('Error de conexión. Comprueba tu internet e inténtalo de nuevo.');
+        }
+      }
+
+      /* ---- Step 2: Confirm payment via Stripe ---- */
+      async function confirmPayment() {
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+
+        /* Clear any previous Stripe-level payment error */
+        var payErrEl = document.getElementById('vqPaymentError');
+        if (payErrEl) payErrEl.classList.remove('show');
+
+        var result = await stripeInstance.confirmPayment({
+          elements: stripeElements,
+          confirmParams: {
+            return_url:    window.location.origin + '/success-show.html',
+            receipt_email: inputEmail.value.trim().toLowerCase(),
+          },
+        });
+
+        /* confirmPayment only returns here if there was an error
+           (a successful payment always redirects to return_url) */
+        if (result.error) {
+          var errEl   = document.getElementById('vqPaymentError');
+          var errText = document.getElementById('vqPaymentErrorText');
+          if (result.error.type !== 'validation_error' && errEl && errText) {
+            errText.textContent = result.error.message;
+            errEl.classList.add('show');
+          }
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+        }
+      }
+
+      /* ---- Form submit dispatcher ---- */
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (flowStep === 'form') {
+          if (!validateForm()) return;
+          initPayment();
+        } else if (flowStep === 'payment') {
+          confirmPayment();
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

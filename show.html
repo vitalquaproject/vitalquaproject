@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vitalqua Show — Vitalqua Project</title>
-  <meta name="description" content="Inscríbete en el Vitalqua Show. Con tu aportación financias agua limpia para estudiantes en Kenia durante 20 años." />
+  <title>Concierto Benéfico · UIC × ADESCI × Vitalqua Project · 16 Julio</title>
+  <meta name="description" content="Concierto benéfico organizado por UIC Barcelona, ADESCI y Vitalqua Project. 16 de julio — una noche de música solidaria para llevar agua limpia a 500 estudiantes en Kenia." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,204 +110,232 @@
     .logo-mark { width: auto; height: 32px; display: block; flex-shrink: 0; }
 
     /* ============================================================
-       HERO — light blue/white gradient, formal
+       HERO — mobile-first · concierto benéfico
        ============================================================ */
     .hero {
       position: relative;
-      min-height: 100vh;
+      min-height: 100svh;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 130px 0 80px;
+      align-items: center;
+      padding: 96px 0 56px;
       overflow: hidden;
       background:
-        radial-gradient(ellipse at 18% 28%, rgba(79,179,217,.16) 0%, transparent 52%),
-        radial-gradient(ellipse at 82% 72%, rgba(42,133,179,.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 18% 28%, rgba(79,179,217,.18) 0%, transparent 52%),
+        radial-gradient(ellipse at 82% 72%, rgba(42,133,179,.11) 0%, transparent 50%),
         linear-gradient(155deg, #E4F3FB 0%, #F5F9FC 45%, #EDF6FC 100%);
     }
 
-    /* Floating particle canvas */
     .hero-canvas {
       position: absolute; inset: 0;
-      pointer-events: none; z-index: 0;
-      overflow: visible;
+      pointer-events: none; z-index: 0; overflow: visible;
     }
     .hero-canvas svg { width: 100%; height: 100%; display: block; }
 
+    /* Mobile-first: single centred column */
     .hero-inner {
       position: relative; z-index: 2;
       width: 100%;
-      max-width: 1120px;
+      max-width: 520px;
       margin: 0 auto;
-      padding: 0 clamp(18px, 5vw, 48px);
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: clamp(28px, 5vw, 72px);
-      align-items: center;
-    }
-    .hero-text {
+      padding: 0 clamp(20px, 6vw, 36px);
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
+      text-align: center;
     }
 
-    .eyebrow-show {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-size: 0.7rem;
+    /* ── Org logos strip — unified card ── */
+    .hero-orgs {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .hero-orgs-label {
+      font-size: .6rem;
       font-weight: 700;
-      letter-spacing: 0.28em;
+      letter-spacing: .22em;
       text-transform: uppercase;
-      color: var(--cy-dk);
-      margin-bottom: 20px;
+      color: var(--muted);
     }
-    .eyebrow-show::before {
-      content: ""; flex-shrink: 0;
-      width: 22px; height: 1px;
-      background: var(--cy-dk);
-      opacity: 0.55;
+    .hero-orgs-logos {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(42,133,179,.14);
+      border-radius: var(--radius);
+      padding: clamp(14px, 2.5vw, 20px) clamp(12px, 3vw, 24px);
+      box-shadow: var(--shadow-sm);
+    }
+    .hero-org-link {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 0 clamp(12px, 2.8vw, 26px);
+      text-decoration: none;
+      transition: opacity 180ms ease;
+      flex-shrink: 0;
+    }
+    .hero-org-link:hover { opacity: .68; }
+    .hero-org-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(42,133,179,.18);
+      flex-shrink: 0;
+    }
+    .hero-org-img {
+      height: clamp(30px, 6.5vw, 50px);
+      width: auto; display: block;
+    }
+    .hero-org-img--vq { height: clamp(22px, 5vw, 38px); }
+    .hero-org-name {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(.55rem, 1.2vw, .65rem);
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
     }
 
-    .show-name {
-      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
-      font-size: clamp(1.15rem, 2.4vw, 1.75rem);
-      font-weight: 600;
-      letter-spacing: -0.015em;
-      line-height: 1.1;
-      color: var(--ink-soft);
+    /* ── Eyebrow ── */
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .26em; text-transform: uppercase;
+      color: var(--cy-dk);
+      margin-bottom: 12px;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: ""; width: 18px; height: 1px;
+      background: var(--cy-dk); opacity: .5; flex-shrink: 0;
+    }
+
+    /* ── Main title ── */
+    .hero-title {
+      font-family: 'Bebas Neue', 'Inter Tight', sans-serif;
+      font-size: clamp(2.8rem, 9vw, 4.8rem);
+      font-weight: 400;
+      letter-spacing: .05em; line-height: .95;
+      color: var(--cy-xdk);
+      text-transform: uppercase;
       margin-bottom: 22px;
     }
-    .show-name em {
-      font-style: normal;
-      color: var(--navy);
-      font-weight: 700;
-    }
+    .hero-title .title-line2 { color: var(--navy); }
 
-    .tagline-block {
-      margin-bottom: 28px;
-      line-height: 1;
+    /* ── Event info cards ── */
+    .hero-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      width: 100%;
+      margin-bottom: 20px;
     }
-    .tu-velada {
-      display: block;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: clamp(3.6rem, 8.5vw, 6.8rem);
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      line-height: 0.92;
-      color: var(--cy-xdk);
-    }
-    .tagline-sep {
-      display: block;
-      width: 36px;
-      height: 1.5px;
-      background: var(--cy-lt);
-      margin: 12px 0;
-      opacity: 0.7;
-    }
-    .su-agua {
-      display: block;
-      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
-      font-size: clamp(2.6rem, 6vw, 4.8rem);
-      font-weight: 300;
-      letter-spacing: 0.18em;
-      line-height: 1;
-      color: var(--cy);
-    }
-
-    .hero-lede {
-      font-size: clamp(0.93rem, 1.6vw, 1.05rem);
-      color: var(--ink-soft);
-      max-width: 48ch;
-      margin-bottom: 32px;
-      line-height: 1.68;
-    }
-
-    .event-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: flex-start;
-      margin-bottom: 28px;
-    }
-    .pill {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: rgba(79,179,217,.1);
-      border: 1px solid rgba(79,179,217,.28);
-      color: var(--cy-xdk);
-      font-size: 0.84rem;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-    }
-    .pill svg { flex-shrink: 0; opacity: 0.7; }
-    .pill strong { color: var(--navy); font-weight: 700; }
-
-    .impact-badge {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 14px 24px;
+    .hero-info-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 4px;
+      padding: clamp(11px, 2.8vw, 16px) 6px;
+      background: rgba(255,255,255,.88);
+      border: 1.5px solid rgba(42,133,179,.18);
       border-radius: var(--radius);
-      background: rgba(79,179,217,.08);
-      border: 1.5px solid rgba(79,179,217,.28);
-      color: var(--cy-xdk);
-      font-family: 'Inter Tight', 'Inter', sans-serif;
-      font-size: 0.96rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      line-height: 1.4;
+      backdrop-filter: blur(8px);
+      transition: border-color 180ms ease, box-shadow 180ms ease;
     }
-    .impact-badge .amount-em {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--cy-dk);
+    .hero-info-item svg { color: var(--cy-dk); opacity: .75; flex-shrink: 0; }
+    .hero-info-label {
+      font-size: .58rem; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase;
+      color: var(--muted); line-height: 1;
+    }
+    .hero-info-value {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(.78rem, 2.4vw, .95rem);
+      font-weight: 700; color: var(--navy);
+      letter-spacing: -.01em; line-height: 1.2; text-align: center;
     }
 
-    /* Right: crystal water drop illustration */
-    .crystal-col {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    /* ── Lede ── */
+    .hero-lede {
+      font-size: clamp(.88rem, 2.1vw, 1rem);
+      color: var(--ink-soft); max-width: 40ch;
+      line-height: 1.65; margin: 0 auto 22px;
+    }
+
+    /* ── Primary CTA ── */
+    .hero-cta {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%;
+      padding: 17px 24px;
+      background: var(--navy); color: #fff;
+      border-radius: 999px;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.02rem; font-weight: 700; letter-spacing: .01em;
+      text-decoration: none;
+      transition: background 180ms ease, transform 200ms var(--ease), box-shadow 200ms ease;
+      box-shadow: 0 4px 20px rgba(15,26,46,.18);
+      margin-bottom: 12px;
+    }
+    .hero-cta:hover {
+      background: var(--cy-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(42,133,179,.28);
+    }
+    .cta-arrow { transition: transform 200ms var(--ease); flex-shrink: 0; }
+    .hero-cta:hover .cta-arrow { transform: translateX(4px); }
+
+    /* ── Trust note ── */
+    .hero-trust {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      font-size: .73rem; color: var(--muted); font-weight: 500;
+    }
+    .hero-trust svg { flex-shrink: 0; color: var(--cy-dk); opacity: .7; }
+
+    /* ── Crystal drop (desktop right column) ── */
+    .hero-crystal-col {
+      display: none;
+      justify-content: center; align-items: center;
       pointer-events: none;
     }
     .crystal-svg {
-      width: 100%;
-      max-width: 260px;
-      height: auto;
+      width: 100%; max-width: 240px; height: auto;
       filter:
         drop-shadow(0 18px 44px rgba(42,133,179,.22))
         drop-shadow(0 4px 12px rgba(79,179,217,.15));
       animation: crystal-float 6s ease-in-out infinite;
     }
     @keyframes crystal-float {
-      0%, 100% { transform: translateY(0px) rotate(-0.6deg); }
-      50%       { transform: translateY(-14px) rotate(0.6deg); }
+      0%, 100% { transform: translateY(0px) rotate(-.6deg); }
+      50%       { transform: translateY(-14px) rotate(.6deg); }
     }
 
-    @media (max-width: 820px) {
+    /* ── Desktop: two-column layout ── */
+    @media (min-width: 820px) {
       .hero-inner {
-        grid-template-columns: 1fr;
-        gap: 0;
-        position: relative;
+        max-width: 1120px;
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        text-align: left;
+        align-items: center;
+        gap: clamp(32px, 5vw, 64px);
+        padding: 0 clamp(20px, 5vw, 48px);
       }
-      .crystal-col {
-        position: absolute;
-        right: clamp(8px, 4vw, 32px);
-        top: 50%;
-        transform: translateY(-50%);
-        width: 160px;
-        opacity: 0.18;
-        z-index: 0;
+      .hero-orgs   { justify-content: flex-start; }
+      .hero-eyebrow { align-self: flex-start; }
+      .hero-eyebrow::after { display: none; }
+      .hero-lede   { margin-left: 0; margin-right: auto; }
+      .hero-info   { max-width: 380px; }
+      .hero-cta    { max-width: 260px; }
+      .hero-trust  { justify-content: flex-start; }
+      .hero-crystal-col {
+        display: flex;
+        grid-row: 1 / span 8;
+        grid-column: 2;
       }
-      .hero-text {
-        position: relative;
-        z-index: 1;
-      }
-    }
-    @media (max-width: 580px) {
-      .crystal-col { display: none; }
-      .hero-text { align-items: center; text-align: center; }
-      .event-pills { justify-content: center; }
-      .eyebrow-show { justify-content: center; }
-      .tagline-sep { margin: 12px auto; }
     }
 
     /* ============================================================
@@ -408,6 +436,23 @@
     }
     .schedule-item:last-child { border-bottom: none; padding-bottom: 0; }
     .schedule-item:first-child { padding-top: 0; }
+    .schedule-item--highlight {
+      background: rgba(79,179,217,.07);
+      border-radius: 10px;
+      padding: 13px 10px;
+      border-bottom: none;
+      margin: 4px -10px;
+    }
+    .schedule-time--concert {
+      background: var(--cy-dk);
+      color: #fff;
+    }
+    .schedule-desc--concert {
+      font-weight: 700;
+      color: var(--cy-xdk);
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      display: flex; align-items: center;
+    }
     .schedule-time {
       flex-shrink: 0;
       min-width: 100px;
@@ -1216,65 +1261,7 @@
     /* ============================================================
        COLLAB HERO BLOCK — ADESCI × Vitalqua · The Vitalqua Show
        ============================================================ */
-    .collab-hero-block {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-bottom: 30px;
-    }
-    .collab-hero-orgs {
-      display: flex;
-      align-items: center;
-      gap: clamp(10px, 2.5vw, 22px);
-      flex-wrap: wrap;
-    }
-    .collab-hero-org-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      text-decoration: none;
-      transition: opacity 180ms ease;
-    }
-    .collab-hero-org-link:hover { opacity: 0.72; }
-    .collab-hero-org-img {
-      height: clamp(42px, 7vw, 64px);
-      width: auto;
-      display: block;
-    }
-    .collab-hero-org-img--vq {
-      height: clamp(28px, 4vw, 40px);
-      opacity: 0.65;
-    }
-    .collab-hero-org-name--vq {
-      font-family: 'Inter Tight', 'Inter', sans-serif;
-      font-size: clamp(0.9rem, 2vw, 1.3rem);
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--ink-soft);
-      opacity: 0.75;
-      white-space: nowrap;
-    }
-    .collab-hero-x {
-      font-family: 'Inter Tight', 'Inter', sans-serif;
-      font-size: clamp(1.2rem, 2.8vw, 2rem);
-      font-weight: 300;
-      color: var(--cy);
-      opacity: 0.6;
-      flex-shrink: 0;
-    }
-    .collab-hero-show {
-      font-family: 'Bebas Neue', 'Inter Tight', sans-serif;
-      font-size: clamp(3.8rem, 10vw, 7.5rem);
-      font-weight: 400;
-      letter-spacing: 0.06em;
-      line-height: 0.92;
-      color: var(--cy-xdk);
-      text-transform: uppercase;
-    }
-    @media (max-width: 580px) {
-      .collab-hero-orgs { justify-content: center; }
-      .collab-hero-show { text-align: center; }
-    }
+    /* collab-hero styles migrated to hero-org-* in the hero CSS block above */
 
     /* ---- Stripe Payment Element container ---- */
     .vq-payment-wrap {
@@ -1328,7 +1315,7 @@
   </header>
 
   <!-- ================================================================
-       HERO
+       HERO — mobile-first · concierto benéfico
        ================================================================ -->
   <section class="hero" id="top">
 
@@ -1340,60 +1327,76 @@
 
     <div class="hero-inner">
 
-      <div class="hero-text">
-
-        <div class="collab-hero-block">
-          <div class="collab-hero-orgs">
-            <a href="https://www.adesci.es" target="_blank" rel="noopener noreferrer" class="collab-hero-org-link" aria-label="ADESCI">
-              <img src="img/adesci.png" alt="ADESCI" class="collab-hero-org-img" />
-            </a>
-            <span class="collab-hero-x" aria-hidden="true">×</span>
-            <a href="https://www.uic.es" target="_blank" rel="noopener noreferrer" class="collab-hero-org-link" aria-label="UIC Barcelona">
-              <img src="img/uic_logo.png" alt="UIC Barcelona" class="collab-hero-org-img" />
-            </a>
-            <span class="collab-hero-x" aria-hidden="true">×</span>
-            <a href="index.html" class="collab-hero-org-link collab-hero-org-link--vq" aria-label="Vitalqua Project">
-              <img src="img/logo.svg" alt="" aria-hidden="true" class="collab-hero-org-img collab-hero-org-img--vq" />
-              <span class="collab-hero-org-name--vq">Vitalqua Project</span>
-            </a>
-          </div>
-          <div class="collab-hero-show">The Vitalqua Show</div>
-        </div>
-
-        <p class="hero-lede">
-          Una noche especial donde cada euro transforma vidas reales.
-          Tu aportación financia agua potable para estudiantes en Kenia durante los próximos 20 años.
-        </p>
-
-        <div class="event-pills">
-          <span class="pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <strong>16 de julio</strong>
-          </span>
-          <span class="pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <strong>19 – 23h</strong>
-          </span>
-          <span class="pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <strong>UIC Barcelona</strong>
-          </span>
-          <span class="pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <strong>Aforo limitado</strong>
-          </span>
-        </div>
-
-        <div class="impact-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/>
-          </svg>
-          Solo <span class="amount-em">20&nbsp;€</span> = 1 estudiante con agua limpia&nbsp;20&nbsp;años
+      <!-- Org logos strip — unified card -->
+      <div class="hero-orgs">
+        <span class="hero-orgs-label">Organitzat per</span>
+        <div class="hero-orgs-logos" role="list" aria-label="Organizadores del evento">
+          <a href="https://www.uic.es" target="_blank" rel="noopener noreferrer" class="hero-org-link" aria-label="UIC Barcelona" role="listitem">
+            <img src="img/uic_logo.png" alt="UIC Barcelona" class="hero-org-img" />
+            <span class="hero-org-name">UIC Barcelona</span>
+          </a>
+          <div class="hero-org-divider" aria-hidden="true"></div>
+          <a href="https://www.adesci.es" target="_blank" rel="noopener noreferrer" class="hero-org-link" aria-label="ADESCI" role="listitem">
+            <img src="img/adesci.png" alt="ADESCI" class="hero-org-img" />
+            <span class="hero-org-name">ADESCI</span>
+          </a>
+          <div class="hero-org-divider" aria-hidden="true"></div>
+          <a href="index.html" class="hero-org-link" aria-label="Vitalqua Project" role="listitem">
+            <img src="img/logo.svg" alt="" aria-hidden="true" class="hero-org-img hero-org-img--vq" />
+            <span class="hero-org-name">Vitalqua Project</span>
+          </a>
         </div>
       </div>
 
-      <!-- RIGHT: Crystal water drop SVG -->
-      <div class="crystal-col" aria-hidden="true">
+      <!-- Eyebrow -->
+      <div class="hero-eyebrow">16 Julio · UIC Barcelona</div>
+
+      <!-- Title -->
+      <h1 class="hero-title">
+        Concierto<br>
+        <span class="title-line2">Benéfico</span>
+      </h1>
+
+      <!-- Event info: date · time · venue -->
+      <div class="hero-info" role="list" aria-label="Detalles del evento">
+        <div class="hero-info-item" role="listitem">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span class="hero-info-label">Fecha</span>
+          <span class="hero-info-value">16&nbsp;Julio</span>
+        </div>
+        <div class="hero-info-item" role="listitem">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="hero-info-label">Hora</span>
+          <span class="hero-info-value">19:00 – 22:00</span>
+        </div>
+        <div class="hero-info-item" role="listitem">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="hero-info-label">Lugar</span>
+          <span class="hero-info-value">UIC&nbsp;Barcelona</span>
+        </div>
+      </div>
+
+      <!-- Lede -->
+      <p class="hero-lede">
+        Una noche solidaria organizada por UIC, ADESCI y Vitalqua Project.
+        Música en directo, picoteo y un proyecto que da agua limpia
+        a 500 estudiantes en Kenia.
+      </p>
+
+      <!-- CTA -->
+      <a href="#inscripcion" class="hero-cta">
+        Reservar mi plaza
+        <svg class="cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+
+      <!-- Trust note -->
+      <p class="hero-trust">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Pago seguro · Stripe · Aforo limitado
+      </p>
+
+      <!-- Crystal drop — visible only on desktop (≥820px) -->
+      <div class="hero-crystal-col" aria-hidden="true">
         <svg class="crystal-svg" viewBox="0 0 220 310" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <radialGradient id="dropGrad" cx="42%" cy="35%" r="60%">
@@ -1410,104 +1413,31 @@
               <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
-
-          <!-- Main water drop body -->
-          <path d="M110 14 C110 14 36 110 36 178 a74 74 0 0 0 148 0 C184 110 110 14 110 14 Z"
-                fill="url(#dropGrad)" opacity="0.92"/>
-
-          <!-- Facet lines — crystal effect -->
+          <path d="M110 14 C110 14 36 110 36 178 a74 74 0 0 0 148 0 C184 110 110 14 110 14 Z" fill="url(#dropGrad)" opacity="0.92"/>
           <path d="M110 14 L70 130 L110 175" fill="rgba(255,255,255,0.12)"/>
           <path d="M110 14 L150 130 L110 175" fill="rgba(27,95,133,0.18)"/>
           <path d="M70 130 L110 175 L110 252" fill="rgba(255,255,255,0.07)"/>
           <path d="M150 130 L110 175 L110 252" fill="rgba(27,95,133,0.10)"/>
           <path d="M36 178 L110 175 L184 178" fill="rgba(255,255,255,0.06)"/>
-
-          <!-- Front edge highlight -->
-          <path d="M110 14 C110 14 36 110 36 178 a74 74 0 0 0 148 0 C184 110 110 14 110 14 Z"
-                fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
-
-          <!-- Glass highlight (top-left) -->
-          <ellipse cx="85" cy="140" rx="18" ry="32"
-                   fill="white" opacity="0.22"
-                   transform="rotate(-20 85 140)"/>
-          <ellipse cx="90" cy="108" rx="8" ry="14"
-                   fill="white" opacity="0.35"
-                   transform="rotate(-18 90 108)"/>
-
-          <!-- Inner glow -->
-          <ellipse cx="110" cy="190" rx="52" ry="52"
-                   fill="url(#dropGrad2)" opacity="0.3"/>
-
-          <!-- Small water bubble inside -->
+          <path d="M110 14 C110 14 36 110 36 178 a74 74 0 0 0 148 0 C184 110 110 14 110 14 Z" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+          <ellipse cx="85" cy="140" rx="18" ry="32" fill="white" opacity="0.22" transform="rotate(-20 85 140)"/>
+          <ellipse cx="90" cy="108" rx="8" ry="14" fill="white" opacity="0.35" transform="rotate(-18 90 108)"/>
+          <ellipse cx="110" cy="190" rx="52" ry="52" fill="url(#dropGrad2)" opacity="0.3"/>
           <circle cx="130" cy="170" r="10" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-          <circle cx="92" cy="200" r="7" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.28)" stroke-width="0.8"/>
-
-          <!-- Sparkle stars around the drop -->
+          <circle cx="92"  cy="200" r="7"  fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.28)" stroke-width="0.8"/>
           <g filter="url(#glow)">
-            <!-- Star 1 (top right) -->
-            <g transform="translate(172,52)">
-              <line x1="0" y1="-9" x2="0" y2="9" stroke="#4FB3D9" stroke-width="1.8" stroke-linecap="round"/>
-              <line x1="-9" y1="0" x2="9" y2="0" stroke="#4FB3D9" stroke-width="1.8" stroke-linecap="round"/>
-              <line x1="-6" y1="-6" x2="6" y2="6" stroke="#4FB3D9" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-              <line x1="6" y1="-6" x2="-6" y2="6" stroke="#4FB3D9" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-            </g>
-            <!-- Star 2 (left) -->
-            <g transform="translate(24,145)">
-              <line x1="0" y1="-7" x2="0" y2="7" stroke="#A3D0E3" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="-7" y1="0" x2="7" y2="0" stroke="#A3D0E3" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="-4.5" y1="-4.5" x2="4.5" y2="4.5" stroke="#A3D0E3" stroke-width="0.9" stroke-linecap="round" opacity="0.55"/>
-              <line x1="4.5" y1="-4.5" x2="-4.5" y2="4.5" stroke="#A3D0E3" stroke-width="0.9" stroke-linecap="round" opacity="0.55"/>
-            </g>
-            <!-- Star 3 (top center-right) -->
-            <g transform="translate(162,28)">
-              <line x1="0" y1="-5" x2="0" y2="5" stroke="#D6EEF6" stroke-width="1.2" stroke-linecap="round"/>
-              <line x1="-5" y1="0" x2="5" y2="0" stroke="#D6EEF6" stroke-width="1.2" stroke-linecap="round"/>
-            </g>
-            <!-- Star 4 (bottom right) -->
-            <g transform="translate(190,240)">
-              <line x1="0" y1="-6" x2="0" y2="6" stroke="#4FB3D9" stroke-width="1.4" stroke-linecap="round"/>
-              <line x1="-6" y1="0" x2="6" y2="0" stroke="#4FB3D9" stroke-width="1.4" stroke-linecap="round"/>
-              <line x1="-4" y1="-4" x2="4" y2="4" stroke="#4FB3D9" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
-              <line x1="4" y1="-4" x2="-4" y2="4" stroke="#4FB3D9" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
-            </g>
-            <!-- Star 5 (left bottom) -->
-            <g transform="translate(14,270)">
-              <line x1="0" y1="-5" x2="0" y2="5" stroke="#A3D0E3" stroke-width="1.2" stroke-linecap="round"/>
-              <line x1="-5" y1="0" x2="5" y2="0" stroke="#A3D0E3" stroke-width="1.2" stroke-linecap="round"/>
-            </g>
+            <g transform="translate(172,52)"><line x1="0" y1="-9" x2="0" y2="9" stroke="#4FB3D9" stroke-width="1.8" stroke-linecap="round"/><line x1="-9" y1="0" x2="9" y2="0" stroke="#4FB3D9" stroke-width="1.8" stroke-linecap="round"/><line x1="-6" y1="-6" x2="6" y2="6" stroke="#4FB3D9" stroke-width="1" stroke-linecap="round" opacity="0.6"/><line x1="6" y1="-6" x2="-6" y2="6" stroke="#4FB3D9" stroke-width="1" stroke-linecap="round" opacity="0.6"/></g>
+            <g transform="translate(24,145)"><line x1="0" y1="-7" x2="0" y2="7" stroke="#A3D0E3" stroke-width="1.5" stroke-linecap="round"/><line x1="-7" y1="0" x2="7" y2="0" stroke="#A3D0E3" stroke-width="1.5" stroke-linecap="round"/></g>
+            <g transform="translate(190,240)"><line x1="0" y1="-6" x2="0" y2="6" stroke="#4FB3D9" stroke-width="1.4" stroke-linecap="round"/><line x1="-6" y1="0" x2="6" y2="0" stroke="#4FB3D9" stroke-width="1.4" stroke-linecap="round"/></g>
           </g>
-
-          <!-- Small floating satellite drops -->
-          <!-- Drop top-left -->
-          <path d="M32 70 C32 70 24 84 24 90 a8 8 0 0 0 16 0 C40 84 32 70 32 70 Z"
-                fill="#A3D0E3" opacity="0.65"/>
-          <!-- Drop right -->
-          <path d="M196 120 C196 120 190 131 190 136 a6 6 0 0 0 12 0 C202 131 196 120 196 120 Z"
-                fill="#4FB3D9" opacity="0.5"/>
-          <!-- Drop bottom-left -->
-          <path d="M22 230 C22 230 16 240 16 244 a6 6 0 0 0 12 0 C28 240 22 230 22 230 Z"
-                fill="#D6EEF6" opacity="0.7"/>
+          <path d="M32 70 C32 70 24 84 24 90 a8 8 0 0 0 16 0 C40 84 32 70 32 70 Z" fill="#A3D0E3" opacity="0.65"/>
+          <path d="M196 120 C196 120 190 131 190 136 a6 6 0 0 0 12 0 C202 131 196 120 196 120 Z" fill="#4FB3D9" opacity="0.5"/>
+          <path d="M22 230 C22 230 16 240 16 244 a6 6 0 0 0 12 0 C28 240 22 230 22 230 Z" fill="#D6EEF6" opacity="0.7"/>
         </svg>
       </div>
 
     </div>
   </section>
-
-  <!-- Water drop scroll indicator -->
-  <div class="water-arrow" aria-hidden="true">
-    <div class="water-drop-wrap">
-      <svg class="water-drop" viewBox="0 0 36 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18 2 C18 2 4 18 4 27 a14 14 0 0 0 28 0 C32 18 18 2 18 2 Z" fill="#4FB3D9" opacity="0.85"/>
-        <ellipse cx="13" cy="22" rx="3.5" ry="5.5" fill="white" opacity="0.3" transform="rotate(-18 13 22)"/>
-      </svg>
-      <div class="water-chevrons">
-        <svg width="26" height="13" viewBox="0 0 28 14" fill="none" stroke="#4FB3D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 14 12 26 2"/></svg>
-        <svg width="26" height="13" viewBox="0 0 28 14" fill="none" stroke="#4FB3D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 14 12 26 2"/></svg>
-        <svg width="26" height="13" viewBox="0 0 28 14" fill="none" stroke="#4FB3D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 14 12 26 2"/></svg>
-      </div>
-    </div>
-    <span class="water-arrow-label">Sigue bajando</span>
-  </div>
 
   <!-- ================================================================
        INFO SECTION — horario + qué incluye
@@ -1526,20 +1456,27 @@
           </div>
           <ul class="schedule-list">
             <li class="schedule-item">
-              <span class="schedule-time">19:00 – 20:00</span>
-              <span class="schedule-desc">Cóctel de bienvenida y networking</span>
+              <span class="schedule-time">19:00 – 19:30</span>
+              <span class="schedule-desc">Bienvenida</span>
             </li>
             <li class="schedule-item">
-              <span class="schedule-time">20:00 – 21:30</span>
-              <span class="schedule-desc">Cena de gala</span>
+              <span class="schedule-time">19:30 – 20:30</span>
+              <span class="schedule-desc">Picoteo con música en directo</span>
             </li>
             <li class="schedule-item">
-              <span class="schedule-time">21:30 – 22:00</span>
-              <span class="schedule-desc">Presentación del proyecto Vitalqua</span>
+              <span class="schedule-time">20:30 – 21:00</span>
+              <span class="schedule-desc">Presentación del proyecto</span>
+            </li>
+            <li class="schedule-item schedule-item--highlight">
+              <span class="schedule-time schedule-time--concert">21:00 – 22:00</span>
+              <span class="schedule-desc schedule-desc--concert">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-right:5px;vertical-align:middle"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                CONCIERTO — Nuestra música ✦
+              </span>
             </li>
             <li class="schedule-item">
-              <span class="schedule-time">22:00 – 00:00</span>
-              <span class="schedule-desc">Show en directo y actuaciones</span>
+              <span class="schedule-time">22:00</span>
+              <span class="schedule-desc">Final</span>
             </li>
           </ul>
         </div>
@@ -1559,7 +1496,7 @@
                   <path d="M8 22h8"/><path d="M12 11v11"/><path d="M5 3h14l-2 7a5 5 0 0 1-10 0L5 3z"/>
                 </svg>
               </span>
-              Cóctel de bienvenida
+              1 consumición incluida
             </li>
             <li class="includes-item">
               <span class="includes-dot">
@@ -1567,7 +1504,7 @@
                   <path d="M3 11h18"/><path d="M3 15h18"/><path d="M5 19h14a2 2 0 0 0 2-2v-1H3v1a2 2 0 0 0 2 2z"/><path d="M3 11a7 7 0 0 1 14 0"/>
                 </svg>
               </span>
-              Cena de gala incluida
+              Picoteo
             </li>
             <li class="includes-item">
               <span class="includes-dot">
@@ -1575,7 +1512,7 @@
                   <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
                 </svg>
               </span>
-              Show en directo
+              Concierto en directo
             </li>
             <li class="includes-item">
               <span class="includes-dot">

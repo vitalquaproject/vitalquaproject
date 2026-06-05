@@ -31,15 +31,24 @@
       box-shadow: 0 32px 80px rgba(0,0,0,.55);
     }
 
-    /* ── Background: animated water SVG ── */
+    /* ── Background: photo + dark tint ── */
     .flyer-bg {
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(ellipse at 30% 20%, #1a6e9e 0%, transparent 55%),
-        radial-gradient(ellipse at 75% 65%, #0d4a70 0%, transparent 55%),
-        radial-gradient(ellipse at 55% 100%, #06324f 0%, transparent 50%),
-        linear-gradient(170deg, #0c2d4a 0%, #0e3d60 40%, #082538 100%);
+      background-image: url('img/fimg.jpg');
+      background-size: cover;
+      background-position: center 40%;
+    }
+    .flyer-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        170deg,
+        rgba(7,16,30,.72) 0%,
+        rgba(10,22,42,.60) 50%,
+        rgba(6,18,34,.75) 100%
+      );
     }
 
     /* Water drop blobs */
@@ -132,78 +141,76 @@
         0 24px 64px rgba(0,0,0,.30);
     }
 
-    /* Org logos strip */
+    /* Org logos — no box, white silhouettes */
     .orgs {
       display: flex;
       align-items: center;
-      gap: 0;
-      margin-bottom: 22px;
-      background: rgba(255,255,255,0.92);
-      border-radius: 10px;
-      padding: 10px 0;
-      width: 100%;
-    }
-    .org-logo-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 0 12px;
+      gap: 16px;
+      margin-bottom: 26px;
     }
-    .org-logo-wrap img {
-      max-height: 34px;
+    .org-logo {
+      height: 38px;
       width: auto;
       display: block;
-      object-fit: contain;
-      filter: none;
+      filter: brightness(0) invert(1);
+      opacity: .85;
     }
-    .org-divider {
-      width: 1px;
-      height: 36px;
-      background: rgba(42,133,179,.18);
+    .org-logo--adesci {
+      height: 30px;
+    }
+    .org-sep {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: rgba(163,208,227,.5);
       flex-shrink: 0;
     }
-    /* Vitalqua SVG logo in strip */
-    .org-vq-wrap {
-      flex: 1;
-      display: flex;
+    /* Vitalqua text logo — mirrors show.html header */
+    .org-vq {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 7px;
-      padding: 0 10px;
     }
-    .org-vq-drop {
+    .org-vq-mark {
       height: 26px;
       width: auto;
+      display: block;
+      filter: brightness(0) invert(1);
+      opacity: .85;
       flex-shrink: 0;
     }
-    .org-vq-name {
+    .org-vq-text {
       font-family: 'Inter Tight', 'Inter', sans-serif;
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .06em;
-      color: #0F1A2E;
+      font-weight: 600;
+      font-size: .88rem;
+      letter-spacing: -0.02em;
+      color: rgba(255,255,255,.85);
       white-space: nowrap;
     }
 
-    /* Title */
-    .title {
-      font-family: 'Bebas Neue', 'Inter', sans-serif;
-      font-size: 5.6rem;
-      line-height: .9;
-      letter-spacing: .04em;
-      color: #ffffff;
-      margin-bottom: 6px;
-      text-shadow: 0 2px 18px rgba(79,179,217,.3);
-    }
-    .title-sub {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      letter-spacing: .08em;
-      color: rgba(255,255,255,.82);
+    /* Title — unified Bebas Neue block */
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin-bottom: 20px;
-      font-style: italic;
+      line-height: 1;
+    }
+    .title-main {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 6rem;
+      letter-spacing: .06em;
+      color: #ffffff;
+      text-shadow: 0 2px 24px rgba(79,179,217,.28);
+      line-height: .92;
+    }
+    .title-accent {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.4rem;
+      letter-spacing: .22em;
+      color: #4FB3D9;
+      line-height: 1;
+      text-shadow: 0 0 28px rgba(79,179,217,.45);
     }
 
     /* Date badge */
@@ -396,25 +403,23 @@
   <!-- Glass panel -->
   <div class="panel">
 
-    <!-- Org logos -->
+    <!-- Org logos (no box) -->
     <div class="orgs">
-      <div class="org-logo-wrap">
-        <img src="img/uic_logo.png" alt="UIC Barcelona" />
-      </div>
-      <div class="org-divider"></div>
-      <div class="org-logo-wrap">
-        <img src="img/adesci.png" alt="ADESCI" />
-      </div>
-      <div class="org-divider"></div>
-      <div class="org-vq-wrap">
-        <img src="img/logo.svg" alt="Vitalqua" class="org-vq-drop" />
-        <span class="org-vq-name">Vitalqua</span>
-      </div>
+      <img src="img/uic_logo.png" alt="UIC Barcelona" class="org-logo" />
+      <div class="org-sep"></div>
+      <img src="img/adesci.png" alt="ADESCI" class="org-logo org-logo--adesci" />
+      <div class="org-sep"></div>
+      <span class="org-vq">
+        <img src="img/logo.svg" alt="" class="org-vq-mark" />
+        <span class="org-vq-text">Vitalqua Project</span>
+      </span>
     </div>
 
-    <!-- Title -->
-    <div class="title">CONCIERTO</div>
-    <div class="title-sub">Benéfico</div>
+    <!-- Title — unified block -->
+    <div class="title-block">
+      <span class="title-main">CONCIERTO</span>
+      <span class="title-accent">BENÉFICO</span>
+    </div>
 
     <!-- Date badge -->
     <div class="date-badge">

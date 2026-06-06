@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — Vitalqua Party</title>
+  <title>Admin — Vitalqua</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
@@ -158,6 +158,42 @@
     }
     .btn-logout:hover { border-color: rgba(255,255,255,.35); color: #fff; }
 
+    /* Event tab bar */
+    .event-tabs {
+      display: flex; gap: 4px;
+      padding: 10px clamp(18px, 3vw, 36px) 0;
+      background: var(--navy-dp);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .event-tab {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 18px 11px;
+      border: none; background: transparent; cursor: pointer;
+      font: inherit; font-size: 0.84rem; font-weight: 600;
+      color: rgba(255,255,255,.42);
+      border-bottom: 2.5px solid transparent;
+      border-radius: 6px 6px 0 0;
+      transition: color 160ms ease, background 160ms ease;
+      white-space: nowrap;
+    }
+    .event-tab:hover { color: rgba(255,255,255,.7); background: rgba(255,255,255,.04); }
+    .event-tab.active {
+      color: #fff;
+      border-bottom-color: var(--cy-dk);
+      background: rgba(42,133,179,.10);
+    }
+    .tab-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 20px; height: 20px; padding: 0 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12); color: rgba(255,255,255,.6);
+      font-size: 0.7rem; font-weight: 700;
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .event-tab.active .tab-count {
+      background: rgba(42,133,179,.35); color: #7DCFF0;
+    }
+
     /* Content */
     .content { padding: clamp(24px, 4vw, 40px) clamp(18px, 3vw, 36px); }
 
@@ -281,6 +317,46 @@
     .table-footer-count { font-size: 0.82rem; color: var(--muted); }
     .table-footer-count strong { color: var(--ink); }
 
+    /* QR Scanner button */
+    .btn-qr-scan {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px; border-radius: 999px;
+      border: 1.5px solid var(--cy-dk); color: var(--cy-dk);
+      background: rgba(42,133,179,.06);
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      transition: background 150ms ease, color 150ms ease;
+      white-space: nowrap;
+    }
+    .btn-qr-scan:hover { background: rgba(42,133,179,.14); color: var(--cy-xdk); }
+
+    /* QR Scanner modal */
+    .qr-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(7,16,30,.75); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .qr-modal-overlay.open { display: flex; }
+    .qr-modal {
+      background: var(--surface); border-radius: var(--radius-lg);
+      padding: 28px 28px 24px; max-width: 400px; width: 100%;
+      box-shadow: var(--shadow-lg); text-align: center;
+    }
+    .qr-modal h2 {
+      font-size: 1.1rem; font-weight: 700; color: var(--navy);
+      margin: 0 0 6px;
+    }
+    .qr-modal p {
+      font-size: 0.85rem; color: var(--muted); margin: 0 0 18px; line-height: 1.55;
+    }
+    #qrReaderContainer { width: 100%; border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+    .qr-modal-close {
+      padding: 8px 22px; border-radius: 999px; border: 1.5px solid rgba(15,26,46,.15);
+      background: transparent; color: var(--muted); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: border-color 150ms, color 150ms;
+    }
+    .qr-modal-close:hover { border-color: var(--navy); color: var(--navy); }
+
     /* Toast */
     .toast-area {
       position: fixed; bottom: 24px; right: 24px;
@@ -329,12 +405,24 @@
     <header class="topbar">
       <div class="topbar-inner">
         <div class="topbar-left">
-          <span class="topbar-title">Vitalqua Party · Admin</span>
+          <span class="topbar-title" id="topbarTitle">Vitalqua · Admin</span>
           <span class="live-badge"><span class="live-dot"></span>En vivo</span>
         </div>
         <button class="btn-logout" id="btnLogout">Cerrar sesión</button>
       </div>
     </header>
+
+    <!-- Event tabs -->
+    <nav class="event-tabs" aria-label="Selector de evento">
+      <button class="event-tab active" data-event="concert" aria-label="Ver entradas del Concierto ADESCI">
+        🎸 Concierto · ADESCI
+        <span class="tab-count" id="tabCountConcert">—</span>
+      </button>
+      <button class="event-tab" data-event="show" aria-label="Ver entradas de The Vitalqua Show">
+        ✨ The Vitalqua Show
+        <span class="tab-count" id="tabCountShow">—</span>
+      </button>
+    </nav>
 
     <main class="content">
 
@@ -358,11 +446,29 @@
         </div>
       </div>
 
-      <!-- Search -->
+      <!-- Search + QR scanner button -->
       <div class="table-toolbar">
         <div class="search-wrap">
           <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre, apellidos, teléfono o ID…" aria-label="Buscar" />
+        </div>
+        <button class="btn-qr-scan" id="btnOpenQrScanner" aria-label="Escanear QR de entrada">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <path d="M14 14h2v2h-2z"/><path d="M18 14h3"/><path d="M14 18v3"/><path d="M18 18h3v3h-3z"/>
+          </svg>
+          Escanear QR
+        </button>
+      </div>
+
+      <!-- QR scanner modal -->
+      <div class="qr-modal-overlay" id="qrModalOverlay" role="dialog" aria-modal="true" aria-label="Escáner de QR">
+        <div class="qr-modal">
+          <h2>Escanear entrada QR</h2>
+          <p>Apunta la cámara al QR del asistente para marcar su entrada automáticamente.</p>
+          <div id="qrReaderContainer"></div>
+          <button class="qr-modal-close" id="btnCloseQrScanner">Cancelar</button>
         </div>
       </div>
 
@@ -403,6 +509,9 @@
   <!-- Toasts -->
   <div class="toast-area" id="toastArea" aria-live="polite"></div>
 
+  <!-- QR Scanner -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -424,16 +533,67 @@
 
     // ⚠️ Cambia esta contraseña antes de publicar
     const ADMIN_PASSWORD = "vitalqua2026";
-    const TICKET_PRICE   = 25;
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db   = firebase.firestore();
 
+    /* ----------------------------------------------------------------
+       Event configuration — add more events here as needed
+       ---------------------------------------------------------------- */
+    const EVENTS = {
+      concert: {
+        label:        'Concierto · ADESCI',
+        collection:   null,                  /* usa ticketsCol() amb ruta anidada */
+        firestoreDoc: 'vitalqua-party-tickets',
+        revenue:      (tickets) => tickets.length * 25,
+        revenueHint:  '(25 € × entrades)',
+        /* mapeja els camps del doc → format intern {name, surname, phone, scanned, createdAt} */
+        mapDoc: (id, d) => ({
+          id,
+          name:      d.name      || d.nom      || '',
+          surname:   d.surname   || d.cognoms  || '',
+          phone:     d.phone     || d.telefon  || '',
+          scanned:   d.scanned   || false,
+          createdAt: d.createdAt || d.paidAt   || null,
+          totalEur:  d.totalEur  || 25,
+        }),
+        filter: (_d) => true,
+      },
+      show: {
+        label:        'The Vitalqua Show',
+        collection:   'pagaments-show',      /* col·lecció arrel de Firestore */
+        firestoreDoc: null,
+        revenue:      (tickets) => tickets.reduce((sum, t) => sum + (t.totalEur || 0), 0),
+        revenueHint:  '(10 € × persones)',
+        mapDoc: (id, d) => ({
+          id,
+          name:      d.nom      || '',
+          surname:   d.cognoms  || '',
+          phone:     d.telefon  || '',
+          scanned:   d.scanned  || false,
+          createdAt: d.paidAt   || d.createdAt || null,
+          totalEur:  d.totalEur || 0,
+          numPersones: d.numPersones || 1,
+          acompanyants: d.acompanyants || [],
+        }),
+        /* filtre: només docs amb pagament confirmat */
+        filter: (d) => d.status === 'paid',
+      },
+    };
+
+    let currentEvent = 'concert';
+
     function ticketsCol() {
+      const ev = EVENTS[currentEvent];
+      if (ev.collection) {
+        /* col·lecció arrel directa (show) */
+        return db.collection(ev.collection);
+      }
+      /* ruta anidada (concert) */
       return db
         .collection('artifacts')
-        .doc('vitalqua-party-tickets')
+        .doc(ev.firestoreDoc)
         .collection('public')
         .doc('data')
         .collection('tickets');
@@ -486,10 +646,17 @@
 
       /* Stats (always over full set, not filtered) */
       const scanned = tickets.filter(t => t.scanned).length;
+      const revenue = EVENTS[currentEvent].revenue(tickets);
       document.getElementById('statTotal').textContent   = tickets.length;
       document.getElementById('statScanned').textContent = scanned;
       document.getElementById('statPending').textContent = tickets.length - scanned;
-      document.getElementById('statRevenue').textContent = `${(tickets.length * TICKET_PRICE).toLocaleString('es-ES')} €`;
+      document.getElementById('statRevenue').textContent =
+        `${revenue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+
+      /* Update tab badge for current event */
+      const badgeId = currentEvent === 'concert' ? 'tabCountConcert' : 'tabCountShow';
+      const badge = document.getElementById(badgeId);
+      if (badge) badge.textContent = tickets.length;
 
       if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6"><div class="table-placeholder">
@@ -553,11 +720,13 @@
     function startListener() {
       if (unsubscribe) unsubscribe();
 
+      const ev = EVENTS[currentEvent];
+
       unsubscribe = ticketsCol().onSnapshot(
         snap => {
-          /* Sort by createdAt descending in JS to stay compatible with any Firestore index state */
           allTickets = snap.docs
-            .map(d => ({ id: d.id, ...d.data() }))
+            .filter(d => ev.filter(d.data()))
+            .map(d => ev.mapDoc(d.id, d.data()))
             .sort((a, b) => {
               const ta = a.createdAt?.seconds ?? 0;
               const tb = b.createdAt?.seconds ?? 0;
@@ -604,6 +773,91 @@
 
     /* Search */
     document.getElementById('searchInput').addEventListener('input', () => render(allTickets));
+
+    /* ----------------------------------------------------------------
+       Event tab switching
+       ---------------------------------------------------------------- */
+    function switchEvent(eventKey) {
+      if (eventKey === currentEvent) return;
+      currentEvent = eventKey;
+
+      /* Update tab active state */
+      document.querySelectorAll('.event-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.event === eventKey);
+      });
+
+      /* Update topbar title */
+      document.getElementById('topbarTitle').textContent =
+        `Vitalqua · ${EVENTS[eventKey].label}`;
+
+      /* Clear search */
+      document.getElementById('searchInput').value = '';
+
+      /* Show loading state */
+      document.getElementById('tbody').innerHTML = `<tr><td colspan="7">
+        <div class="table-placeholder">
+          <div class="spinner-sm"></div>
+          <p>Cargando entradas…</p>
+        </div>
+      </td></tr>`;
+
+      /* Restart Firestore listener for the new collection */
+      startListener();
+    }
+
+    document.querySelectorAll('.event-tab').forEach(btn => {
+      btn.addEventListener('click', () => switchEvent(btn.dataset.event));
+    });
+
+    /* ----------------------------------------------------------------
+       QR Scanner
+       ---------------------------------------------------------------- */
+    let html5QrCode = null;
+
+    function openQrScanner() {
+      document.getElementById('qrModalOverlay').classList.add('open');
+      html5QrCode = new Html5Qrcode('qrReaderContainer');
+      html5QrCode.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        async (decodedText) => {
+          const ticketId = decodedText.trim();
+          await closeQrScanner();
+
+          /* Check the ticket exists before marking it */
+          const snap = await ticketsCol().doc(ticketId).get();
+          if (!snap.exists) {
+            toast(`⚠️ Entrada no encontrada: ${ticketId}`);
+            return;
+          }
+          if (snap.data().scanned) {
+            toast(`⚠️ Entrada ${ticketId} ya fue escaneada`);
+            return;
+          }
+          await markScanned(ticketId);
+        },
+        () => { /* ignore scan errors (frame-by-frame decode failures) */ }
+      ).catch(err => {
+        console.error('[QR] Camera error:', err);
+        toast('No se pudo acceder a la cámara. Comprueba los permisos del navegador.');
+        closeQrScanner();
+      });
+    }
+
+    async function closeQrScanner() {
+      if (html5QrCode) {
+        try { await html5QrCode.stop(); } catch { /* already stopped */ }
+        html5QrCode.clear();
+        html5QrCode = null;
+      }
+      document.getElementById('qrModalOverlay').classList.remove('open');
+    }
+
+    document.getElementById('btnOpenQrScanner').addEventListener('click', openQrScanner);
+    document.getElementById('btnCloseQrScanner').addEventListener('click', closeQrScanner);
+    document.getElementById('qrModalOverlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('qrModalOverlay')) closeQrScanner();
+    });
   </script>
 
 </body>

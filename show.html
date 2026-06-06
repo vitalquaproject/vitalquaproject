@@ -1284,6 +1284,58 @@
     }
     .vq-payment-error.show { display: flex; }
     .vq-payment-error svg { flex-shrink: 0; margin-top: 2px; }
+
+    /* ============================================================
+       COMPANION SECTION — acompanyants dinàmics
+       ============================================================ */
+    .companion-section { display: flex; flex-direction: column; gap: 12px; }
+    .companion-header-row {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px;
+    }
+    .companion-labels { display: flex; flex-direction: column; gap: 3px; }
+    .companion-section-title { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+    .companion-section-hint  { font-size: 0.78rem; color: var(--muted); }
+    .btn-add-companion {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 999px;
+      border: 1.5px solid var(--cy-dk);
+      background: transparent; color: var(--cy-dk);
+      font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .btn-add-companion:hover  { background: var(--cy-dk); color: #fff; }
+    .btn-add-companion:disabled { opacity: .4; cursor: default; }
+    .companion-list { display: flex; flex-direction: column; gap: 8px; }
+    .companion-card {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-soft); border: 1.5px solid var(--cy-xlt);
+      border-radius: var(--radius-sm); padding: 10px 12px;
+    }
+    .companion-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--cy-lt); color: var(--cy-xdk);
+      font-size: 0.7rem; font-weight: 700;
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .companion-input {
+      flex: 1; min-width: 0;
+      border: none; background: transparent;
+      font-family: inherit; font-size: 0.9rem; color: var(--ink);
+      outline: none; padding: 0;
+    }
+    .companion-input::placeholder { color: var(--faint); }
+    .companion-input.invalid { color: #DC2626; }
+    .btn-remove-companion {
+      background: none; border: none; padding: 4px;
+      color: var(--muted); cursor: pointer;
+      border-radius: 6px; display: grid; place-items: center;
+      flex-shrink: 0; transition: color 160ms ease, background 160ms ease;
+    }
+    .btn-remove-companion:hover { color: #DC2626; background: rgba(220,38,38,.08); }
+    .companion-error { display: none; color: #DC2626; font-size: 0.78rem; }
+    .companion-error.show { display: block; }
   </style>
 
   <!-- Stripe.js — must load before any Stripe Elements code -->
@@ -1325,7 +1377,7 @@
             <span class="hero-org-name">UIC Barcelona</span>
           </a>
           <div class="hero-org-divider" aria-hidden="true"></div>
-          <a href="https://www.adesci.es" target="_blank" rel="noopener noreferrer" class="hero-org-link" aria-label="ADESCI" role="listitem">
+          <a href="https://www.adesci.org" target="_blank" rel="noopener noreferrer" class="hero-org-link" aria-label="ADESCI" role="listitem">
             <img src="img/adesci.png" alt="ADESCI" class="hero-org-img" />
             <span class="hero-org-name">ADESCI</span>
           </a>
@@ -1713,195 +1765,55 @@
 
           <div class="form-divider"></div>
 
-          <!-- NÚMERO DE ENTRADAS -->
-          <div class="qty-section">
-            <div class="qty-label-row">
-              <span class="qty-label-title">
-                Número de entradas <span class="req" style="color:var(--cy-dk);margin-left:2px" aria-hidden="true">*</span>
-              </span>
-              <span class="qty-label-hint">Podéis apuntaros varios juntos</span>
-            </div>
-            <div class="qty-stepper" role="group" aria-label="Número de entradas">
-              <button type="button" class="qty-btn" id="qtyMinus" aria-label="Reducir entradas">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </button>
-              <span class="qty-display" id="qtyDisplay" aria-live="polite" aria-atomic="true">1</span>
-              <button type="button" class="qty-btn" id="qtyPlus" aria-label="Aumentar entradas">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- SPLIT-EMAIL CHECKBOX (hidden until qty > 1) -->
-          <div class="split-email-wrap" id="splitEmailWrap">
-            <label class="split-email-label" for="splitEmailCheck">
-              <input type="checkbox" id="splitEmailCheck" />
-              <div class="split-checkbox-box" aria-hidden="true">
-                <svg class="split-checkbox-check" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="2 6 5 9 10 3"/>
+          <!-- ACOMPANYANTS -->
+          <div class="companion-section" id="companionSection">
+            <div class="companion-header-row">
+              <div class="companion-labels">
+                <span class="companion-section-title">Acompanyants</span>
+                <span class="companion-section-hint">Afegeix qui ve amb tu (opcional · màx. 9)</span>
+              </div>
+              <button type="button" class="btn-add-companion" id="addCompanionBtn" aria-label="Afegir acompanyant">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
-              </div>
-              <div class="split-email-text">
-                <strong>¿Enviar entradas a correos diferentes?</strong>
-                <span>Cada acompañante recibirá su entrada directamente.</span>
-              </div>
-            </label>
+                Afegir
+              </button>
+            </div>
+            <div id="companionsList" class="companion-list" aria-live="polite"></div>
+            <span class="field-hint companion-error" id="companionError">Tots els acompanyants han de tenir nom.</span>
           </div>
 
-          <!-- DYNAMIC GUEST CARDS (injected by JS) -->
-          <div class="guests-section" id="guestsSection" aria-live="polite"></div>
-
-          <div class="form-divider"></div>
-
-          <!-- TIER SELECTOR -->
-          <div class="tier-section">
-            <div class="tier-label-row">
-              <span class="tier-label-title">
-                Tu aportación <span class="req" style="color:var(--cy-dk);margin-left:2px" aria-hidden="true">*</span>
-              </span>
-              <span class="tier-label-hint">20&nbsp;€ = agua para 1 estudiante durante 20&nbsp;años</span>
-            </div>
-
-            <div class="tier-grid" id="tierGrid" role="radiogroup" aria-label="Selecciona tu aportación">
-
-              <!-- 10 € — ½ estudiante -->
-              <button type="button" class="tier-card" data-amount="10" aria-pressed="false">
-                <div class="tier-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
-                </div>
-                <div class="tier-persons">
-                  <div class="tier-person half">
-                    <div class="tier-person-head"></div>
-                    <div class="tier-person-body"></div>
-                  </div>
-                </div>
-                <div class="tier-amount">10&nbsp;€</div>
-                <div class="tier-students">½ estudiante</div>
-                <div class="tier-tag">Mínimo</div>
-              </button>
-
-              <!-- 20 € — 1 estudiante -->
-              <button type="button" class="tier-card" data-amount="20" aria-pressed="false">
-                <div class="tier-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
-                </div>
-                <div class="tier-persons">
-                  <div class="tier-person">
-                    <div class="tier-person-head"></div>
-                    <div class="tier-person-body"></div>
-                  </div>
-                </div>
-                <div class="tier-amount">20&nbsp;€</div>
-                <div class="tier-students">1 estudiante</div>
-              </button>
-
-              <!-- 30 € — 1,5 estudiantes -->
-              <button type="button" class="tier-card" data-amount="30" aria-pressed="false">
-                <div class="tier-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
-                </div>
-                <div class="tier-persons">
-                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
-                  <div class="tier-person half"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
-                </div>
-                <div class="tier-amount">30&nbsp;€</div>
-                <div class="tier-students">1,5 estudiantes</div>
-                <div class="tier-tag">Popular</div>
-              </button>
-
-              <!-- 50 € — 2,5 estudiantes -->
-              <button type="button" class="tier-card" data-amount="50" aria-pressed="false">
-                <div class="tier-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
-                </div>
-                <div class="tier-persons">
-                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
-                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
-                  <div class="tier-person half"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
-                </div>
-                <div class="tier-amount">50&nbsp;€</div>
-                <div class="tier-students">2,5 estudiantes</div>
-              </button>
-
-              <!-- Precio personalizado — ocupa 4 columnas -->
-              <button type="button" class="tier-card tier-custom" data-amount="custom" aria-pressed="false">
-                <div class="tier-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--cy-dk);flex-shrink:0">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                  <span class="tier-amount" style="font-size:1rem">Importe personalizado</span>
-                </div>
-                <div class="tier-students" style="margin-bottom:6px">Tú decides cuánto contribuyes (mínimo 10&nbsp;€)</div>
-                <!-- Input only visible when selected -->
-                <div class="custom-input-wrap" id="customInputWrap">
-                  <span class="custom-euro-prefix">€</span>
-                  <input type="number" id="customAmountInput" class="custom-input"
-                    min="10" step="1" placeholder="Importe"
-                    aria-label="Introduce tu importe personalizado (mínimo 10 euros)"
-                    aria-describedby="custom-hint-error"/>
-                  <span class="custom-min-note">Mínimo 10&nbsp;€ · Todo va al proyecto</span>
-                  <span class="custom-hint-error" id="custom-hint-error">El importe mínimo es 10&nbsp;€.</span>
-                </div>
-              </button>
-
-            </div>
-
-            <span class="tier-hint-error" id="tierHintError">Selecciona un importe para continuar.</span>
-          </div>
-
-          <!-- Price summary (updates dynamically) -->
-          <div class="price-summary" id="priceSummary" aria-label="Resumen de aportación">
+          <!-- PRICE SUMMARY -->
+          <div class="price-summary" id="priceSummary" aria-label="Resum del preu">
             <div class="price-summary-label">
-              <span class="ps-title" id="psSummaryTitle">Selecciona tu aportación</span>
-              <span class="ps-sub" id="psSummarySub">Todo va directamente al proyecto · Kenia</span>
+              <span class="ps-title" id="psSummaryTitle">1 persona</span>
+              <span class="ps-sub" id="psSummarySub">10&nbsp;€ per persona · 100% va al projecte</span>
             </div>
-            <span class="price-summary-amount empty" id="psSummaryAmount">—</span>
+            <span class="price-summary-amount" id="psSummaryAmount">10&nbsp;€</span>
           </div>
 
-          <!-- Stripe Payment Element (shown after backend creates PaymentIntent) -->
-          <div class="vq-payment-wrap" id="vqPaymentWrap" hidden>
-            <div class="form-divider"></div>
-            <div class="vq-payment-label">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                <line x1="1" y1="10" x2="23" y2="10"/>
-              </svg>
-              Datos de pago
-            </div>
-            <div id="vqPaymentElement"></div>
-            <div class="vq-payment-error" id="vqPaymentError" role="alert" aria-live="polite">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-              </svg>
-              <span id="vqPaymentErrorText"></span>
-            </div>
-          </div>
-
-          <!-- Pay button -->
+          <!-- PAY BUTTON -->
           <button type="submit" class="btn-submit" id="submitBtn">
             <div class="spinner" aria-hidden="true"></div>
             <svg class="lock-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
             </svg>
-            <span class="btn-text" id="submitBtnText">Selecciona tu aportación</span>
+            <span class="btn-text" id="submitBtnText">Pagar 10&nbsp;€</span>
           </button>
 
           <p class="stripe-trust">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
-            Pago seguro procesado por Stripe
+            Pagament segur processat per Stripe
           </p>
 
           <div class="form-error" id="formError" role="alert" aria-live="polite">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
-            <span id="formErrorText">Algo ha fallado. Por favor inténtalo de nuevo o escríbenos a <strong>vitalquaproject@gmail.com</strong>.</span>
+            <span id="formErrorText">S'ha produït un error. Torna-ho a intentar o escriu-nos a <strong>vitalquaproject@gmail.com</strong>.</span>
           </div>
 
         </form>
@@ -1924,6 +1836,7 @@
        SCRIPTS
        ================================================================ -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
@@ -1932,7 +1845,7 @@
        Replace with your real pk_test_* or pk_live_* key.
        The secret key lives ONLY in .env / server.js.
        ---------------------------------------------------------------- */
-    var VQ_STRIPE_PK = 'pk_test_REPLACE_WITH_YOUR_PUBLISHABLE_KEY';
+    var VQ_STRIPE_PK = 'pk_live_51TaK1mDcloTKglOilvufV61ccgdGf4Q5mpb2gVwcA5qpGXae4q5VpnQbv3UARkefQ9bgliYisQ3OSVjiTXWifgsu00a0rJ4q5v';
 
     /* ----------------------------------------------------------------
        FIREBASE — sold-out check y conteo de participantes
@@ -1998,280 +1911,126 @@
     })();
 
     /* ----------------------------------------------------------------
-       QUANTITY STEPPER
+       COMPANION MANAGEMENT — acompanyants dinàmics (màx 9)
+       Total = 10 € × (1 + nombre d'acompanyants).
        ---------------------------------------------------------------- */
     (function () {
-      var MAX_QTY  = 10;
-      var qty      = 1;
-      var btnMinus = document.getElementById('qtyMinus');
-      var btnPlus  = document.getElementById('qtyPlus');
-      var display  = document.getElementById('qtyDisplay');
+      var MAX   = 9;
+      var companions = [];            /* nom (string) per cada acompanyant */
+      var list   = document.getElementById('companionsList');
+      var addBtn = document.getElementById('addCompanionBtn');
+      var errEl  = document.getElementById('companionError');
 
-      function render() {
-        display.textContent = qty;
-        btnMinus.disabled   = qty <= 1;
-        btnPlus.disabled    = qty >= MAX_QTY;
-        if (window._VQ_SHOW)   window._VQ_SHOW.refreshSummary();
-        if (window._VQ_GUESTS) window._VQ_GUESTS.onQtyChange(qty);
-      }
-
-      btnMinus.addEventListener('click', function () {
-        if (qty > 1)       { qty--; render(); }
-      });
-      btnPlus.addEventListener('click', function () {
-        if (qty < MAX_QTY) { qty++; render(); }
-      });
-
-      render();
-
-      window._VQ_QTY = {
-        get:    function () { return qty; },
-        getMax: function () { return MAX_QTY; }
-      };
-    })();
-
-    /* ----------------------------------------------------------------
-       SPLIT-EMAIL / GUEST MANAGEMENT
-       ---------------------------------------------------------------- */
-    (function () {
-      var splitWrap    = document.getElementById('splitEmailWrap');
-      var splitCheck   = document.getElementById('splitEmailCheck');
-      var guestsSection = document.getElementById('guestsSection');
-
-      /* guest state: array of {name, email} objects mirroring the DOM */
-      var guestData = [];
-
-      /* --- Build one guest card node for index i --- */
-      function buildCard(i) {
+      function buildCard(idx) {
         var card = document.createElement('div');
-        card.className = 'guest-card';
-        card.dataset.guestIndex = i;
+        card.className = 'companion-card';
+        card.setAttribute('data-ci', idx);
         card.innerHTML =
-          '<div class="guest-card-header">' +
-            '<div class="guest-number">' + (i + 1) + '</div>' +
-            '<span class="guest-card-title">Acompañante ' + (i + 1) + '</span>' +
-          '</div>' +
-          '<div class="guest-field-row">' +
-            '<div class="field guest-field" id="guest-field-nombre-' + i + '">' +
-              '<label for="guestNombre' + i + '">Nombre completo <span class="req" aria-hidden="true">*</span></label>' +
-              '<input type="text" id="guestNombre' + i + '" class="input" placeholder="Ej. Laura Sánchez"' +
-                ' autocomplete="off" autocapitalize="words" data-guest="' + i + '" data-field="name" />' +
-              '<span class="field-hint" id="hint-guest-nombre-' + i + '">Introduce el nombre del acompañante.</span>' +
-            '</div>' +
-            '<div class="field guest-field" id="guest-field-email-' + i + '">' +
-              '<label for="guestEmail' + i + '">Correo electrónico <span class="req" aria-hidden="true">*</span></label>' +
-              '<input type="email" id="guestEmail' + i + '" class="input" placeholder="Ej. laura@gmail.com"' +
-                ' autocomplete="off" data-guest="' + i + '" data-field="email" />' +
-              '<span class="field-hint" id="hint-guest-email-' + i + '">Introduce un correo válido.</span>' +
-            '</div>' +
-          '</div>';
+          '<div class="companion-num">' + (idx + 1) + '</div>' +
+          '<input type="text" class="companion-input input"' +
+            ' placeholder="Nom de l\'acompanyant ' + (idx + 1) + '"' +
+            ' autocapitalize="words" autocomplete="off"' +
+            ' aria-label="Acompanyant ' + (idx + 1) + '" />' +
+          '<button type="button" class="btn-remove-companion"' +
+            ' aria-label="Eliminar acompanyant ' + (idx + 1) + '">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' +
+            '</svg>' +
+          '</button>';
 
-        /* Live-sync inputs to guestData */
-        card.querySelectorAll('input').forEach(function (inp) {
-          inp.addEventListener('input', function () {
-            var idx   = parseInt(this.dataset.guest, 10);
-            var field = this.dataset.field;
-            guestData[idx][field] = this.value;
-            /* clear error on typing */
-            this.classList.remove('invalid');
-            var hint = document.getElementById('hint-guest-' + field.replace('name','nombre') + '-' + idx);
-            if (hint) hint.classList.remove('show');
-          });
+        card.querySelector('input').addEventListener('input', function () {
+          companions[idx] = this.value;
+          this.classList.remove('invalid');
+          errEl.classList.remove('show');
+        });
+
+        card.querySelector('.btn-remove-companion').addEventListener('click', function () {
+          companions.splice(idx, 1);
+          list.removeChild(card);
+          rebuildIndices();
+          refreshPrice();
         });
 
         return card;
       }
 
-      /* --- Re-render guest cards to match qty - 1 --- */
-      function renderGuests() {
-        var needed = splitCheck.checked ? (window._VQ_QTY ? window._VQ_QTY.get() - 1 : 0) : 0;
+      /* Re-number cards after a removal */
+      function rebuildIndices() {
+        var cards = list.querySelectorAll('.companion-card');
+        cards.forEach(function (c, i) {
+          c.setAttribute('data-ci', i);
+          c.querySelector('.companion-num').textContent = i + 1;
+          var inp = c.querySelector('input');
+          inp.setAttribute('aria-label', 'Acompanyant ' + (i + 1));
+          inp.setAttribute('placeholder', 'Nom de l\'acompanyant ' + (i + 1));
+          inp.value = companions[i] || '';
+          /* Reattach listener with correct index */
+          var fresh = inp.cloneNode(true);
+          (function (freshInp, ci) {
+            freshInp.addEventListener('input', function () {
+              companions[ci] = this.value;
+              this.classList.remove('invalid');
+              errEl.classList.remove('show');
+            });
+          })(fresh, i);
+          inp.parentNode.replaceChild(fresh, inp);
 
-        /* Grow */
-        while (guestData.length < needed) {
-          guestData.push({ name: '', email: '' });
-          guestsSection.appendChild(buildCard(guestData.length - 1));
-        }
-        /* Shrink */
-        while (guestData.length > needed) {
-          guestData.pop();
-          var last = guestsSection.lastElementChild;
-          if (last) guestsSection.removeChild(last);
-        }
-
-        /* Section title */
-        var title = guestsSection.querySelector('.guests-section-title');
-        if (needed > 0 && !title) {
-          var t = document.createElement('div');
-          t.className = 'guests-section-title';
-          t.textContent = 'Datos de los acompañantes';
-          guestsSection.insertBefore(t, guestsSection.firstChild);
-        } else if (needed === 0 && title) {
-          guestsSection.removeChild(title);
-        }
-
-        guestsSection.classList.toggle('visible', needed > 0);
-      }
-
-      /* --- Checkbox toggle --- */
-      splitCheck.addEventListener('change', renderGuests);
-
-      /* --- Called by the stepper when qty changes --- */
-      function onQtyChange(qty) {
-        /* Show/hide the checkbox row */
-        splitWrap.classList.toggle('visible', qty > 1);
-        if (qty <= 1) {
-          splitCheck.checked = false;
-        }
-        /* Resize guest list if split is active */
-        renderGuests();
-      }
-
-      /* --- Validation --- */
-      function validate() {
-        if (!splitCheck.checked) return true;
-        var ok = true;
-        var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        guestData.forEach(function (g, i) {
-          var nomInput   = document.getElementById('guestNombre' + i);
-          var emailInput = document.getElementById('guestEmail' + i);
-          var hintNom    = document.getElementById('hint-guest-nombre-' + i);
-          var hintEmail  = document.getElementById('hint-guest-email-' + i);
-
-          if (!g.name.trim()) {
-            nomInput.classList.add('invalid');
-            hintNom.classList.add('show');
-            if (ok) nomInput.focus();
-            ok = false;
-          }
-          if (!EMAIL_RE.test(g.email.trim())) {
-            emailInput.classList.add('invalid');
-            hintEmail.classList.add('show');
-            if (ok) emailInput.focus();
-            ok = false;
-          }
+          var oldBtn = c.querySelector('.btn-remove-companion');
+          var newBtn = oldBtn.cloneNode(true);
+          (function (cardEl, ci) {
+            newBtn.addEventListener('click', function () {
+              companions.splice(ci, 1);
+              list.removeChild(cardEl);
+              rebuildIndices();
+              refreshPrice();
+            });
+          })(c, i);
+          oldBtn.parentNode.replaceChild(newBtn, oldBtn);
         });
-        return ok;
       }
 
-      /* --- Public API --- */
-      window._VQ_GUESTS = {
-        onQtyChange:  onQtyChange,
-        validate:     validate,
-        getData:      function () {
-          if (!splitCheck.checked) return [];
-          return guestData.map(function (g) {
-            return { name: g.name.trim(), email: g.email.trim() };
-          });
-        }
-      };
-    })();
-
-    /* ----------------------------------------------------------------
-       TIER SELECTOR — lógica de selección e impacto
-       ---------------------------------------------------------------- */
-    (function () {
-      var selectedAmount = null;
-
-      var tierGrid       = document.getElementById('tierGrid');
-      var tierHintError  = document.getElementById('tierHintError');
-      var psSummaryTitle  = document.getElementById('psSummaryTitle');
-      var psSummarySub    = document.getElementById('psSummarySub');
-      var psSummaryAmount = document.getElementById('psSummaryAmount');
-      var submitBtnText   = document.getElementById('submitBtnText');
-      var customInput     = document.getElementById('customAmountInput');
-      var customHintError = document.getElementById('custom-hint-error');
-
-      function studentsLabel(totalEuros) {
-        var n = totalEuros / 20;
-        if (n < 1)              return '½ estudiante';
-        if (n === 1)            return '1 estudiante';
-        if (n % 1 === 0.5)     return n.toFixed(1).replace('.', ',') + ' estudiantes';
-        return Math.floor(n) + (n % 1 ? '+' : '') + ' estudiante' + (n > 1 ? 's' : '');
+      function refreshPrice() {
+        var n     = 1 + companions.length;
+        var total = 10 * n;
+        var label = n === 1 ? '1 persona' : n + ' persones';
+        document.getElementById('psSummaryTitle').textContent   = label;
+        document.getElementById('psSummaryAmount').textContent  = total + '\u00A0\u20AC';
+        document.getElementById('submitBtnText').textContent    = 'Pagar ' + total + '\u00A0\u20AC';
+        addBtn.disabled = companions.length >= MAX;
       }
 
-      function updateSummary(euros) {
-        var qty   = window._VQ_QTY ? window._VQ_QTY.get() : 1;
-        var total = euros ? euros * qty : null;
-
-        if (!total || isNaN(total) || total <= 0) {
-          psSummaryTitle.textContent  = 'Selecciona tu aportación';
-          psSummarySub.textContent    = 'Todo va directamente al proyecto · Kenia';
-          psSummaryAmount.textContent = '—';
-          psSummaryAmount.classList.add('empty');
-          submitBtnText.textContent   = 'Selecciona tu aportación';
-          return;
-        }
-
-        var entradas = qty === 1 ? '1 entrada' : qty + ' entradas';
-        var label    = studentsLabel(total);
-        psSummaryTitle.textContent  = entradas + ' · ' + euros.toLocaleString('es-ES') + '\u00A0€/persona';
-        psSummarySub.textContent    = label + ' · 20 años de agua limpia garantizada';
-        psSummaryAmount.textContent = total.toLocaleString('es-ES') + '\u00A0€';
-        psSummaryAmount.classList.remove('empty');
-        submitBtnText.textContent   = 'Pagar ' + total.toLocaleString('es-ES') + '\u00A0€';
-      }
-
-      tierGrid.addEventListener('click', function (e) {
-        var card = e.target.closest('.tier-card');
-        if (!card || card.disabled) return;
-
-        /* Deselect all */
-        tierGrid.querySelectorAll('.tier-card').forEach(function (c) {
-          c.classList.remove('selected');
-          c.setAttribute('aria-pressed', 'false');
-        });
-
-        /* Select this one */
-        card.classList.add('selected');
-        card.setAttribute('aria-pressed', 'true');
-        tierHintError.classList.remove('show');
-
-        var amount = card.dataset.amount;
-        if (amount === 'custom') {
-          selectedAmount = null;
-          updateSummary(null);
-          setTimeout(function () {
-            if (customInput) customInput.focus();
-          }, 80);
-        } else {
-          selectedAmount = parseInt(amount, 10);
-          updateSummary(selectedAmount);
-          customHintError.classList.remove('show');
-        }
+      addBtn.addEventListener('click', function () {
+        if (companions.length >= MAX) return;
+        companions.push('');
+        list.appendChild(buildCard(companions.length - 1));
+        refreshPrice();
+        var inputs = list.querySelectorAll('input');
+        if (inputs.length) inputs[inputs.length - 1].focus();
       });
 
-      /* Custom amount input → update summary live */
-      if (customInput) {
-        customInput.addEventListener('input', function () {
-          customHintError.classList.remove('show');
-          customInput.classList.remove('invalid');
-          var val = parseFloat(this.value);
-          if (!isNaN(val) && val >= 10) {
-            selectedAmount = val;
-            updateSummary(val);
-          } else {
-            selectedAmount = null;
-            updateSummary(null);
-          }
-        });
-        customInput.addEventListener('click', function (e) { e.stopPropagation(); });
-      }
+      refreshPrice();
 
-      /* Expose to global scope */
-      window._VQ_SHOW = {
-        getAmount:      function () { return selectedAmount; },
-        isCustom:       function () {
-          var sel = tierGrid.querySelector('.tier-card.selected');
-          return sel && sel.dataset.amount === 'custom';
+      window._VQ_COMPANIONS = {
+        validate: function () {
+          var ok = true;
+          var cards = list.querySelectorAll('.companion-card');
+          cards.forEach(function (c, i) {
+            var inp = c.querySelector('input');
+            if (!companions[i] || !companions[i].trim()) {
+              inp.classList.add('invalid');
+              errEl.classList.add('show');
+              if (ok) inp.focus();
+              ok = false;
+            }
+          });
+          return ok;
         },
-        refreshSummary: function () { updateSummary(selectedAmount); },
-        showTierError:  function () { tierHintError.classList.add('show'); },
-        showCustomError: function () {
-          if (customInput) {
-            customInput.classList.add('invalid');
-            customHintError.classList.add('show');
-          }
-        }
+        getData: function () {
+          return companions.map(function (n) {
+            return { nom: (n || '').trim() };
+          });
+        },
+        getTotalPersones: function () { return 1 + companions.length; }
       };
     })();
 
@@ -2342,270 +2101,236 @@
       document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
     })();
 
-    /* ----------------------------------------------------------------
-       FORMULARIO — validación, Payment Intent y Stripe Elements
-       Flujo de dos pasos:
-         1. El usuario rellena sus datos y selecciona su aportación
-            → "Proceder al pago" llama al backend para crear el
-              PaymentIntent y monta el Payment Element inline.
-         2. El usuario introduce sus datos de tarjeta
-            → "Confirmar pago" llama a stripe.confirmPayment()
-              que redirige a success-show.html.
-       ---------------------------------------------------------------- */
-    (function () {
-      var form        = document.getElementById('showForm');
-      var submitBtn   = document.getElementById('submitBtn');
-      var submitText  = document.getElementById('submitBtnText');
-      var errorMsg    = document.getElementById('formError');
-      var errorText   = document.getElementById('formErrorText');
+    /* ================================================================
+       PAGAMENT CLIENT-SIDE PUR — Stripe API + Firebase (sense servidor)
+       ================================================================
+       Flux:
+         1. Validació: total = 10 € exactament × (1 + acompanyants)
+         2. Sign-in anònim Firebase Auth (per escriure a Firestore)
+         3. Escriptura a 'pagaments/{id}' amb status:'pending'
+         4. Crida directa a l'API de Stripe per crear la Checkout Session
+         5. Redirecció a Stripe Hosted Checkout (session.url)
 
+       ⚠️  AVÍS DE SEGURETAT: la clau secreta de Stripe (STRIPE_SK) és
+           visible al navegador / codi font. Acceptable per a un event
+           benèfic petit sense dades sensibles. Per a producció amb volum
+           alt, mou la creació de la sessió a un servidor o Cloud Function.
+
+       Regles de Firestore necessàries per a 'pagaments-show':
+         allow create: if request.auth != null;
+         allow read, update: if request.auth != null
+                             && resource.data.status == 'pending';
+       ================================================================ */
+    (function () {
+      var PRICE_PER_PERSON = 10;
+
+      /* ⚠️ Clau secreta — visible al navegador (risc acceptat) */
+      var STRIPE_SK = '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';
+
+      var firebaseConfig = {
+        apiKey:            'AIzaSyDKic5e9DAU1iw6ZOtsT1gGEEyU8WCtAXE',
+        authDomain:        'vitalqua-project.firebaseapp.com',
+        projectId:         'vitalqua-project',
+        storageBucket:     'vitalqua-project.firebasestorage.app',
+        messagingSenderId: '263061224525',
+        appId:             '1:263061224525:web:9bc179545f515ffac27004',
+      };
+
+      var app  = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+      var db   = firebase.firestore(app);
+      var auth = firebase.auth(app);
+
+      var form           = document.getElementById('showForm');
+      var submitBtn      = document.getElementById('submitBtn');
+      var errorMsg       = document.getElementById('formError');
+      var errorText      = document.getElementById('formErrorText');
       var inputNombre    = document.getElementById('inputNombre');
       var inputApellidos = document.getElementById('inputApellidos');
       var inputTelefono  = document.getElementById('inputTelefono');
       var inputEmail     = document.getElementById('inputEmail');
-
-      var hintNombre    = document.getElementById('hint-nombre');
-      var hintApellidos = document.getElementById('hint-apellidos');
-      var hintTelefono  = document.getElementById('hint-telefono');
-      var hintEmail     = document.getElementById('hint-email');
-
-      /* State */
-      var flowStep = 'form'; // 'form' | 'payment'
-      var stripeInstance = null;
-      var stripeElements = null;
+      var hintNombre     = document.getElementById('hint-nombre');
+      var hintApellidos  = document.getElementById('hint-apellidos');
+      var hintTelefono   = document.getElementById('hint-telefono');
+      var hintEmail      = document.getElementById('hint-email');
 
       /* ---- Helpers ---- */
-      function isValidSpanishPhone(raw) {
-        var cleaned = raw.replace(/[\s\-\.]/g, '');
-        return /^(\+34|0034)?[6789]\d{8}$/.test(cleaned);
+      function isValidEmail(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
       }
-
-      function isValidEmail(val) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+      function isValidPhone(v) {
+        return /^[6-9]\d{8}$/.test(v.replace(/[\s\-\.]/g, ''));
       }
-
-      function clearErrorOn(input, hint, extraCheck) {
-        input.addEventListener('input', function () {
-          var ok = extraCheck ? extraCheck(input.value) : input.value.trim().length > 0;
-          if (ok) {
-            input.classList.remove('invalid');
-            hint.classList.remove('show');
-          }
-        });
-      }
-      clearErrorOn(inputNombre,    hintNombre);
-      clearErrorOn(inputApellidos, hintApellidos);
-      clearErrorOn(inputTelefono,  hintTelefono, isValidSpanishPhone);
-      clearErrorOn(inputEmail,     hintEmail,    isValidEmail);
-
-      function applyTitleCase(inp) {
-        inp.addEventListener('input', function () {
-          var pos    = this.selectionStart;
-          var titled = this.value.replace(/(?:^|[\s\-])(\S)/g, function (m) { return m.toUpperCase(); });
-          if (this.value !== titled) {
-            this.value = titled;
-            this.setSelectionRange(pos, pos);
-          }
-        });
-      }
-      applyTitleCase(inputNombre);
-      applyTitleCase(inputApellidos);
-
-      inputTelefono.addEventListener('input', function () {
-        var digits = this.value.replace(/\D/g, '').slice(0, 9);
-        var f = digits.slice(0, 3);
-        if (digits.length > 3) f += ' ' + digits.slice(3, 5);
-        if (digits.length > 5) f += ' ' + digits.slice(5, 7);
-        if (digits.length > 7) f += ' ' + digits.slice(7, 9);
-        this.value = f;
-      });
-
-      function validateForm() {
-        var ok = true;
-        var setErr = function (inp, hint) {
-          inp.classList.add('invalid');
-          hint.classList.add('show');
-          if (ok) inp.focus();
-          ok = false;
-        };
-        if (!inputNombre.value.trim())                  setErr(inputNombre,    hintNombre);
-        if (!inputApellidos.value.trim())               setErr(inputApellidos, hintApellidos);
-        if (!isValidSpanishPhone(inputTelefono.value))  setErr(inputTelefono,  hintTelefono);
-        if (!isValidEmail(inputEmail.value))            setErr(inputEmail,     hintEmail);
-
-        var vq = window._VQ_SHOW;
-        if (!vq) return false;
-        if (vq.getAmount() === null) {
-          if (vq.isCustom()) { vq.showCustomError(); } else { vq.showTierError(); }
-          ok = false;
-        }
-
-        /* Validate guest fields if split-email is active */
-        if (window._VQ_GUESTS && !window._VQ_GUESTS.validate()) ok = false;
-
-        return ok;
-      }
-
-      function showFormError(msg) {
-        errorText.textContent = msg;
+      function showFormError(html) {
+        errorText.innerHTML = html;
         errorMsg.classList.add('show');
         submitBtn.classList.remove('loading');
         submitBtn.disabled = false;
       }
 
-      function lockFormFields() {
-        document.querySelectorAll('#showForm input').forEach(function (inp) { inp.disabled = true; });
-        document.querySelectorAll('.tier-card').forEach(function (btn) { btn.disabled = true; });
-        var qtyMinus = document.getElementById('qtyMinus');
-        var qtyPlus  = document.getElementById('qtyPlus');
-        if (qtyMinus) qtyMinus.disabled = true;
-        if (qtyPlus)  qtyPlus.disabled  = true;
+      /* ---- Validació del formulari ---- */
+      function validateForm() {
+        var ok = true;
+        var markErr = function (inp, hint) {
+          inp.classList.add('invalid');
+          hint.classList.add('show');
+          if (ok) inp.focus();
+          ok = false;
+        };
+        if (!inputNombre.value.trim())         markErr(inputNombre,    hintNombre);
+        if (!inputApellidos.value.trim())      markErr(inputApellidos, hintApellidos);
+        if (!isValidPhone(inputTelefono.value)) markErr(inputTelefono, hintTelefono);
+        if (!isValidEmail(inputEmail.value))   markErr(inputEmail,     hintEmail);
+        if (window._VQ_COMPANIONS && !window._VQ_COMPANIONS.validate()) ok = false;
+        return ok;
       }
 
-      /* ---- Step 1: Create PaymentIntent on the backend ---- */
-      async function initPayment() {
+      /* ---- Validació estricta del preu ---- */
+      function validatePrice(numPersones) {
+        if (numPersones < 1 || numPersones > 10) return null;
+        var expected = PRICE_PER_PERSON * numPersones;
+        if (expected % PRICE_PER_PERSON !== 0) return null;
+        return expected;
+      }
+
+      /* ---- Neteja d'errors en escriure ---- */
+      [inputNombre, inputApellidos].forEach(function (inp) {
+        inp.addEventListener('input', function () {
+          var hint = this === inputNombre ? hintNombre : hintApellidos;
+          if (this.value.trim()) { this.classList.remove('invalid'); hint.classList.remove('show'); }
+        });
+        inp.addEventListener('input', function () {
+          var pos = this.selectionStart;
+          var v   = this.value.replace(/(?:^|[\s\-])(\S)/g, function (m) { return m.toUpperCase(); });
+          if (this.value !== v) { this.value = v; this.setSelectionRange(pos, pos); }
+        });
+      });
+      inputTelefono.addEventListener('input', function () {
+        if (isValidPhone(this.value)) { this.classList.remove('invalid'); hintTelefono.classList.remove('show'); }
+      });
+      inputEmail.addEventListener('input', function () {
+        if (isValidEmail(this.value)) { this.classList.remove('invalid'); hintEmail.classList.remove('show'); }
+      });
+
+      /* ---- Flux principal ---- */
+      async function handleSubmit() {
+        if (!validateForm()) return;
+
+        var numPersones = window._VQ_COMPANIONS
+          ? window._VQ_COMPANIONS.getTotalPersones() : 1;
+
+        var totalEur = validatePrice(numPersones);
+        if (!totalEur) {
+          alert('El preu ha de ser exactament de 10\u00A0\u20AC per persona');
+          return;
+        }
+
         submitBtn.classList.add('loading');
         submitBtn.disabled = true;
         errorMsg.classList.remove('show');
 
-        var vq       = window._VQ_SHOW;
-        var amount   = vq.getAmount();
-        var isCustom = vq.isCustom();
-        var qty      = window._VQ_QTY ? window._VQ_QTY.get() : 1;
-        var nombre    = inputNombre.value.trim();
-        var apellidos = inputApellidos.value.trim();
-        var telefono  = inputTelefono.value.trim();
-        var email     = inputEmail.value.trim().toLowerCase();
-        var ticketId  = generateTicketId();
-
-        var guests = window._VQ_GUESTS ? window._VQ_GUESTS.getData() : [];
-
-        /* Persist registration data before the Stripe redirect */
-        localStorage.setItem('vq_show_ticketId',  ticketId);
-        localStorage.setItem('vq_show_nombre',    nombre);
-        localStorage.setItem('vq_show_apellidos', apellidos);
-        localStorage.setItem('vq_show_telefono',  telefono);
-        localStorage.setItem('vq_show_email',     email);
-        localStorage.setItem('vq_show_amount',    amount);
-        localStorage.setItem('vq_show_qty',       qty);
-        localStorage.setItem('vq_show_total',     amount * qty);
-        if (guests.length) {
-          localStorage.setItem('vq_show_guests', JSON.stringify(guests));
-        }
+        var nom          = inputNombre.value.trim();
+        var cognoms      = inputApellidos.value.trim();
+        var telefon      = inputTelefono.value.trim();
+        var email        = inputEmail.value.trim().toLowerCase();
+        var acompanyants = window._VQ_COMPANIONS
+          ? window._VQ_COMPANIONS.getData() : [];
 
         try {
-          var resp = await fetch('/api/create-payment-intent', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              option_id:     isCustom ? 'custom' : String(amount),
-              quantity:      qty,
-              custom_amount: isCustom ? amount : undefined,
-              metadata: {
-                ticket_id: ticketId,
-                nombre:    nombre,
-                apellidos: apellidos,
-                telefono:  telefono,
-                email:     email,
-                guests:    guests.length ? JSON.stringify(guests) : undefined,
-              },
-            }),
+          /* ── 1. Sign-in anònim per a Firestore ── */
+          var credential = await auth.signInAnonymously();
+          var uid        = credential.user.uid;
+
+          /* ── 2. Escriptura a 'pagaments' amb status:'pending' ── */
+          var pagamentsRef = db.collection('pagaments-show').doc();
+          var pagamentsId  = pagamentsRef.id;
+
+          await pagamentsRef.set({
+            nom:          nom,
+            cognoms:      cognoms,
+            telefon:      telefon,
+            email:        email,
+            acompanyants: acompanyants,
+            numPersones:  numPersones,
+            totalEur:     totalEur,
+            status:       'pending',
+            uid:          uid,
+            createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
           });
 
-          var data = await resp.json();
+          /* ── 3. Crida directa a l'API de Stripe per crear la Checkout Session ── */
+          var params = new URLSearchParams();
+          params.append('mode', 'payment');
+          params.append('line_items[0][price_data][currency]', 'eur');
+          params.append('line_items[0][price_data][unit_amount]', '1000');
+          params.append('line_items[0][price_data][product_data][name]',
+            'Concert Ben\u00e8fic \u00b7 Vitalqua Project \u00b7 16 Juliol');
+          params.append('line_items[0][price_data][product_data][description]',
+            'Entrada inclou consumici\u00f3 + picoteo + concert en directe \u00b7 UIC Barcelona');
+          params.append('line_items[0][quantity]', numPersones.toString());
+          params.append('success_url',
+            window.location.origin + '/success-show.html?session_id={CHECKOUT_SESSION_ID}');
+          params.append('cancel_url',
+            window.location.origin + '/show.html?cancel=1');
+          params.append('client_reference_id', pagamentsId);
+          params.append('customer_email', email);
+          params.append('metadata[nom]',         nom);
+          params.append('metadata[cognoms]',     cognoms);
+          params.append('metadata[telefon]',     telefon);
+          params.append('metadata[numPersones]', numPersones.toString());
+          params.append('metadata[totalEur]',    totalEur.toString());
+          params.append('metadata[pagamentsId]', pagamentsId);
+          var acompStr = JSON.stringify(acompanyants);
+          if (acompStr.length <= 500) params.append('metadata[acompanyants]', acompStr);
 
-          if (!resp.ok) {
-            showFormError(data.error || 'Error al iniciar el pago. Inténtalo de nuevo.');
-            return;
+          var stripeResp = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+            method:  'POST',
+            headers: {
+              'Authorization': 'Bearer ' + STRIPE_SK,
+              'Content-Type':  'application/x-www-form-urlencoded',
+            },
+            body: params.toString(),
+          });
+
+          if (!stripeResp.ok) {
+            var errData = await stripeResp.json().catch(function () { return {}; });
+            throw new Error(
+              (errData.error && errData.error.message) ||
+              'Stripe API HTTP ' + stripeResp.status
+            );
           }
 
-          /* Mount Stripe Payment Element */
-          stripeInstance = Stripe(VQ_STRIPE_PK);
-          stripeElements = stripeInstance.elements({
-            clientSecret: data.clientSecret,
-            locale: 'es',
-            appearance: {
-              theme: 'stripe',
-              variables: {
-                colorPrimary:       '#2A85B3',
-                colorBackground:    '#ffffff',
-                colorText:          '#1A2B42',
-                colorDanger:        '#DC2626',
-                fontFamily:         'Inter, system-ui, sans-serif',
-                borderRadius:       '10px',
-                spacingUnit:        '4px',
-              },
-              rules: {
-                '.Input': { border: '1.5px solid #D0DFF0', boxShadow: 'none' },
-                '.Input:focus': { border: '1.5px solid #2A85B3', boxShadow: '0 0 0 3px rgba(42,133,179,.15)' },
-                '.Label': { fontWeight: '600', fontSize: '13px' },
-              },
-            },
-          });
+          var session = await stripeResp.json();
 
-          var paymentElement = stripeElements.create('payment');
-          paymentElement.mount('#vqPaymentElement');
+          /* ── 4. Guardar context per a la pàgina d'èxit ── */
+          localStorage.setItem('vq_uid',          uid);
+          localStorage.setItem('vq_pagaments_id', pagamentsId);
 
-          /* Reveal payment section */
-          document.getElementById('vqPaymentWrap').hidden = false;
-          document.getElementById('vqPaymentWrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-          /* Freeze form fields — amount is now locked server-side */
-          lockFormFields();
-
-          /* Transition to step 2 */
-          flowStep = 'payment';
-          submitBtn.classList.remove('loading');
-          submitBtn.disabled = false;
-          var total = amount * qty;
-          submitText.textContent = 'Confirmar pago · ' + total.toLocaleString('es-ES') + '\u00A0€';
+          /* ── 5. Redirecció a Stripe Hosted Checkout ── */
+          window.location.assign(session.url);
 
         } catch (err) {
-          console.error('[Vitalqua] Error creating payment intent:', err);
-          showFormError('Error de conexión. Comprueba tu internet e inténtalo de nuevo.');
-        }
-      }
-
-      /* ---- Step 2: Confirm payment via Stripe ---- */
-      async function confirmPayment() {
-        submitBtn.classList.add('loading');
-        submitBtn.disabled = true;
-
-        /* Clear any previous Stripe-level payment error */
-        var payErrEl = document.getElementById('vqPaymentError');
-        if (payErrEl) payErrEl.classList.remove('show');
-
-        var result = await stripeInstance.confirmPayment({
-          elements: stripeElements,
-          confirmParams: {
-            return_url:    window.location.origin + '/success-show.html',
-            receipt_email: inputEmail.value.trim().toLowerCase(),
-          },
-        });
-
-        /* confirmPayment only returns here if there was an error
-           (a successful payment always redirects to return_url) */
-        if (result.error) {
-          var errEl   = document.getElementById('vqPaymentError');
-          var errText = document.getElementById('vqPaymentErrorText');
-          if (result.error.type !== 'validation_error' && errEl && errText) {
-            errText.textContent = result.error.message;
-            errEl.classList.add('show');
+          console.error('[Vitalqua] handleSubmit error:', err);
+          if (err.message && err.message.toLowerCase().includes('stripe')) {
+            showFormError(
+              'Error en crear la sessi\u00f3 de pagament: ' + err.message +
+              '. Contacta <strong>vitalquaproject@gmail.com</strong>.'
+            );
+          } else if (err.code === 'permission-denied') {
+            showFormError('Error de permisos. Contacta <strong>vitalquaproject@gmail.com</strong>.');
+          } else if (err.code === 'unavailable') {
+            showFormError('Sense connexi\u00f3. Connecta\'t i torna-ho a intentar.');
+          } else {
+            showFormError(
+              'Error inesperat. Torna-ho a intentar o escriu-nos a ' +
+              '<strong>vitalquaproject@gmail.com</strong>.'
+            );
           }
-          submitBtn.classList.remove('loading');
-          submitBtn.disabled = false;
         }
       }
 
-      /* ---- Form submit dispatcher ---- */
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        if (flowStep === 'form') {
-          if (!validateForm()) return;
-          initPayment();
-        } else if (flowStep === 'payment') {
-          confirmPayment();
-        }
+        handleSubmit();
       });
     })();
   </script>

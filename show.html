@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="ca">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Concierto Benéfico · UIC × ADESCI × Vitalqua Project · 16 Julio</title>
-  <meta name="description" content="Concierto benéfico organizado por UIC Barcelona, ADESCI y Vitalqua Project. 16 de julio — una noche de música solidaria para llevar agua limpia a 500 estudiantes en Kenia." />
+  <title>Concert Benèfic · UIC × ADESCI × Vitalqua Project · 16 Juliol</title>
+  <meta name="description" content="Concert benèfic organitzat per UIC Barcelona, ADESCI i Vitalqua Project. 16 de juliol — una nit de música solidària per portar aigua neta a 500 estudiants a Kenya." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
   <style>
     /* ================================================================
        Vitalqua — show.html
-       Paleta: blanco / azul claro — evento formal para adultos
+       Paleta: blanc / blau clar — event formal per a adults
        ================================================================ */
     :root {
       --bg:        #F5F9FC;
@@ -110,7 +110,7 @@
     .logo-mark { width: auto; height: 32px; display: block; flex-shrink: 0; }
 
     /* ============================================================
-       HERO — mobile-first · concierto benéfico
+       HERO — mobile-first · concert benèfic
        ============================================================ */
     .hero {
       position: relative;
@@ -389,7 +389,7 @@
     }
 
     /* ============================================================
-       INFO SECTION — horario + incluye
+       INFO SECTION — horari + inclou
        ============================================================ */
     .info-section {
       background: var(--surface);
@@ -485,7 +485,7 @@
     @media (max-width: 640px) { .info-grid { grid-template-columns: 1fr; } }
 
     /* ============================================================
-       IMPACT SECTION — ¿Sabías que? (light version)
+       IMPACT SECTION — Sabies que? (versió clara)
        ============================================================ */
     .impact-section {
       position: relative;
@@ -740,8 +740,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 14px 8px 12px;
+      gap: 4px;
+      padding: 14px 6px 12px;
+      min-height: 110px;
       border-radius: var(--radius);
       background: var(--bg);
       border: 1.5px solid rgba(42,133,179,.16);
@@ -813,17 +814,21 @@
 
     .tier-amount {
       font-family: 'Inter Tight', 'Inter', sans-serif;
-      font-size: 1.15rem;
+      font-size: clamp(1rem, 3.5vw, 1.15rem);
       font-weight: 700;
       letter-spacing: -0.02em;
       color: var(--navy);
       line-height: 1;
     }
     .tier-students {
-      font-size: 0.71rem;
-      font-weight: 500;
-      color: var(--muted);
+      font-size: clamp(0.62rem, 2vw, 0.72rem);
+      font-weight: 600;
+      color: var(--cy-xdk);
       line-height: 1.2;
+    }
+    @media (max-width: 360px) {
+      .tier-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .tier-card  { padding: 10px 4px 8px; min-height: 96px; }
     }
     .tier-tag {
       display: inline-block;
@@ -916,6 +921,12 @@
     .ps-sub {
       font-size: 0.76rem;
       color: var(--muted);
+    }
+    .ps-min {
+      font-size: 0.72rem;
+      color: var(--cy-dk);
+      font-weight: 600;
+      opacity: 0.75;
     }
     .price-summary-amount {
       font-family: 'Inter Tight', 'Inter', sans-serif;
@@ -1288,54 +1299,138 @@
     /* ============================================================
        COMPANION SECTION — acompanyants dinàmics
        ============================================================ */
-    .companion-section { display: flex; flex-direction: column; gap: 12px; }
-    .companion-header-row {
-      display: flex; align-items: flex-start;
-      justify-content: space-between; gap: 12px;
+    /* ---- Persons counter ---- */
+    .persons-section {
+      display: flex; flex-direction: column; gap: 10px;
     }
-    .companion-labels { display: flex; flex-direction: column; gap: 3px; }
-    .companion-section-title { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
-    .companion-section-hint  { font-size: 0.78rem; color: var(--muted); }
-    .btn-add-companion {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 999px;
-      border: 1.5px solid var(--cy-dk);
+    .persons-section-header { display: flex; flex-direction: column; gap: 3px; }
+    .persons-section-title { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+    .persons-section-hint  { font-size: 0.78rem; color: var(--muted); }
+    .persons-counter {
+      display: flex; align-items: center; justify-content: center;
+      gap: 20px;
+      background: var(--bg-soft);
+      border: 1.5px solid var(--cy-xlt);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+    .btn-counter {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 2px solid var(--cy-dk);
       background: transparent; color: var(--cy-dk);
-      font-size: 0.82rem; font-weight: 600;
-      cursor: pointer; white-space: nowrap; flex-shrink: 0;
-      transition: background 160ms ease, color 160ms ease;
+      display: grid; place-items: center;
+      cursor: pointer; flex-shrink: 0;
+      transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+      -webkit-tap-highlight-color: transparent;
     }
-    .btn-add-companion:hover  { background: var(--cy-dk); color: #fff; }
-    .btn-add-companion:disabled { opacity: .4; cursor: default; }
-    .companion-list { display: flex; flex-direction: column; gap: 8px; }
-    .companion-card {
+    .btn-counter:hover:not(:disabled) {
+      background: var(--cy-dk); color: #fff;
+    }
+    .btn-counter:active:not(:disabled) {
+      transform: scale(.93);
+    }
+    .btn-counter:disabled { opacity: .28; cursor: default; }
+    .counter-value {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 2.6rem; font-weight: 800;
+      color: var(--navy); letter-spacing: -0.05em; line-height: 1;
+      min-width: 56px; text-align: center;
+      transition: color 180ms ease;
+    }
+    .counter-hint {
+      font-size: 0.75rem; color: var(--muted); text-align: center;
+    }
+
+    /* ---- Companion names (dinàmic) ---- */
+    #companionNamesSection:not(:empty) {
+      margin-bottom: 14px;
+    }
+    .companion-names-section {
+      display: flex; flex-direction: column; gap: 10px;
+      animation: fade-down .22s ease both;
+      padding: 14px 16px;
+      background: var(--bg-soft);
+      border: 1.5px solid var(--cy-xlt);
+      border-radius: var(--radius-sm);
+    }
+    @keyframes fade-down {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .companion-names-title    { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+    .companion-names-hint     { font-size: 0.78rem; color: var(--muted); }
+    .companion-names-required { font-size: 0.72rem; font-weight: 600; color: var(--cy-dk); background: rgba(79,179,217,.13); border-radius: 4px; padding: 1px 6px; }
+    .companion-names-list     { display: flex; flex-direction: column; gap: 8px; }
+    .companion-name-field {
       display: flex; align-items: center; gap: 10px;
-      background: var(--bg-soft); border: 1.5px solid var(--cy-xlt);
+      background: #fff; border: 1.5px solid var(--cy-xlt);
       border-radius: var(--radius-sm); padding: 10px 12px;
+      transition: border-color .15s;
     }
-    .companion-num {
+    .companion-name-field.invalid { border-color: #e05050; }
+    .companion-name-inner { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .companion-name-error {
+      display: none; font-size: 0.72rem; color: #e05050;
+    }
+    .companion-name-error.show { display: block; }
+    .companion-name-num {
       width: 22px; height: 22px; border-radius: 50%;
       background: var(--cy-lt); color: var(--cy-xdk);
       font-size: 0.7rem; font-weight: 700;
       display: grid; place-items: center; flex-shrink: 0;
     }
-    .companion-input {
-      flex: 1; min-width: 0;
+    .companion-name-input {
+      width: 100%; min-width: 0;
       border: none; background: transparent;
       font-family: inherit; font-size: 0.9rem; color: var(--ink);
       outline: none; padding: 0;
     }
-    .companion-input::placeholder { color: var(--faint); }
-    .companion-input.invalid { color: #DC2626; }
-    .btn-remove-companion {
-      background: none; border: none; padding: 4px;
-      color: var(--muted); cursor: pointer;
-      border-radius: 6px; display: grid; place-items: center;
-      flex-shrink: 0; transition: color 160ms ease, background 160ms ease;
+    .companion-name-input.invalid { color: #e05050; }
+    .companion-name-input::placeholder { color: var(--faint); }
+
+    /* ---- Custom price row ---- */
+    .custom-price-row {
+      margin-top: 10px;
+      animation: fade-down .22s ease both;
     }
-    .btn-remove-companion:hover { color: #DC2626; background: rgba(220,38,38,.08); }
-    .companion-error { display: none; color: #DC2626; font-size: 0.78rem; }
-    .companion-error.show { display: block; }
+    .custom-price-inner {
+      position: relative; display: flex; align-items: center;
+    }
+    .custom-price-symbol {
+      position: absolute; left: 14px;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--cy-dk); pointer-events: none; user-select: none;
+    }
+    .custom-price-input {
+      width: 100%;
+      padding: 12px 16px 12px 32px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(42,133,179,.28);
+      background: var(--bg-soft);
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.15rem; font-weight: 700; color: var(--navy);
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+      -moz-appearance: textfield; appearance: textfield;
+    }
+    .custom-price-input::-webkit-inner-spin-button,
+    .custom-price-input::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; }
+    .custom-price-input:focus {
+      border-color: var(--cy-dk);
+      box-shadow: 0 0 0 3px rgba(42,133,179,.12);
+    }
+    .custom-price-input.invalid {
+      border-color: #C0392B;
+      box-shadow: 0 0 0 3px rgba(192,57,43,.1);
+    }
+    .custom-price-note {
+      font-size: 0.74rem; color: var(--muted); margin-top: 6px; display: block;
+    }
+    .custom-price-error {
+      display: none; font-size: 0.78rem; color: #C0392B; margin-top: 4px;
+    }
+    .custom-price-error.show { display: block; }
   </style>
 
   <!-- Stripe.js — must load before any Stripe Elements code -->
@@ -1348,7 +1443,7 @@
        ================================================================ -->
   <header class="site-header" id="siteHeader">
     <div class="wrap nav">
-      <a href="index.html" class="logo" aria-label="Vitalqua Project — ir al inicio">
+      <a href="index.html" class="logo" aria-label="Vitalqua Project — anar a l'inici">
         <img src="img/logo.svg" alt="" width="32" height="32" class="logo-mark" />
         Vitalqua Project
       </a>
@@ -1356,7 +1451,7 @@
   </header>
 
   <!-- ================================================================
-       HERO — mobile-first · concierto benéfico
+       HERO — mobile-first · concert benèfic
        ================================================================ -->
   <section class="hero" id="top">
 
@@ -1371,7 +1466,7 @@
       <!-- Org logos strip — unified card -->
       <div class="hero-orgs">
         <span class="hero-orgs-label">Organitzat per</span>
-        <div class="hero-orgs-logos" role="list" aria-label="Organizadores del evento">
+        <div class="hero-orgs-logos" role="list" aria-label="Organitzadors de l'event">
           <a href="https://www.uic.es" target="_blank" rel="noopener noreferrer" class="hero-org-link" aria-label="UIC Barcelona" role="listitem">
             <img src="img/uic_logo.png" alt="UIC Barcelona" class="hero-org-img" />
             <span class="hero-org-name">UIC Barcelona</span>
@@ -1390,20 +1485,20 @@
       </div>
 
       <!-- Eyebrow -->
-      <div class="hero-eyebrow">16 Julio · UIC Barcelona</div>
+      <div class="hero-eyebrow">16 Juliol · UIC Barcelona</div>
 
       <!-- Title -->
       <h1 class="hero-title">
-        Concierto<br>
-        <span class="title-line2">Benéfico</span>
+        Concert<br>
+        <span class="title-line2">Benèfic</span>
       </h1>
 
       <!-- Event info: date · time · venue -->
-      <div class="hero-info" role="list" aria-label="Detalles del evento">
+      <div class="hero-info" role="list" aria-label="Detalls de l'event">
         <div class="hero-info-item" role="listitem">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <span class="hero-info-label">Fecha</span>
-          <span class="hero-info-value">16&nbsp;Julio</span>
+          <span class="hero-info-label">Data</span>
+          <span class="hero-info-value">16&nbsp;Juliol</span>
         </div>
         <div class="hero-info-item" role="listitem">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -1412,28 +1507,28 @@
         </div>
         <div class="hero-info-item" role="listitem">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span class="hero-info-label">Lugar</span>
+          <span class="hero-info-label">Lloc</span>
           <span class="hero-info-value">UIC&nbsp;Barcelona</span>
         </div>
       </div>
 
       <!-- Lede -->
       <p class="hero-lede">
-        Una noche solidaria organizada por UIC, ADESCI y Vitalqua Project.
-        Música en directo, picoteo y un proyecto que da agua limpia
-        a 500 estudiantes en Kenia.
+        Una nit solidària organitzada per UIC, ADESCI i Vitalqua Project.
+        Música en directe, aperitius i un projecte que porta aigua neta
+        a 500 estudiants a Kenya.
       </p>
 
       <!-- CTA -->
       <a href="#inscripcion" class="hero-cta">
-        Reservar mi plaza
+        Reservar la meva plaça
         <svg class="cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
 
       <!-- Trust note -->
       <p class="hero-trust">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Pago seguro · Stripe · Aforo limitado
+        Pagament segur · Stripe · Aforament limitat
       </p>
 
       <!-- Crystal drop — visible only on desktop (≥820px) -->
@@ -1481,37 +1576,37 @@
   </section>
 
   <!-- ================================================================
-       INFO SECTION — horario + qué incluye
+       INFO SECTION — horari + què inclou
        ================================================================ -->
   <section class="info-section">
     <div class="wrap">
       <div class="info-grid">
 
-        <!-- HORARIO -->
+        <!-- HORARI -->
         <div class="info-card reveal">
           <div class="info-card-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
             </svg>
-            Programa de la velada
+            Programa de la vetllada
           </div>
           <ul class="schedule-list">
             <li class="schedule-item">
               <span class="schedule-time">19:00 – 19:30</span>
-              <span class="schedule-desc">Bienvenida</span>
+              <span class="schedule-desc">Benvinguda</span>
             </li>
             <li class="schedule-item">
               <span class="schedule-time">19:30 – 20:30</span>
-              <span class="schedule-desc">Picoteo con música en directo</span>
+              <span class="schedule-desc">Aperitius amb música en directe</span>
             </li>
             <li class="schedule-item">
               <span class="schedule-time">20:30 – 21:00</span>
-              <span class="schedule-desc">Presentación del proyecto</span>
+              <span class="schedule-desc">Presentació del projecte</span>
             </li>
             <li class="schedule-item schedule-item--highlight">
               <span class="schedule-time schedule-time--concert">21:00 – 22:30</span>
               <span class="schedule-desc schedule-desc--concert">
-                CONCIERTO — La Nostra Música
+                CONCERT — La Nostra Música
               </span>
             </li>
             <li class="schedule-item">
@@ -1521,13 +1616,13 @@
           </ul>
         </div>
 
-        <!-- QUÉ INCLUYE -->
+        <!-- QUÈ INCLOU -->
         <div class="info-card reveal">
           <div class="info-card-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
             </svg>
-            Qué incluye tu inscripción
+            Què inclou la teva inscripció
           </div>
           <ul class="includes-list">
             <li class="includes-item">
@@ -1536,7 +1631,7 @@
                   <path d="M8 22h8"/><path d="M12 11v11"/><path d="M5 3h14l-2 7a5 5 0 0 1-10 0L5 3z"/>
                 </svg>
               </span>
-              1 consumición incluida
+              1 consumició inclosa
             </li>
             <li class="includes-item">
               <span class="includes-dot">
@@ -1544,7 +1639,7 @@
                   <path d="M3 11h18"/><path d="M3 15h18"/><path d="M5 19h14a2 2 0 0 0 2-2v-1H3v1a2 2 0 0 0 2 2z"/><path d="M3 11a7 7 0 0 1 14 0"/>
                 </svg>
               </span>
-              Picoteo
+              Aperitius
             </li>
             <li class="includes-item">
               <span class="includes-dot">
@@ -1552,7 +1647,7 @@
                   <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
                 </svg>
               </span>
-              Concierto en directo
+              Concert en directe
             </li>
           </ul>
         </div>
@@ -1562,7 +1657,7 @@
   </section>
 
   <!-- ================================================================
-       IMPACT SECTION — ¿Sabías que?
+       IMPACT SECTION — Sabies que?
        ================================================================ -->
   <section class="impact-section">
     <div class="impact-inner wrap">
@@ -1573,36 +1668,36 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
-          ¿Sabías que?
+          Sabies que?
         </div>
 
         <p class="impact-body">
-          Proveer a <strong>un estudiante</strong> con agua limpia
-          durante <strong>20 años</strong> tiene un coste de
-          solo <span class="cy-em">20&nbsp;€</span>.
-          Con tu presencia esta noche, ese estudiante bebe agua segura
-          el resto de su vida escolar.
+          Proveir a <strong>un estudiant</strong> d'aigua neta
+          durant <strong>20 anys</strong> té un cost de
+          només <span class="cy-em">20&nbsp;€</span>.
+          Amb la teva presència aquesta nit, aquell estudiant beu aigua segura
+          la resta de la seva vida escolar.
         </p>
 
         <div class="impact-stats">
           <div class="impact-stat">
             <span class="impact-number">20 años</span>
-            <span class="impact-stat-label">de agua garantizada por estudiante</span>
+            <span class="impact-stat-label">d'aigua garantida per estudiant</span>
           </div>
           <div class="impact-stat">
             <span class="impact-number">20&nbsp;€</span>
-            <span class="impact-stat-label">es todo lo que cuesta</span>
+            <span class="impact-stat-label">és tot el que costa</span>
           </div>
           <div class="impact-stat">
             <span class="impact-number">500+</span>
-            <span class="impact-stat-label">estudiantes en Narok, Kenia</span>
+            <span class="impact-stat-label">estudiants a Narok, Kenya</span>
           </div>
         </div>
       </div>
 
       <!-- Illustration -->
       <div class="impact-illustration" aria-hidden="true">
-        <svg class="student-svg" viewBox="0 0 380 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Estudiante con agua limpia">
+        <svg class="student-svg" viewBox="0 0 380 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Estudiant amb aigua neta">
           <style>
             .skin        { fill: #3D1F0A; }
             .skin-mid    { fill: #4A2510; }
@@ -1688,11 +1783,11 @@
     <div class="form-wrap">
 
       <div class="form-heading reveal">
-        <div class="form-eyebrow">Reserva tu plaza</div>
-        <h2 class="form-title">Confirma tu inscripción</h2>
+        <div class="form-eyebrow">Reserva la teva plaça</div>
+        <h2 class="form-title">Confirma la teva inscripció</h2>
         <p class="form-sub">
-          Elige cuántos estudiantes quieres financiar, rellena tus datos
-          y completa el pago de forma segura con Stripe.
+          Tria quants estudiants vols finançar, omple les teves dades
+          i completa el pagament de forma segura amb Stripe.
         </p>
       </div>
 
@@ -1706,8 +1801,8 @@
           </svg>
         </div>
         <div class="soldout-banner-body">
-          <p class="soldout-banner-title">Aforo completo</p>
-          <p class="soldout-banner-text">Lo sentimos, se ha alcanzado el aforo máximo. ¡Gracias a todos por vuestro apoyo!</p>
+          <p class="soldout-banner-title">Aforament complet</p>
+          <p class="soldout-banner-text">Ho sentim, s'ha assolit l'aforament màxim. Gràcies a tothom pel vostre suport!</p>
         </div>
       </div>
 
@@ -1715,79 +1810,167 @@
       <div class="form-card reveal" id="formCard">
         <form id="showForm" novalidate>
 
-          <!-- Nombre + Apellidos -->
+            <!-- Nom + Cognoms -->
           <div class="field-row">
             <div class="field" id="field-nombre">
               <label for="inputNombre">
-                Nombre <span class="req" aria-hidden="true">*</span>
+                Nom <span class="req" aria-hidden="true">*</span>
               </label>
               <input type="text" id="inputNombre" class="input"
-                placeholder="Ej. Carmen"
+                placeholder="Ex. Carme"
                 autocomplete="given-name" autocapitalize="words"
                 required aria-required="true" aria-describedby="hint-nombre"/>
-              <span class="field-hint" id="hint-nombre">Introduce tu nombre.</span>
+              <span class="field-hint" id="hint-nombre">Introdueix el teu nom.</span>
             </div>
             <div class="field" id="field-apellidos">
               <label for="inputApellidos">
-                Apellidos <span class="req" aria-hidden="true">*</span>
+                Cognoms <span class="req" aria-hidden="true">*</span>
               </label>
               <input type="text" id="inputApellidos" class="input"
-                placeholder="Ej. Martínez García"
+                placeholder="Ex. Martínez García"
                 autocomplete="family-name" autocapitalize="words"
                 required aria-required="true" aria-describedby="hint-apellidos"/>
-              <span class="field-hint" id="hint-apellidos">Introduce tus apellidos.</span>
+              <span class="field-hint" id="hint-apellidos">Introdueix els teus cognoms.</span>
             </div>
           </div>
 
-          <!-- Teléfono -->
+          <!-- Telèfon -->
           <div class="field" id="field-telefono">
             <label for="inputTelefono">
-              Teléfono <span class="req" aria-hidden="true">*</span>
+              Telèfon <span class="req" aria-hidden="true">*</span>
             </label>
             <input type="tel" id="inputTelefono" class="input"
-              placeholder="Ej. 612 34 56 78"
+              placeholder="Ex. 612 34 56 78"
               autocomplete="tel"
               required aria-required="true" aria-describedby="hint-telefono"/>
-            <span class="field-hint" id="hint-telefono">Número español no válido (ej. 612 345 678).</span>
+            <span class="field-hint" id="hint-telefono">Número no vàlid (ex. 612 345 678).</span>
           </div>
 
-          <!-- Email -->
+          <!-- Correu electrònic -->
           <div class="field" id="field-email">
             <label for="inputEmail">
-              Correo electrónico <span class="req" aria-hidden="true">*</span>
+              Correu electrònic <span class="req" aria-hidden="true">*</span>
             </label>
             <input type="email" id="inputEmail" class="input"
-              placeholder="Ej. carmen@gmail.com"
+              placeholder="Ex. carme@gmail.com"
               autocomplete="email"
               required aria-required="true" aria-describedby="hint-email"/>
-            <span class="field-hint" id="hint-email">Introduce un correo válido. Te enviaremos la invitación.</span>
+            <span class="field-hint" id="hint-email">Introdueix un correu vàlid. T'enviarem la invitació.</span>
           </div>
 
           <div class="form-divider"></div>
 
-          <!-- ACOMPANYANTS -->
-          <div class="companion-section" id="companionSection">
-            <div class="companion-header-row">
-              <div class="companion-labels">
-                <span class="companion-section-title">Acompanyants</span>
-                <span class="companion-section-hint">Afegeix qui ve amb tu (opcional · màx. 9)</span>
+          <!-- PRICE OPTIONS -->
+          <div class="field" id="field-price">
+            <div class="tier-label-row">
+              <span class="tier-label-title">Contribució per persona</span>
+              <span class="tier-label-hint">Selecciona el teu tram</span>
+            </div>
+            <div class="tier-grid" id="priceGrid">
+
+              <!-- 10 € · ½ estudiant -->
+              <button type="button" class="tier-card selected" data-price="10" aria-pressed="true">
+                <span class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </span>
+                <div class="tier-persons" aria-hidden="true">
+                  <div class="tier-person half"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <span class="tier-amount">10&nbsp;€</span>
+                <span class="tier-students">½ estudiant</span>
+              </button>
+
+              <!-- 20 € · 1 estudiant -->
+              <button type="button" class="tier-card" data-price="20" aria-pressed="false">
+                <span class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </span>
+                <div class="tier-persons" aria-hidden="true">
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <span class="tier-amount">20&nbsp;€</span>
+                <span class="tier-students">1 estudiant</span>
+                <span class="tier-tag">Popular</span>
+              </button>
+
+              <!-- 30 € · 1½ estudiants -->
+              <button type="button" class="tier-card" data-price="30" aria-pressed="false">
+                <span class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </span>
+                <div class="tier-persons" aria-hidden="true">
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person half"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <span class="tier-amount">30&nbsp;€</span>
+                <span class="tier-students">1½ estudiants</span>
+              </button>
+
+              <!-- Lliure · import personalitzat -->
+              <button type="button" class="tier-card" data-price="custom" aria-pressed="false">
+                <span class="tier-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                </span>
+                <div class="tier-persons" aria-hidden="true" style="font-size:1.3rem;height:28px;display:flex;align-items:center;justify-content:center">
+                  ✏️
+                </div>
+                <span class="tier-amount">Lliure</span>
+                <span class="tier-students">Tu decideixes</span>
+              </button>
+
+            </div>
+
+            <!-- Custom price input (apareix quan es selecciona "Lliure") -->
+            <div class="custom-price-row" id="customPriceRow" style="display:none">
+              <div class="custom-price-inner">
+                <span class="custom-price-symbol">€</span>
+                <input type="number" id="customPriceInput" class="custom-price-input"
+                       placeholder="10" min="10" step="1" inputmode="numeric"
+                       aria-label="Import personalitzat per persona" />
               </div>
-              <button type="button" class="btn-add-companion" id="addCompanionBtn" aria-label="Afegir acompanyant">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <span class="custom-price-note" id="customPriceNote">Mínim 10&nbsp;€ per persona</span>
+              <span class="custom-price-error" id="customPriceError">Introdueix un import vàlid (mínim 10&nbsp;€).</span>
+            </div>
+
+            <span class="tier-hint-error" id="priceHintError">Selecciona un tram de contribució.</span>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <!-- NÚMERO DE PERSONES -->
+          <div class="persons-section" id="personsSection">
+            <div class="persons-section-header">
+              <span class="persons-section-title">Número de persones</span>
+              <span class="persons-section-hint">Titular inclòs &middot; mínim 10&nbsp;€ per persona</span>
+            </div>
+            <div class="persons-counter">
+              <button type="button" class="btn-counter" id="btnPersonMinus"
+                      aria-label="Menys persones" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+              <span class="counter-value" id="personCount" aria-live="polite"
+                    aria-label="Número de persones seleccionades">1</span>
+              <button type="button" class="btn-counter" id="btnPersonPlus"
+                      aria-label="Més persones">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true">
                   <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
-                Afegir
               </button>
             </div>
-            <div id="companionsList" class="companion-list" aria-live="polite"></div>
-            <span class="field-hint companion-error" id="companionError">Tots els acompanyants han de tenir nom.</span>
+            <span class="counter-hint">màx. 10 persones per reserva</span>
           </div>
+
+          <!-- NOMS ACOMPANYANTS (dinàmic) -->
+          <div id="companionNamesSection" style="display:none"></div>
 
           <!-- PRICE SUMMARY -->
           <div class="price-summary" id="priceSummary" aria-label="Resum del preu">
             <div class="price-summary-label">
               <span class="ps-title" id="psSummaryTitle">1 persona</span>
               <span class="ps-sub" id="psSummarySub">10&nbsp;€ per persona · 100% va al projecte</span>
+              <span class="ps-min" id="psSummaryMin" style="display:none"></span>
             </div>
             <span class="price-summary-amount" id="psSummaryAmount">10&nbsp;€</span>
           </div>
@@ -1827,7 +2010,7 @@
        ================================================================ -->
   <footer class="site-footer">
     <div class="wrap footer-inner">
-      <span>© Vitalqua Project · Kenia</span>
+      <span>© Vitalqua Project · Kenya</span>
       <a href="mailto:vitalquaproject@gmail.com">vitalquaproject@gmail.com</a>
     </div>
   </footer>
@@ -1848,7 +2031,7 @@
     var VQ_STRIPE_PK = 'pk_live_51TaK1mDcloTKglOilvufV61ccgdGf4Q5mpb2gVwcA5qpGXae4q5VpnQbv3UARkefQ9bgliYisQ3OSVjiTXWifgsu00a0rJ4q5v';
 
     /* ----------------------------------------------------------------
-       FIREBASE — sold-out check y conteo de participantes
+       FIREBASE — comprovació sold-out i recompte de participants
        ---------------------------------------------------------------- */
     (function () {
       const TICKET_LIMIT  = 200;
@@ -1875,7 +2058,7 @@
         document.querySelectorAll('#showForm input').forEach(function (inp) {
           inp.disabled = true;
         });
-        document.querySelectorAll('.tier-card').forEach(function (btn) {
+        document.querySelectorAll('.tier-card, .btn-counter').forEach(function (btn) {
           btn.disabled = true;
         });
 
@@ -1886,7 +2069,7 @@
           btn.disabled = true;
           btn.classList.add('soldout');
           if (lockIcon) lockIcon.style.display = 'none';
-          if (btnText)  btnText.textContent = 'AFORO COMPLETO';
+          if (btnText)  btnText.textContent = 'AFORAMENT COMPLET';
         }
       }
 
@@ -1899,7 +2082,7 @@
           var count = snap.size;
           if (count >= TICKET_LIMIT) lockForm();
         } catch (err) {
-          console.warn('[Vitalqua Show] No se ha podido verificar el aforo:', err);
+          console.warn('[Vitalqua Show] No s\'ha pogut verificar l\'aforament:', err);
         }
       }
 
@@ -1911,131 +2094,151 @@
     })();
 
     /* ----------------------------------------------------------------
-       COMPANION MANAGEMENT — acompanyants dinàmics (màx 9)
-       Total = 10 € × (1 + nombre d'acompanyants).
+       PERSONS COUNTER + COMPANION NAMES
        ---------------------------------------------------------------- */
     (function () {
-      var MAX   = 9;
-      var companions = [];            /* nom (string) per cada acompanyant */
-      var list   = document.getElementById('companionsList');
-      var addBtn = document.getElementById('addCompanionBtn');
-      var errEl  = document.getElementById('companionError');
+      var MIN = 1;
+      var MAX = 10;
+      var numPersones    = 1;
+      var companionNames = [];   /* nom per cada acompanyant (numPersones-1) */
 
-      function buildCard(idx) {
-        var card = document.createElement('div');
-        card.className = 'companion-card';
-        card.setAttribute('data-ci', idx);
-        card.innerHTML =
-          '<div class="companion-num">' + (idx + 1) + '</div>' +
-          '<input type="text" class="companion-input input"' +
-            ' placeholder="Nom de l\'acompanyant ' + (idx + 1) + '"' +
-            ' autocapitalize="words" autocomplete="off"' +
-            ' aria-label="Acompanyant ' + (idx + 1) + '" />' +
-          '<button type="button" class="btn-remove-companion"' +
-            ' aria-label="Eliminar acompanyant ' + (idx + 1) + '">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-              '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' +
-            '</svg>' +
-          '</button>';
+      var countEl      = document.getElementById('personCount');
+      var btnMinus     = document.getElementById('btnPersonMinus');
+      var btnPlus      = document.getElementById('btnPersonPlus');
+      var namesSection = document.getElementById('companionNamesSection');
 
-        card.querySelector('input').addEventListener('input', function () {
-          companions[idx] = this.value;
-          this.classList.remove('invalid');
-          errEl.classList.remove('show');
-        });
-
-        card.querySelector('.btn-remove-companion').addEventListener('click', function () {
-          companions.splice(idx, 1);
-          list.removeChild(card);
-          rebuildIndices();
-          refreshPrice();
-        });
-
-        return card;
-      }
-
-      /* Re-number cards after a removal */
-      function rebuildIndices() {
-        var cards = list.querySelectorAll('.companion-card');
-        cards.forEach(function (c, i) {
-          c.setAttribute('data-ci', i);
-          c.querySelector('.companion-num').textContent = i + 1;
-          var inp = c.querySelector('input');
-          inp.setAttribute('aria-label', 'Acompanyant ' + (i + 1));
-          inp.setAttribute('placeholder', 'Nom de l\'acompanyant ' + (i + 1));
-          inp.value = companions[i] || '';
-          /* Reattach listener with correct index */
-          var fresh = inp.cloneNode(true);
-          (function (freshInp, ci) {
-            freshInp.addEventListener('input', function () {
-              companions[ci] = this.value;
-              this.classList.remove('invalid');
-              errEl.classList.remove('show');
-            });
-          })(fresh, i);
-          inp.parentNode.replaceChild(fresh, inp);
-
-          var oldBtn = c.querySelector('.btn-remove-companion');
-          var newBtn = oldBtn.cloneNode(true);
-          (function (cardEl, ci) {
-            newBtn.addEventListener('click', function () {
-              companions.splice(ci, 1);
-              list.removeChild(cardEl);
-              rebuildIndices();
-              refreshPrice();
-            });
-          })(c, i);
-          oldBtn.parentNode.replaceChild(newBtn, oldBtn);
-        });
-      }
-
+      /* ---- Refresca el resum de preu ---- */
       function refreshPrice() {
-        var n     = 1 + companions.length;
-        var total = 10 * n;
-        var label = n === 1 ? '1 persona' : n + ' persones';
-        document.getElementById('psSummaryTitle').textContent   = label;
-        document.getElementById('psSummaryAmount').textContent  = total + '\u00A0\u20AC';
-        document.getElementById('submitBtnText').textContent    = 'Pagar ' + total + '\u00A0\u20AC';
-        addBtn.disabled = companions.length >= MAX;
+        var preuPerPersona = Math.max(10, window._VQ_PRICE || 10);
+        var total          = preuPerPersona * numPersones;
+        var minimTotal     = 10 * numPersones;
+        var label          = numPersones === 1 ? '1 persona' : numPersones + ' persones';
+
+        document.getElementById('psSummaryTitle').textContent  = label;
+        document.getElementById('psSummarySub').textContent    =
+          preuPerPersona + '\u00A0\u20AC per persona \u00b7 100% va al projecte';
+        document.getElementById('psSummaryAmount').textContent = total + '\u00A0\u20AC';
+        document.getElementById('submitBtnText').textContent   = 'Pagar ' + total + '\u00A0\u20AC';
+
+        /* Etiqueta mínim total (visible quan hi ha >1 persona) */
+        var psMin = document.getElementById('psSummaryMin');
+        if (psMin) {
+          if (numPersones > 1) {
+            psMin.textContent    = 'mínim ' + minimTotal + '\u00A0\u20AC en total (' + numPersones + '\u00A0\u00D7\u00A010\u00A0\u20AC)';
+            psMin.style.display  = '';
+          } else {
+            psMin.style.display  = 'none';
+          }
+        }
+
+        /* Actualitza la nota de mínim del preu lliure */
+        var priceNote = document.getElementById('customPriceNote');
+        if (priceNote) {
+          priceNote.textContent = numPersones > 1
+            ? 'M\u00EDnim 10\u00A0\u20AC per persona \u00b7 total m\u00EDnim ' + minimTotal + '\u00A0\u20AC'
+            : 'M\u00EDnim 10\u00A0\u20AC per persona';
+        }
       }
 
-      addBtn.addEventListener('click', function () {
-        if (companions.length >= MAX) return;
-        companions.push('');
-        list.appendChild(buildCard(companions.length - 1));
-        refreshPrice();
-        var inputs = list.querySelectorAll('input');
-        if (inputs.length) inputs[inputs.length - 1].focus();
-      });
+      /* ---- Construeix/actualitza els camps de nom ---- */
+      function buildCompanionInputs() {
+        var count = numPersones - 1;
+        if (count <= 0) {
+          namesSection.style.display = 'none';
+          namesSection.innerHTML     = '';
+          companionNames = [];
+          return;
+        }
 
-      refreshPrice();
+        /* Ajusta l'array de noms sense perdre els ja escrits */
+        while (companionNames.length < count) companionNames.push('');
+        companionNames = companionNames.slice(0, count);
+
+        namesSection.style.display = 'block';
+        namesSection.innerHTML =
+          '<div class="companion-names-section">' +
+            '<div>' +
+              '<span class="companion-names-title">Noms dels acompanyants</span>&nbsp;' +
+              '<span class="companion-names-required">obligatori</span>' +
+            '</div>' +
+            '<div class="companion-names-list" id="companionNamesList"></div>' +
+          '</div>';
+
+        var list = document.getElementById('companionNamesList');
+        for (var i = 0; i < count; i++) {
+          (function (idx) {
+            var field = document.createElement('div');
+            field.className = 'companion-name-field';
+            field.id = 'companionField-' + idx;
+            field.innerHTML =
+              '<div class="companion-name-num">' + (idx + 1) + '</div>' +
+              '<div class="companion-name-inner">' +
+                '<input type="text" class="companion-name-input" id="companionInput-' + idx + '"' +
+                  ' placeholder="Nom i cognoms de l\'acompanyant ' + (idx + 1) + '"' +
+                  ' autocapitalize="words" autocomplete="off" required' +
+                  ' aria-label="Acompanyant ' + (idx + 1) + '"' +
+                  ' value="' + ((companionNames[idx] || '').replace(/"/g, '&quot;')) + '" />' +
+                '<span class="companion-name-error" id="companionError-' + idx + '">Introdueix el nom de l\'acompanyant ' + (idx + 1) + '.</span>' +
+              '</div>';
+            var input = field.querySelector('input');
+            input.addEventListener('input', function () {
+              companionNames[idx] = this.value;
+              if (this.value.trim()) {
+                this.classList.remove('invalid');
+                document.getElementById('companionError-' + idx).classList.remove('show');
+                field.classList.remove('invalid');
+              }
+            });
+            list.appendChild(field);
+          })(i);
+        }
+      }
+
+      /* ---- Actualitza el comptador ---- */
+      function setCount(n) {
+        numPersones       = Math.max(MIN, Math.min(MAX, n));
+        countEl.textContent = numPersones;
+        btnMinus.disabled   = (numPersones <= MIN);
+        btnPlus.disabled    = (numPersones >= MAX);
+        buildCompanionInputs();
+        refreshPrice();
+      }
+
+      btnMinus.addEventListener('click', function () { setCount(numPersones - 1); });
+      btnPlus.addEventListener('click',  function () { setCount(numPersones + 1); });
+
+      setCount(1);
+      window._VQ_REFRESH_PRICE = refreshPrice;
 
       window._VQ_COMPANIONS = {
         validate: function () {
           var ok = true;
-          var cards = list.querySelectorAll('.companion-card');
-          cards.forEach(function (c, i) {
-            var inp = c.querySelector('input');
-            if (!companions[i] || !companions[i].trim()) {
-              inp.classList.add('invalid');
-              errEl.classList.add('show');
-              if (ok) inp.focus();
+          var count = numPersones - 1;
+          for (var i = 0; i < count; i++) {
+            var input = document.getElementById('companionInput-' + i);
+            var error = document.getElementById('companionError-' + i);
+            var field = document.getElementById('companionField-' + i);
+            if (input && !input.value.trim()) {
+              if (input && ok) input.focus();
+              if (input) input.classList.add('invalid');
+              if (error) error.classList.add('show');
+              if (field) field.classList.add('invalid');
               ok = false;
             }
-          });
+          }
           return ok;
         },
-        getData: function () {
-          return companions.map(function (n) {
+        getData:  function () {
+          return companionNames.slice(0, numPersones - 1).map(function (n) {
             return { nom: (n || '').trim() };
           });
         },
-        getTotalPersones: function () { return 1 + companions.length; }
+        getTotalPersones: function () { return numPersones; },
       };
     })();
 
     /* ----------------------------------------------------------------
-       Genera un ID único: VSW-XXXXXX
+       Genera un ID únic: VSW-XXXXXX
        ---------------------------------------------------------------- */
     function generateTicketId() {
       var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -2122,7 +2325,56 @@
                              && resource.data.status == 'pending';
        ================================================================ */
     (function () {
-      var PRICE_PER_PERSON = 10;
+      window._VQ_PRICE = 10; /* preu per persona seleccionat */
+
+      /* ---- Selector de preu ---- */
+      var customPriceRow   = document.getElementById('customPriceRow');
+      var customPriceInput = document.getElementById('customPriceInput');
+      var customPriceError = document.getElementById('customPriceError');
+
+      document.querySelectorAll('#priceGrid .tier-card').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('#priceGrid .tier-card').forEach(function (b) {
+            b.classList.remove('selected');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          this.classList.add('selected');
+          this.setAttribute('aria-pressed', 'true');
+          document.getElementById('priceHintError').classList.remove('show');
+
+          if (this.dataset.price === 'custom') {
+            customPriceRow.style.display = 'block';
+            var val = parseInt(customPriceInput.value, 10);
+            window._VQ_PRICE = (isFinite(val) && val >= 10) ? val : 0;
+            customPriceInput.focus();
+          } else {
+            customPriceRow.style.display = 'none';
+            customPriceInput.classList.remove('invalid');
+            customPriceError.classList.remove('show');
+            window._VQ_PRICE = parseInt(this.dataset.price, 10);
+          }
+          if (window._VQ_REFRESH_PRICE) window._VQ_REFRESH_PRICE();
+        });
+      });
+
+      /* Input de preu lliure */
+      customPriceInput.addEventListener('input', function () {
+        var val   = parseInt(this.value, 10);
+        var valid = isFinite(val) && val >= 10;
+        window._VQ_PRICE = valid ? val : 0;
+        this.classList.toggle('invalid', this.value !== '' && !valid);
+        if (this.value !== '' && !valid) {
+          var nPers = parseInt((document.getElementById('personCount') || {}).textContent, 10) || 1;
+          customPriceError.textContent = nPers > 1
+            ? 'Introdueix un import v\u00E0lid (m\u00EDnim 10\u00A0\u20AC · total m\u00EDnim ' + (10 * nPers) + '\u00A0\u20AC).'
+            : 'Introdueix un import v\u00E0lid (m\u00EDnim 10\u00A0\u20AC).';
+          customPriceError.classList.add('show');
+        } else {
+          customPriceError.classList.remove('show');
+        }
+        document.getElementById('priceHintError').classList.remove('show');
+        if (window._VQ_REFRESH_PRICE) window._VQ_REFRESH_PRICE();
+      });
 
       /* ⚠️ Clau secreta — visible al navegador (risc acceptat) */
       var STRIPE_SK = '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';
@@ -2176,20 +2428,36 @@
           if (ok) inp.focus();
           ok = false;
         };
-        if (!inputNombre.value.trim())         markErr(inputNombre,    hintNombre);
-        if (!inputApellidos.value.trim())      markErr(inputApellidos, hintApellidos);
-        if (!isValidPhone(inputTelefono.value)) markErr(inputTelefono, hintTelefono);
-        if (!isValidEmail(inputEmail.value))   markErr(inputEmail,     hintEmail);
-        if (window._VQ_COMPANIONS && !window._VQ_COMPANIONS.validate()) ok = false;
+        if (!inputNombre.value.trim())          markErr(inputNombre,    hintNombre);
+        if (!inputApellidos.value.trim())       markErr(inputApellidos, hintApellidos);
+        if (!isValidPhone(inputTelefono.value)) markErr(inputTelefono,  hintTelefono);
+        if (!isValidEmail(inputEmail.value))    markErr(inputEmail,     hintEmail);
+        /* Validació preu: mínim 10 € per persona */
+        if ((window._VQ_PRICE || 0) < 10) {
+          document.getElementById('priceHintError').classList.add('show');
+          ok = false;
+        }
+        /* Validació noms acompanyants (obligatoris) */
+        if (window._VQ_COMPANIONS && !window._VQ_COMPANIONS.validate()) {
+          ok = false;
+        }
         return ok;
       }
 
       /* ---- Validació estricta del preu ---- */
       function validatePrice(numPersones) {
+        var preuPerPersona = window._VQ_PRICE || 0;
+        if (!isFinite(preuPerPersona) || preuPerPersona < 10) {
+          document.getElementById('priceHintError').classList.add('show');
+          return null;
+        }
         if (numPersones < 1 || numPersones > 10) return null;
-        var expected = PRICE_PER_PERSON * numPersones;
-        if (expected % PRICE_PER_PERSON !== 0) return null;
-        return expected;
+        var total = preuPerPersona * numPersones;
+        if (total < 10 * numPersones) {
+          document.getElementById('priceHintError').classList.add('show');
+          return null;
+        }
+        return total;
       }
 
       /* ---- Neteja d'errors en escriure ---- */
@@ -2220,7 +2488,6 @@
 
         var totalEur = validatePrice(numPersones);
         if (!totalEur) {
-          alert('El preu ha de ser exactament de 10\u00A0\u20AC per persona');
           return;
         }
 
@@ -2261,7 +2528,7 @@
           var params = new URLSearchParams();
           params.append('mode', 'payment');
           params.append('line_items[0][price_data][currency]', 'eur');
-          params.append('line_items[0][price_data][unit_amount]', '1000');
+          params.append('line_items[0][price_data][unit_amount]', ((window._VQ_PRICE || 10) * 100).toString());
           params.append('line_items[0][price_data][product_data][name]',
             'Concert Ben\u00e8fic \u00b7 Vitalqua Project \u00b7 16 Juliol');
           params.append('line_items[0][price_data][product_data][description]',

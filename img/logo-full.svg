@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 36"
+     role="img" aria-label="Vitalqua Project">
+  <title>Vitalqua Project</title>
+
+  <style>
+    .drop polygon { stroke-width: .4; }
+    .brand {
+      font-family: 'Inter Tight', Inter, system-ui, -apple-system, sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.32px;
+      fill: #0F1A2E;
+    }
+  </style>
+
+  <!-- Faceted water-drop · original viewBox 0 0 32 36 -->
+  <g class="drop">
+    <!-- tip -->
+    <polygon points="16,4 6,22 16,22"          fill="#4FB3D9" stroke="#4FB3D9"/>
+    <polygon points="16,4 16,22 26,22"          fill="#D6EEF6" stroke="#D6EEF6"/>
+    <!-- body fan -->
+    <polygon points="16,22 26,22 24.66,27"      fill="#D6EEF6" stroke="#D6EEF6"/>
+    <polygon points="16,22 24.66,27 21,30.66"   fill="#A3D0E3" stroke="#A3D0E3"/>
+    <polygon points="16,22 21,30.66 16,32"      fill="#A3D0E3" stroke="#A3D0E3"/>
+    <polygon points="16,22 16,32 11,30.66"      fill="#4FB3D9" stroke="#4FB3D9"/>
+    <polygon points="16,22 11,30.66 7.34,27"    fill="#2A85B3" stroke="#2A85B3"/>
+    <polygon points="16,22 7.34,27 6,22"        fill="#2A85B3" stroke="#2A85B3"/>
+  </g>
+
+  <!-- Wordmark  centrat verticalment respecte la gota -->
+  <text x="42" y="18"
+        class="brand"
+        dominant-baseline="middle">Vitalqua Project</text>
+</svg>

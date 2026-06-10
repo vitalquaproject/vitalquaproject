@@ -2164,6 +2164,9 @@
               '</div>';
             var input = field.querySelector('input');
             input.addEventListener('input', function () {
+              var pos = this.selectionStart;
+              var v   = this.value.replace(/(?:^|[\s\-])(\S)/g, function (m) { return m.toUpperCase(); });
+              if (this.value !== v) { this.value = v; this.setSelectionRange(pos, pos); }
               companionNames[idx] = this.value;
               if (this.value.trim()) {
                 this.classList.remove('invalid');
@@ -2406,7 +2409,7 @@
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
       }
       function isValidPhone(v) {
-        return /^[6-9]\d{8}$/.test(v.replace(/[\s\-\.]/g, ''));
+        return /^6\d{8}$/.test(v.replace(/[\s\-\.]/g, ''));
       }
       function showFormError(html) {
         errorText.innerHTML = html;

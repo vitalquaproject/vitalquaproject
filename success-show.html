@@ -526,28 +526,13 @@
       }
 
       try {
-        /* ── 1. Verificar el pagament via backend (la clau secreta mai surt del servidor) ── */
-        var verifyResp = await fetch('/api/verify-session/' + sessionId);
-        var verifyData = await verifyResp.json();
-
-        if (!verifyResp.ok || verifyData.error) {
-          throw new Error(verifyData.error || 'Error en verificar el pagament.');
-        }
-
-        if (!verifyData.paid) {
-          showErr(
-            'El pagament no s\'ha completat (estat: ' + (verifyData.status || 'desconegut') + ').<br>' +
-            '<a href="show.html" style="color:#2A85B3">Torna a intentar-ho</a> o escriu-nos a vitalquaproject@gmail.com'
-          );
-          return;
-        }
-
-        /* ── 2. Obtenir el pagamentsId de client_reference_id ── */
-        var pagamentsId = verifyData.clientReferenceId;
+        /* ── 1. Obtenir pagamentsId des de localStorage ── */
+        var pagamentsId = localStorage.getItem('vq_pagaments_id');
         if (!pagamentsId) {
           showErr(
-            'Error intern: no s\'ha trobat la refer\u00e8ncia del document.<br>' +
-            'Contacta <strong>vitalquaproject@gmail.com</strong> i indica el ID de sessi\u00f3: ' + sessionId
+            'No s\'hem pogut recuperar la refer\u00e8ncia del pagament.<br>' +
+            'Si has pagat, escriu-nos a <strong>vitalquaproject@gmail.com</strong> ' +
+            'indicant el teu email i la data del pagament.'
           );
           return;
         }

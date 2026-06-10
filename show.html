@@ -1431,6 +1431,36 @@
       display: none; font-size: 0.78rem; color: #C0392B; margin-top: 4px;
     }
     .custom-price-error.show { display: block; }
+
+    /* ---- Price counter display ---- */
+    .price-counter-display {
+      display: flex; align-items: baseline; justify-content: center;
+      min-width: 96px;
+    }
+    .price-counter-display .counter-value {
+      font-size: 2.4rem;
+      min-width: unset;
+    }
+    .price-counter-eur {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--cy-dk); letter-spacing: -0.02em;
+    }
+
+    /* ---- Impact message ---- */
+    .impact-msg {
+      margin-top: 10px;
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, rgba(79,179,217,.08) 0%, rgba(42,133,179,.05) 100%);
+      border: 1.5px solid rgba(79,179,217,.22);
+      font-size: 0.84rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      text-align: center;
+      transition: opacity 250ms ease;
+    }
+    .impact-msg strong { color: var(--cy-xdk); }
   </style>
 
   <!-- Stripe.js — must load before any Stripe Elements code -->
@@ -1860,79 +1890,36 @@
 
           <div class="form-divider"></div>
 
-          <!-- PRICE OPTIONS -->
+          <!-- PRICE STEPPER -->
           <div class="field" id="field-price">
             <div class="tier-label-row">
               <span class="tier-label-title">Contribució per persona</span>
-              <span class="tier-label-hint">Selecciona el teu tram</span>
+              <span class="tier-label-hint">mínim 10&nbsp;€&nbsp;/&nbsp;persona · 20&nbsp;€ = 1 estudiant 20 anys</span>
             </div>
-            <div class="tier-grid" id="priceGrid">
-
-              <!-- 10 € · ½ estudiant -->
-              <button type="button" class="tier-card selected" data-price="10" aria-pressed="true">
-                <span class="tier-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
-                </span>
-                <div class="tier-persons" aria-hidden="true">
-                  <div class="tier-person half"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
-                </div>
-                <span class="tier-amount">10&nbsp;€</span>
-                <span class="tier-students">½ estudiant</span>
+            <div class="persons-counter" id="priceCounter">
+              <button type="button" class="btn-counter" id="btnPriceMinus"
+                      aria-label="Reduir contribució" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2.8" stroke-linecap="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
               </button>
-
-              <!-- 20 € · 1 estudiant -->
-              <button type="button" class="tier-card" data-price="20" aria-pressed="false">
-                <span class="tier-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
-                </span>
-                <div class="tier-persons" aria-hidden="true">
-                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
-                </div>
-                <span class="tier-amount">20&nbsp;€</span>
-                <span class="tier-students">1 estudiant</span>
-                <span class="tier-tag">Popular</span>
-              </button>
-
-              <!-- 30 € · 1½ estudiants -->
-              <button type="button" class="tier-card" data-price="30" aria-pressed="false">
-                <span class="tier-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
-                </span>
-                <div class="tier-persons" aria-hidden="true">
-                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
-                  <div class="tier-person half"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
-                </div>
-                <span class="tier-amount">30&nbsp;€</span>
-                <span class="tier-students">1½ estudiants</span>
-              </button>
-
-              <!-- Lliure · import personalitzat -->
-              <button type="button" class="tier-card" data-price="custom" aria-pressed="false">
-                <span class="tier-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
-                </span>
-                <div class="tier-persons" aria-hidden="true" style="font-size:1.3rem;height:28px;display:flex;align-items:center;justify-content:center">
-                  ✏️
-                </div>
-                <span class="tier-amount">Lliure</span>
-                <span class="tier-students">Tu decideixes</span>
-              </button>
-
-            </div>
-
-            <!-- Custom price input (apareix quan es selecciona "Lliure") -->
-            <div class="custom-price-row" id="customPriceRow" style="display:none">
-              <div class="custom-price-inner">
-                <span class="custom-price-symbol">€</span>
-                <input type="number" id="customPriceInput" class="custom-price-input"
-                       placeholder="10" min="10" step="1" inputmode="numeric"
-                       aria-label="Import personalitzat per persona" />
+              <div class="price-counter-display">
+                <span class="counter-value" id="priceDisplay" aria-live="polite">10</span>
+                <span class="price-counter-eur">&nbsp;€</span>
               </div>
-              <span class="custom-price-note" id="customPriceNote">Mínim 10&nbsp;€ per persona</span>
-              <span class="custom-price-error" id="customPriceError">Introdueix un import vàlid (mínim 10&nbsp;€).</span>
+              <button type="button" class="btn-counter" id="btnPricePlus"
+                      aria-label="Augmentar contribució">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2.8" stroke-linecap="round" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
             </div>
-
-            <span class="tier-hint-error" id="priceHintError">Selecciona un tram de contribució.</span>
+            <div class="impact-msg" id="impactMsg">
+              <span id="impactText">💧 Amb <strong>10&nbsp;€</strong> finances la matrícula de <strong>½ estudiant</strong> durant un mes a Kenya.</span>
+            </div>
+            <span class="tier-hint-error" id="priceHintError" style="display:none">Import no vàlid.</span>
           </div>
 
           <div class="form-divider"></div>
@@ -2109,14 +2096,17 @@
 
       /* ---- Refresca el resum de preu ---- */
       function refreshPrice() {
-        var preuPerPersona = Math.max(10, window._VQ_PRICE || 10);
-        var total          = preuPerPersona * numPersones;
-        var minimTotal     = 10 * numPersones;
-        var label          = numPersones === 1 ? '1 persona' : numPersones + ' persones';
+        var minTotal = numPersones * 10;
+        var total    = Math.max(window._VQ_PRICE || minTotal, minTotal);
+        var label    = numPersones === 1 ? '1 persona' : numPersones + ' persones';
+        var students = total / 20;
+        var studentsStr = (students % 1 === 0)
+          ? String(students)
+          : students.toFixed(1).replace('.0', '');
 
         document.getElementById('psSummaryTitle').textContent  = label;
         document.getElementById('psSummarySub').textContent    =
-          preuPerPersona + '\u00A0\u20AC per persona \u00b7 100% va al projecte';
+          studentsStr + ' estudiant' + (students !== 1 ? 's' : '') + ' \u00b7 20 anys d\'aigua potable';
         document.getElementById('psSummaryAmount').textContent = total + '\u00A0\u20AC';
         document.getElementById('submitBtnText').textContent   = 'Pagar ' + total + '\u00A0\u20AC';
 
@@ -2124,19 +2114,11 @@
         var psMin = document.getElementById('psSummaryMin');
         if (psMin) {
           if (numPersones > 1) {
-            psMin.textContent    = 'mínim ' + minimTotal + '\u00A0\u20AC en total (' + numPersones + '\u00A0\u00D7\u00A010\u00A0\u20AC)';
+            psMin.textContent    = 'm\u00EDnim ' + minTotal + '\u00A0\u20AC en total (' + numPersones + '\u00A0\u00D7\u00A010\u00A0\u20AC)';
             psMin.style.display  = '';
           } else {
             psMin.style.display  = 'none';
           }
-        }
-
-        /* Actualitza la nota de mínim del preu lliure */
-        var priceNote = document.getElementById('customPriceNote');
-        if (priceNote) {
-          priceNote.textContent = numPersones > 1
-            ? 'M\u00EDnim 10\u00A0\u20AC per persona \u00b7 total m\u00EDnim ' + minimTotal + '\u00A0\u20AC'
-            : 'M\u00EDnim 10\u00A0\u20AC per persona';
         }
       }
 
@@ -2196,12 +2178,18 @@
 
       /* ---- Actualitza el comptador ---- */
       function setCount(n) {
-        numPersones       = Math.max(MIN, Math.min(MAX, n));
-        countEl.textContent = numPersones;
-        btnMinus.disabled   = (numPersones <= MIN);
-        btnPlus.disabled    = (numPersones >= MAX);
+        numPersones              = Math.max(MIN, Math.min(MAX, n));
+        window._VQ_PERSONS_COUNT = numPersones;
+        countEl.textContent      = numPersones;
+        btnMinus.disabled        = (numPersones <= MIN);
+        btnPlus.disabled         = (numPersones >= MAX);
         buildCompanionInputs();
-        refreshPrice();
+        /* Re-clamp price (setPrice crida refreshPrice internament) */
+        if (window._VQ_SET_PRICE) {
+          window._VQ_SET_PRICE(window._VQ_PRICE || numPersones * 10);
+        } else {
+          refreshPrice();
+        }
       }
 
       btnMinus.addEventListener('click', function () { setCount(numPersones - 1); });
@@ -2308,11 +2296,11 @@
        PAGAMENT — Stripe Checkout + Firebase
        ================================================================
        Flux:
-         1. Validació: total = preu × (1 + acompanyants)
+         1. Validació: total = preu × numPersones
          2. Sign-in anònim Firebase Auth (per escriure a Firestore)
          3. Escriptura a 'pagaments-show/{id}' amb status:'pending'
-         4. Crida al backend /api/create-checkout-session (clau secreta al servidor)
-         5. Redirecció a Stripe Hosted Checkout (session.url)
+         4. Desar dades a localStorage per a success-show.html
+         5. Redirecció a Stripe Payment Link (sense backend)
 
        Regles de Firestore necessàries per a 'pagaments-show':
          allow create: if request.auth != null;
@@ -2321,54 +2309,70 @@
     (function () {
       window._VQ_PRICE = 10; /* preu per persona seleccionat */
 
-      /* ---- Selector de preu ---- */
-      var customPriceRow   = document.getElementById('customPriceRow');
-      var customPriceInput = document.getElementById('customPriceInput');
-      var customPriceError = document.getElementById('customPriceError');
+      /* ================================================================
+         STRIPE PAYMENT LINKS
+         Crea els Payment Links al Dashboard de Stripe:
+           Productes → Payment Links → New link
+           · Producte: "Vitalqua Show · 16 Juliol"
+           · Preu fix: Xeur  · Moneda: EUR
+           · Activar "Let customers adjust quantity" (màx 10)
+           · URL d'èxit: https://EL_TEU_DOMINI/success-show.html?session_id={CHECKOUT_SESSION_ID}
+         Substitueix cada REPLACE per la URL real.
+         ================================================================ */
+      var STRIPE_PAYMENT_LINKS = {
+        10:  'https://buy.stripe.com/14A5kD00M8FP8Is4mo8EM02',
+        20:  'https://buy.stripe.com/bJecN528U9JT9MwdWY8EM03',
+        30:  'https://buy.stripe.com/4gM7sL6paf4de2M1ac8EM04',
+        40:  'https://buy.stripe.com/dRm6oHaFqe09gaU3ik8EM05',
+        50:  'https://buy.stripe.com/8x2dR99Bme09bUE4mo8EM06',
+        60:  'https://buy.stripe.com/aFa00j14QaNX2k4aKM8EM07',
+        70:  'https://buy.stripe.com/aFa5kD00Mf4d7Eo1ac8EM08',
+        80:  'https://buy.stripe.com/6oU5kD4h21dncYIf128EM09',
+        90:  'https://buy.stripe.com/28E8wP9Bm2hr9Mwf128EM0a',
+        100: 'https://buy.stripe.com/bJedR9aFqf4d7Eo5qs8EM0b',
+      };
 
-      document.querySelectorAll('#priceGrid .tier-card').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          document.querySelectorAll('#priceGrid .tier-card').forEach(function (b) {
-            b.classList.remove('selected');
-            b.setAttribute('aria-pressed', 'false');
-          });
-          this.classList.add('selected');
-          this.setAttribute('aria-pressed', 'true');
-          document.getElementById('priceHintError').classList.remove('show');
+      /* ---- Missatges d'impacte per total (20€ = 1 estudiant 20 anys) ---- */
+      var IMPACT_MSGS = {
+        10:  '\uD83D\uDCA7 Amb <strong>10\u00A0\u20AC</strong> finances <strong>\u00BD estudiant</strong> durant 20 anys amb aigua potable.',
+        20:  '\uD83D\uDCDA Amb <strong>20\u00A0\u20AC</strong> finances <strong>1 estudiant</strong> durant 20 anys amb aigua potable.',
+        30:  '\uD83C\uDF31 Amb <strong>30\u00A0\u20AC</strong> finances <strong>1\u00BD estudiants</strong> durant 20 anys amb aigua potable.',
+        40:  '\u2728 Amb <strong>40\u00A0\u20AC</strong> finances <strong>2 estudiants</strong> durant 20 anys amb aigua potable.',
+        50:  '\uD83C\uDF93 Amb <strong>50\u00A0\u20AC</strong> finances <strong>2\u00BD estudiants</strong> durant 20 anys amb aigua potable.',
+        60:  '\u2B50 Amb <strong>60\u00A0\u20AC</strong> finances <strong>3 estudiants</strong> durant 20 anys amb aigua potable!',
+        70:  '\uD83D\uDE4F Amb <strong>70\u00A0\u20AC</strong> finances <strong>3\u00BD estudiants</strong> durant 20 anys amb aigua potable.',
+        80:  '\uD83C\uDF0D Amb <strong>80\u00A0\u20AC</strong> finances <strong>4 estudiants</strong> durant 20 anys amb aigua potable!',
+        90:  '\uD83D\uDCAB Amb <strong>90\u00A0\u20AC</strong> finances <strong>4\u00BD estudiants</strong> durant 20 anys amb aigua potable.',
+        100: '\uD83C\uDFC6 Amb <strong>100\u00A0\u20AC</strong> finances <strong>5 estudiants</strong> durant 20 anys amb aigua potable. Incre\u00EFble!',
+      };
+      window._VQ_IMPACT_MSGS = IMPACT_MSGS;
 
-          if (this.dataset.price === 'custom') {
-            customPriceRow.style.display = 'block';
-            var val = parseInt(customPriceInput.value, 10);
-            window._VQ_PRICE = (isFinite(val) && val >= 10) ? val : 0;
-            customPriceInput.focus();
-          } else {
-            customPriceRow.style.display = 'none';
-            customPriceInput.classList.remove('invalid');
-            customPriceError.classList.remove('show');
-            window._VQ_PRICE = parseInt(this.dataset.price, 10);
-          }
-          if (window._VQ_REFRESH_PRICE) window._VQ_REFRESH_PRICE();
-        });
-      });
+      /* ---- Stepper de preu ---- */
+      var PRICE_MIN  = 10;
+      var PRICE_MAX  = 100;
+      var PRICE_STEP = 10;
 
-      /* Input de preu lliure */
-      customPriceInput.addEventListener('input', function () {
-        var val   = parseInt(this.value, 10);
-        var valid = isFinite(val) && val >= 10;
-        window._VQ_PRICE = valid ? val : 0;
-        this.classList.toggle('invalid', this.value !== '' && !valid);
-        if (this.value !== '' && !valid) {
-          var nPers = parseInt((document.getElementById('personCount') || {}).textContent, 10) || 1;
-          customPriceError.textContent = nPers > 1
-            ? 'Introdueix un import v\u00E0lid (m\u00EDnim 10\u00A0\u20AC · total m\u00EDnim ' + (10 * nPers) + '\u00A0\u20AC).'
-            : 'Introdueix un import v\u00E0lid (m\u00EDnim 10\u00A0\u20AC).';
-          customPriceError.classList.add('show');
-        } else {
-          customPriceError.classList.remove('show');
-        }
-        document.getElementById('priceHintError').classList.remove('show');
+      var btnPriceMinus = document.getElementById('btnPriceMinus');
+      var btnPricePlus  = document.getElementById('btnPricePlus');
+      var priceDisplay  = document.getElementById('priceDisplay');
+      var impactText    = document.getElementById('impactText');
+
+      function setPrice(p) {
+        var minTotal = (window._VQ_PERSONS_COUNT || 1) * PRICE_MIN;
+        p = Math.max(minTotal, Math.min(PRICE_MAX, Math.round(p / PRICE_STEP) * PRICE_STEP));
+        window._VQ_PRICE         = p;
+        priceDisplay.textContent = p;
+        btnPriceMinus.disabled   = (p <= minTotal);
+        btnPricePlus.disabled    = (p >= PRICE_MAX);
+        impactText.innerHTML     = IMPACT_MSGS[p] || '';
+        document.getElementById('priceHintError').style.display = 'none';
         if (window._VQ_REFRESH_PRICE) window._VQ_REFRESH_PRICE();
-      });
+      }
+      window._VQ_SET_PRICE = setPrice;
+
+      btnPriceMinus.addEventListener('click', function () { setPrice(window._VQ_PRICE - PRICE_STEP); });
+      btnPricePlus.addEventListener('click',  function () { setPrice(window._VQ_PRICE + PRICE_STEP); });
+      setPrice(10);
 
 
       var firebaseConfig = {
@@ -2424,11 +2428,6 @@
         if (!inputApellidos.value.trim())       markErr(inputApellidos, hintApellidos);
         if (!isValidPhone(inputTelefono.value)) markErr(inputTelefono,  hintTelefono);
         if (!isValidEmail(inputEmail.value))    markErr(inputEmail,     hintEmail);
-        /* Validació preu: mínim 10 € per persona */
-        if ((window._VQ_PRICE || 0) < 10) {
-          document.getElementById('priceHintError').classList.add('show');
-          ok = false;
-        }
         /* Validació noms acompanyants (obligatoris) */
         if (window._VQ_COMPANIONS && !window._VQ_COMPANIONS.validate()) {
           ok = false;
@@ -2436,17 +2435,11 @@
         return ok;
       }
 
-      /* ---- Validació estricta del preu ---- */
+      /* ---- Valida que el total cobreixi el mínim per persona ---- */
       function validatePrice(numPersones) {
-        var preuPerPersona = window._VQ_PRICE || 0;
-        if (!isFinite(preuPerPersona) || preuPerPersona < 10) {
-          document.getElementById('priceHintError').classList.add('show');
-          return null;
-        }
-        if (numPersones < 1 || numPersones > 10) return null;
-        var total = preuPerPersona * numPersones;
-        if (total < 10 * numPersones) {
-          document.getElementById('priceHintError').classList.add('show');
+        var total = window._VQ_PRICE || 0;
+        if (total < numPersones * 10) {
+          document.getElementById('priceHintError').style.display = '';
           return null;
         }
         return total;
@@ -2499,53 +2492,50 @@
           var credential = await auth.signInAnonymously();
           var uid        = credential.user.uid;
 
-          /* ── 2. Escriptura a 'pagaments' amb status:'pending' ── */
-          var pagamentsRef = db.collection('pagaments-show').doc();
-          var pagamentsId  = pagamentsRef.id;
+          /* ── 2. Generar ID de referència ── */
+          var pagamentsId = generateTicketId();
 
+          /* ── 3. Escriptura a Firestore amb status:'pending' ── */
+          var pagamentsRef = db.collection('pagaments-show').doc(pagamentsId);
           await pagamentsRef.set({
-            nom:          nom,
-            cognoms:      cognoms,
-            telefon:      telefon,
-            email:        email,
-            acompanyants: acompanyants,
-            numPersones:  numPersones,
-            totalEur:     totalEur,
-            status:       'pending',
-            uid:          uid,
-            createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
+            nom:            nom,
+            cognoms:        cognoms,
+            telefon:        telefon,
+            email:          email,
+            acompanyants:   acompanyants,
+            numPersones:    numPersones,
+            totalEur:       totalEur,
+            preuPerPersona: Math.round(totalEur / numPersones),
+            status:         'pending',
+            uid:            uid,
+            createdAt:      firebase.firestore.FieldValue.serverTimestamp(),
           });
 
-          /* ── 3. Crear Checkout Session via backend (la clau secreta mai surt del servidor) ── */
-          var stripeResp = await fetch('/api/create-checkout-session', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              nom,
-              cognoms,
-              telefon,
-              email,
-              numPersones,
-              totalEur,
-              pagamentsId,
-              acompanyants,
-              pricePerPerson: window._VQ_PRICE || 10,
-            }),
-          });
-
-          var stripeData = await stripeResp.json();
-          if (!stripeResp.ok || stripeData.error) {
-            throw new Error(stripeData.error || 'Error en crear la sessió de pagament.');
-          }
-
-          var session = stripeData;
-
-          /* ── 4. Guardar context per a la pàgina d'èxit ── */
+          /* ── 4. Desar dades a localStorage per a la pàgina d'èxit ── */
           localStorage.setItem('vq_uid',          uid);
           localStorage.setItem('vq_pagaments_id', pagamentsId);
+          localStorage.setItem('vq_nom',          nom);
+          localStorage.setItem('vq_cognoms',      cognoms);
+          localStorage.setItem('vq_email',        email);
+          localStorage.setItem('vq_telefon',      telefon);
+          localStorage.setItem('vq_num_persones', String(numPersones));
+          localStorage.setItem('vq_total',        String(totalEur));
 
-          /* ── 5. Redirecció a Stripe Hosted Checkout ── */
-          window.location.assign(session.url);
+          /* ── 5. Obtenir Payment Link pel total ── */
+          var baseLink = STRIPE_PAYMENT_LINKS[totalEur];
+          if (!baseLink || baseLink.includes('REPLACE')) {
+            throw new Error(
+              'El Payment Link per a ' + totalEur + '\u00A0\u20AC encara no est\u00E0 configurat. ' +
+              'Contacta <strong>vitalquaproject@gmail.com</strong>.'
+            );
+          }
+
+          /* ── 6. Redirecció a Stripe Payment Link (quantitat=1, preu total fix) ── */
+          var urlParams = new URLSearchParams({
+            client_reference_id: pagamentsId,
+            prefilled_email:     email,
+          });
+          window.location.assign(baseLink + '?' + urlParams.toString());
 
         } catch (err) {
           console.error('[Vitalqua] handleSubmit error:', err);

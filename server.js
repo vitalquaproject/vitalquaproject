@@ -519,6 +519,6 @@ async function sendConfirmationEmail({ ticketId, nombre, apellidos, email, quant
 // Start
 // ---------------------------------------------------------------------------
 const PORT = parseInt(process.env.PORT, 10) || 3000;
-app.listen(PORT, '127.0.0.1', () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n✓ Vitalqua server running  →  http://localhost:${PORT}/show.html\n`);
 });

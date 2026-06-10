@@ -2305,24 +2305,18 @@
     })();
 
     /* ================================================================
-       PAGAMENT CLIENT-SIDE PUR — Stripe API + Firebase (sense servidor)
+       PAGAMENT — Stripe Checkout + Firebase
        ================================================================
        Flux:
-         1. Validació: total = 10 € exactament × (1 + acompanyants)
+         1. Validació: total = preu × (1 + acompanyants)
          2. Sign-in anònim Firebase Auth (per escriure a Firestore)
-         3. Escriptura a 'pagaments/{id}' amb status:'pending'
-         4. Crida directa a l'API de Stripe per crear la Checkout Session
+         3. Escriptura a 'pagaments-show/{id}' amb status:'pending'
+         4. Crida al backend /api/create-checkout-session (clau secreta al servidor)
          5. Redirecció a Stripe Hosted Checkout (session.url)
-
-       ⚠️  AVÍS DE SEGURETAT: la clau secreta de Stripe (STRIPE_SK) és
-           visible al navegador / codi font. Acceptable per a un event
-           benèfic petit sense dades sensibles. Per a producció amb volum
-           alt, mou la creació de la sessió a un servidor o Cloud Function.
 
        Regles de Firestore necessàries per a 'pagaments-show':
          allow create: if request.auth != null;
-         allow read, update: if request.auth != null
-                             && resource.data.status == 'pending';
+         allow read, update: if request.auth != null;
        ================================================================ */
     (function () {
       window._VQ_PRICE = 10; /* preu per persona seleccionat */
@@ -2376,8 +2370,6 @@
         if (window._VQ_REFRESH_PRICE) window._VQ_REFRESH_PRICE();
       });
 
-      /* ⚠️ Clau secreta — visible al navegador (risc acceptat) */
-      var STRIPE_SK = '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';
 
       var firebaseConfig = {
         apiKey:            'AIzaSyDKic5e9DAU1iw6ZOtsT1gGEEyU8WCtAXE',
@@ -2524,49 +2516,29 @@
             createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
           });
 
-          /* ── 3. Crida directa a l'API de Stripe per crear la Checkout Session ── */
-          var params = new URLSearchParams();
-          params.append('mode', 'payment');
-          params.append('line_items[0][price_data][currency]', 'eur');
-          params.append('line_items[0][price_data][unit_amount]', ((window._VQ_PRICE || 10) * 100).toString());
-          params.append('line_items[0][price_data][product_data][name]',
-            'Concert Ben\u00e8fic \u00b7 Vitalqua Project \u00b7 16 Juliol');
-          params.append('line_items[0][price_data][product_data][description]',
-            'Entrada inclou consumici\u00f3 + picoteo + concert en directe \u00b7 UIC Barcelona');
-          params.append('line_items[0][quantity]', numPersones.toString());
-          params.append('success_url',
-            window.location.origin + '/success-show.html?session_id={CHECKOUT_SESSION_ID}');
-          params.append('cancel_url',
-            window.location.origin + '/show.html?cancel=1');
-          params.append('client_reference_id', pagamentsId);
-          params.append('customer_email', email);
-          params.append('metadata[nom]',         nom);
-          params.append('metadata[cognoms]',     cognoms);
-          params.append('metadata[telefon]',     telefon);
-          params.append('metadata[numPersones]', numPersones.toString());
-          params.append('metadata[totalEur]',    totalEur.toString());
-          params.append('metadata[pagamentsId]', pagamentsId);
-          var acompStr = JSON.stringify(acompanyants);
-          if (acompStr.length <= 500) params.append('metadata[acompanyants]', acompStr);
-
-          var stripeResp = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+          /* ── 3. Crear Checkout Session via backend (la clau secreta mai surt del servidor) ── */
+          var stripeResp = await fetch('/api/create-checkout-session', {
             method:  'POST',
-            headers: {
-              'Authorization': 'Bearer ' + STRIPE_SK,
-              'Content-Type':  'application/x-www-form-urlencoded',
-            },
-            body: params.toString(),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nom,
+              cognoms,
+              telefon,
+              email,
+              numPersones,
+              totalEur,
+              pagamentsId,
+              acompanyants,
+              pricePerPerson: window._VQ_PRICE || 10,
+            }),
           });
 
-          if (!stripeResp.ok) {
-            var errData = await stripeResp.json().catch(function () { return {}; });
-            throw new Error(
-              (errData.error && errData.error.message) ||
-              'Stripe API HTTP ' + stripeResp.status
-            );
+          var stripeData = await stripeResp.json();
+          if (!stripeResp.ok || stripeData.error) {
+            throw new Error(stripeData.error || 'Error en crear la sessió de pagament.');
           }
 
-          var session = await stripeResp.json();
+          var session = stripeData;
 
           /* ── 4. Guardar context per a la pàgina d'èxit ── */
           localStorage.setItem('vq_uid',          uid);

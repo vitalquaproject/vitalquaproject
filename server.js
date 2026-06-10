@@ -289,6 +289,130 @@ app.post('/api/create-payment-intent', async (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// POST /api/create-checkout-session
+//
+// Body (JSON):
+//   nom            {string}  — nom del comprador
+//   cognoms        {string}
+//   telefon        {string}
+//   email          {string}
+//   numPersones    {number}  — nombre d'entrades (≥ 1)
+//   totalEur       {number}  — import total en euros (validat aquí)
+//   pagamentsId    {string}  — ID del document de Firestore (client_reference_id)
+//   acompanyants   {Array}   — llista d'acompanyants (opcional)
+//   pricePerPerson {number}  — preu per persona (validat aquí)
+//
+// Response (JSON):
+//   { url: string }          — URL de Stripe Hosted Checkout
+//   { error: string }        — en cas d'error
+// ---------------------------------------------------------------------------
+app.post('/api/create-checkout-session', async (req, res) => {
+  try {
+    const {
+      nom, cognoms, telefon, email,
+      numPersones, totalEur, pagamentsId,
+      acompanyants = [], pricePerPerson,
+    } = req.body;
+
+    const qty   = parseInt(numPersones, 10);
+    const price = parseFloat(pricePerPerson);
+    const total = parseFloat(totalEur);
+
+    if (!qty || qty < 1 || qty > 20) {
+      return res.status(400).json({ error: 'Nombre de persones no vàlid.' });
+    }
+    if (!Number.isFinite(price) || price < 10) {
+      return res.status(400).json({ error: 'Preu per persona no vàlid (mínim 10 €).' });
+    }
+    if (!pagamentsId) {
+      return res.status(400).json({ error: 'Falta el ID de referència del pagament.' });
+    }
+
+    const unitAmountCents = Math.round(price * 100);
+
+    let acompStr = '';
+    try { acompStr = JSON.stringify(acompanyants).slice(0, 500); } catch { acompStr = ''; }
+
+    const successUrl = (process.env.SUCCESS_URL || `${req.protocol}://${req.get('host')}/success-show.html`)
+      .replace(/\/$/, '') + '?session_id={CHECKOUT_SESSION_ID}';
+    const cancelUrl  = `${req.protocol}://${req.get('host')}/show.html?cancel=1`;
+
+    const session = await stripe.checkout.sessions.create({
+      mode:    'payment',
+      line_items: [{
+        price_data: {
+          currency:     'eur',
+          unit_amount:  unitAmountCents,
+          product_data: {
+            name:        'The Vitalqua Show · 16 Juliol',
+            description: 'Entrada inclou consumició + picoteo + concert en directe · UIC Barcelona',
+          },
+        },
+        quantity: qty,
+      }],
+      success_url:          successUrl,
+      cancel_url:           cancelUrl,
+      client_reference_id:  pagamentsId,
+      customer_email:       email || undefined,
+      metadata: {
+        nom,
+        cognoms,
+        telefon,
+        numPersones: String(qty),
+        totalEur:    String(total),
+        pagamentsId,
+        acompanyants: acompStr,
+      },
+    });
+
+    return res.json({ url: session.url });
+
+  } catch (err) {
+    console.error('[Vitalqua] /api/create-checkout-session error:', err);
+    const message = err.type ? `Error de Stripe: ${err.message}` : 'Error intern del servidor.';
+    return res.status(500).json({ error: message });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// GET /api/verify-session/:sessionId
+//
+// Verifica que el payment_status d'una Checkout Session és 'paid'.
+// Retorna les dades de sessió necessàries per a success-show.html.
+//
+// Response (JSON):
+//   { paid: true,  clientReferenceId, metadata, customerEmail } — pagat
+//   { paid: false, status }                                      — no pagat
+//   { error: string }                                            — error
+// ---------------------------------------------------------------------------
+app.get('/api/verify-session/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    if (!sessionId || !sessionId.startsWith('cs_')) {
+      return res.status(400).json({ error: 'Session ID no vàlid.' });
+    }
+
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (session.payment_status !== 'paid') {
+      return res.json({ paid: false, status: session.payment_status });
+    }
+
+    return res.json({
+      paid:               true,
+      clientReferenceId:  session.client_reference_id,
+      metadata:           session.metadata,
+      customerEmail:      session.customer_details?.email || '',
+    });
+
+  } catch (err) {
+    console.error('[Vitalqua] /api/verify-session error:', err);
+    const message = err.type ? `Error de Stripe: ${err.message}` : 'Error intern del servidor.';
+    return res.status(500).json({ error: message });
+  }
+});
+
+// ---------------------------------------------------------------------------
 // Default SPA fallback — redirect unknown paths to show.html
 // ---------------------------------------------------------------------------
 app.use((req, res) => {

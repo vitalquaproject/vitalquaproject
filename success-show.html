@@ -572,22 +572,34 @@
 
         /* ── 6. Enviar email de confirmació via EmailJS ── */
         if (data.email && EMAILJS_PUBLIC_KEY !== 'REPLACE_PUBLIC_KEY') {
-          await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              service_id:  EMAILJS_SERVICE_ID,
-              template_id: EMAILJS_TEMPLATE_ID,
-              user_id:     EMAILJS_PUBLIC_KEY,
-              template_params: {
-                to_email:     data.email,
-                to_name:      data.nom + ' ' + data.cognoms,
-                message_html: buildEmailHtml(data),
-              },
-            }),
-          }).catch(function (e) {
-            console.warn('[Vitalqua] No s\'ha pogut enviar l\'email via EmailJS:', e);
-          });
+          try {
+            var emailRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+              method:  'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                service_id:  EMAILJS_SERVICE_ID,
+                template_id: EMAILJS_TEMPLATE_ID,
+                user_id:     EMAILJS_PUBLIC_KEY,
+                template_params: {
+                  to_email:     data.email,
+                  to_name:      data.nom + ' ' + data.cognoms,
+                  message_html: buildEmailHtml(data),
+                },
+              }),
+            });
+            if (!emailRes.ok) {
+              var errBody = await emailRes.text().catch(function () { return ''; });
+              console.warn('[Vitalqua] EmailJS error ' + emailRes.status + ':', errBody);
+              /* Guardar l'error a Firestore per poder revisar-lo des del admin */
+              await docRef.update({ emailError: emailRes.status + ' ' + errBody }).catch(function () {});
+            } else {
+              console.log('[Vitalqua] Email enviat a ' + data.email);
+              await docRef.update({ emailSent: true }).catch(function () {});
+            }
+          } catch (e) {
+            console.warn('[Vitalqua] No s\'ha pogut enviar l\'email via EmailJS:', e.message || e);
+            await docRef.update({ emailError: String(e.message || e) }).catch(function () {});
+          }
         }
 
         /* ── 7. Netejar localStorage ── */

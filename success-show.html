@@ -558,7 +558,35 @@
         var data = doc.data();
 
         if (data.status === 'paid') {
-          /* Ja processat — mostrar UI sense re-enviar email */
+          /* Ja processat — mostrar UI, però reintenta l'email si no s'havia enviat */
+          if (!data.emailSent && data.email && EMAILJS_PUBLIC_KEY !== 'REPLACE_PUBLIC_KEY') {
+            try {
+              var retryRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  service_id:  EMAILJS_SERVICE_ID,
+                  template_id: EMAILJS_TEMPLATE_ID,
+                  user_id:     EMAILJS_PUBLIC_KEY,
+                  template_params: {
+                    to_email:     data.email,
+                    to_name:      data.nom + ' ' + data.cognoms,
+                    message_html: buildEmailHtml(data),
+                  },
+                }),
+              });
+              if (retryRes.ok) {
+                console.log('[Vitalqua] Email reenviat a ' + data.email);
+                await docRef.update({ emailSent: true, emailError: firebase.firestore.FieldValue.delete() }).catch(function () {});
+              } else {
+                var rb = await retryRes.text().catch(function () { return ''; });
+                console.warn('[Vitalqua] Reintent email error ' + retryRes.status + ':', rb);
+                await docRef.update({ emailError: retryRes.status + ' ' + rb }).catch(function () {});
+              }
+            } catch (e) {
+              console.warn('[Vitalqua] Reintent email excepció:', e.message || e);
+            }
+          }
           showOk(data, pagamentsId);
           return;
         }

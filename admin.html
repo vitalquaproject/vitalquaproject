@@ -657,7 +657,14 @@
       /* Update tab badge for current event */
       const badgeId = currentEvent === 'concert' ? 'tabCountConcert' : 'tabCountShow';
       const badge = document.getElementById(badgeId);
-      if (badge) badge.textContent = tickets.length;
+      if (badge) {
+        if (currentEvent === 'show') {
+          /* compta principals + acompanyants */
+          badge.textContent = tickets.reduce((sum, t) => sum + (t.numPersones || 1), 0);
+        } else {
+          badge.textContent = tickets.length;
+        }
+      }
 
       if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7"><div class="table-placeholder">

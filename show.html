@@ -280,6 +280,32 @@
     .cta-arrow { transition: transform 200ms var(--ease); flex-shrink: 0; }
     .hero-cta:hover .cta-arrow { transform: translateX(4px); }
 
+    /* ── Secondary CTA (Fila 0) ── */
+    .hero-cta-secondary {
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      width: 100%;
+      padding: 14px 24px;
+      background: transparent;
+      color: var(--cy-xdk);
+      border: 2px solid var(--cy-dk);
+      border-radius: 999px;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: .95rem; font-weight: 700; letter-spacing: .01em;
+      text-decoration: none;
+      transition: background 180ms ease, color 180ms ease, transform 200ms var(--ease), box-shadow 200ms ease;
+      margin-bottom: 12px;
+    }
+    .hero-cta-secondary:hover {
+      background: rgba(42,133,179,.09);
+      border-color: var(--cy-xdk);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(42,133,179,.14);
+    }
+    .hero-cta-secondary:hover .cta-arrow { transform: translateX(4px); }
+    @media (min-width: 820px) {
+      .hero-cta-secondary { max-width: 260px; }
+    }
+
     /* ── Trust note ── */
     .hero-trust {
       display: flex; align-items: center; justify-content: center; gap: 7px;
@@ -1231,6 +1257,112 @@
     }
 
     /* ============================================================
+       FILA 0 SECTION
+       ============================================================ */
+    .fila0-section {
+      background: var(--surface);
+      padding: clamp(60px, 9vw, 100px) 0 clamp(72px, 10vw, 120px);
+      border-top: 1px solid var(--bg-soft);
+    }
+    .fila0-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+      text-align: center;
+    }
+    .fila0-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 20px;
+      border-radius: 999px;
+      background: rgba(79,179,217,.12);
+      border: 1px solid rgba(79,179,217,.32);
+      color: var(--cy-xdk);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .fila0-badge svg { flex-shrink: 0; }
+    .fila0-title {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(1.7rem, 4vw, 2.3rem);
+      font-weight: 700;
+      letter-spacing: -0.028em;
+      color: var(--navy);
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .fila0-desc {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      margin-bottom: 30px;
+      max-width: 52ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .fila0-card {
+      background: linear-gradient(135deg, rgba(79,179,217,.07) 0%, rgba(42,133,179,.04) 100%);
+      border: 1.5px solid rgba(79,179,217,.26);
+      border-radius: var(--radius-lg);
+      padding: clamp(24px, 5vw, 40px);
+      margin-bottom: 28px;
+    }
+    .fila0-tax-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: var(--success-lt);
+      color: var(--success);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .fila0-tax-badge svg { flex-shrink: 0; }
+    .fila0-card-title {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .fila0-card-text {
+      font-size: 0.93rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      margin-bottom: 0;
+    }
+    .fila0-card-text strong { color: var(--navy); }
+    .fila0-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 16px 36px;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 999px;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 1.02rem; font-weight: 700; letter-spacing: .01em;
+      text-decoration: none;
+      transition: background 180ms ease, transform 200ms var(--ease), box-shadow 200ms ease;
+      box-shadow: 0 4px 20px rgba(15,26,46,.18);
+      margin-bottom: 14px;
+    }
+    .fila0-btn:hover {
+      background: var(--cy-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(42,133,179,.28);
+    }
+    .fila0-btn:hover .cta-arrow { transform: translateX(4px); }
+    .fila0-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .fila0-note svg { flex-shrink: 0; color: var(--cy-dk); opacity: .7; }
+
+    /* ============================================================
        FOOTER
        ============================================================ */
     .site-footer {
@@ -1553,6 +1685,13 @@
       <a href="#inscripcion" class="hero-cta">
         Reservar la meva plaça
         <svg class="cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+
+      <!-- Fila 0 secondary CTA -->
+      <a href="#fila0" class="hero-cta-secondary">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        No puc assistir · Dona des de casa (Fila 0)
+        <svg class="cta-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
 
       <!-- Trust note -->
@@ -1987,6 +2126,65 @@
           </div>
 
         </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       FILA 0 — Dona des de casa
+       ================================================================ -->
+  <section class="fila0-section" id="fila0">
+    <div class="fila0-wrap">
+
+      <div class="reveal">
+        <div class="fila0-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          Fila 0
+        </div>
+
+        <h2 class="fila0-title">No pots venir?<br>La teva donació també compta.</h2>
+
+        <p class="fila0-desc">
+          Si no pots assistir físicament al concert però vols donar suport al projecte,
+          existeix la <strong>Fila 0</strong>: una forma solidària de participar des de qualsevol lloc del món.
+          Cada euro aportat va directament a portar aigua neta a la comunitat d'Emorogi, a Kenya.
+        </p>
+
+        <div class="fila0-card">
+          <div class="fila0-tax-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            Desgravable fins al 80% dels impostos
+          </div>
+
+          <p class="fila0-card-title">Com funciona la Fila 0?</p>
+          <p class="fila0-card-text">
+            La plataforma <strong>migranodearena.org</strong> permet fer donacions de forma segura a favor de l'ONG <strong>ADESCI</strong>,
+            entitat gestora del projecte Vitalqua. Les donacions gaudeixen de <strong>deducció fiscal de fins al 80%</strong> a la declaració de la renda,
+            d'acord amb la Llei 49/2002 de règim fiscal d'entitats sense ànim de lucre.
+            Rebràs un certificat de donació per poder-lo aplicar.
+          </p>
+        </div>
+
+        <a href="https://www.migranodearena.org/reto/agua-y-educacion-para-kenia-construyendo-el-futuro-de-emorogi"
+           class="fila0-btn"
+           target="_blank" rel="noopener noreferrer">
+          Donar ara · migranodearena.org
+          <svg class="cta-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+
+        <p class="fila0-note">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Donació segura · Certificat fiscal · 100% va al projecte Vitalqua
+        </p>
       </div>
 
     </div>

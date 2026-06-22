@@ -1865,6 +1865,8 @@
        tickets with status === "paid" already exist.
        ---------------------------------------------------------------- */
     (function () {
+      const VENTAS_CERRADAS = true;   /* ← poner false para reabrir la venta */
+
       const TICKET_LIMIT  = 100;
       const TICKETS_COLL  = 'artifacts/vitalqua-party-tickets/public/data/tickets';
 
@@ -1907,6 +1909,13 @@
       }
 
       async function checkTicketLimit() {
+        /* Si la venta está cerrada manualmente, bloquear sin consultar Firestore */
+        if (VENTAS_CERRADAS) {
+          VQ_TANK.setCount(100);
+          lockForm();
+          return;
+        }
+
         try {
           /* Limit to TICKET_LIMIT docs — if we receive that many the
              cap is reached.  Avoids reading the full collection. */

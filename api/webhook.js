@@ -19,7 +19,8 @@ export const config = {
   },
 };
 
-module.exports = async (req, res) => {
+
+export default async function handler(req, res) {
   const sig = req.headers['stripe-signature'];
 
   let event;

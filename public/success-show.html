@@ -517,59 +517,7 @@
 
         var data = doc.data();
 
-        /* ── Helper: envia l'email i retorna true si OK ── */
-        async function sendConfirmEmail(d) {
-          var toEmail = String(d.email || '').trim().toLowerCase();
-          if (!toEmail || EMAILJS_PUBLIC_KEY === 'REPLACE_PUBLIC_KEY') return false;
-
-          /* Validació estricta de l'adreça abans d'enviar */
-          var emailOk = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(toEmail);
-          console.log('[Vitalqua] Enviant email a: "' + toEmail + '" | format vàlid: ' + emailOk);
-          console.log('[Vitalqua] to_name: "' + (d.nom + ' ' + d.cognoms).trim() + '"');
-          if (!emailOk) {
-            console.error('[Vitalqua] L\'adreça "' + toEmail + '" no té format vàlid. No es fa la crida a EmailJS.');
-            await docRef.update({ emailError: 'invalid_email: ' + toEmail }).catch(function () {});
-            return false;
-          }
-
-          try {
-            var res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-              method:  'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                service_id:  EMAILJS_SERVICE_ID,
-                template_id: EMAILJS_TEMPLATE_ID,
-                user_id:     EMAILJS_PUBLIC_KEY,
-                template_params: {
-                  to_email:     toEmail,
-                  to_name:      (d.nom + ' ' + d.cognoms).trim(),
-                  message_html: buildEmailHtml(d),
-                },
-              }),
-            });
-            var body = await res.text().catch(function () { return ''; });
-            if (res.ok) {
-              console.log('[Vitalqua] Email enviat correctament. Resposta:', body);
-              return true;
-            }
-            console.warn('[Vitalqua] EmailJS error ' + res.status + ': ' + body);
-            await docRef.update({ emailError: res.status + ' ' + body }).catch(function () {});
-            return false;
-          } catch (e) {
-            console.warn('[Vitalqua] Excepció enviant email:', e.message || e);
-            await docRef.update({ emailError: String(e.message || e) }).catch(function () {});
-            return false;
-          }
-        }
-
         if (data.status === 'paid') {
-          /* Ja processat — reintenta l'email si no s'havia enviat */
-          if (!data.emailSent) {
-            var retryOk = await sendConfirmEmail(data);
-            if (retryOk) {
-              await docRef.update({ emailSent: true, emailError: firebase.firestore.FieldValue.delete() }).catch(function () {});
-            }
-          }
           showOk(data, pagamentsId);
           return;
         }
@@ -581,18 +529,7 @@
           paidAt:          firebase.firestore.FieldValue.serverTimestamp(),
         });
 
-        /* ── 6. Enviar email de confirmació via EmailJS ── */
-        var sent = await sendConfirmEmail(data);
-        if (sent) {
-          await docRef.update({ emailSent: true }).catch(function () {});
-        }
-
-        /* ── 7. Netejar localStorage ── */
-        //['vq_uid', 'vq_session_doc', 'vq_pagaments_id'].forEach(function (k) {
-        //  localStorage.removeItem(k);
-        //});
-
-        /* ── 8. Mostrar UI de confirmació ── */
+        /* ── 6. Mostrar UI de confirmació ── */
         showOk(data, pagamentsId);
 
       } catch (err) {

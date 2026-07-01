@@ -14,19 +14,6 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 // ---------------------------------------------------------------------------
-// Resend — sends confirmation email when payment is confirmed
-// ---------------------------------------------------------------------------
-let resend = null;
-if (process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.startsWith('re_REPLACE')) {
-  try {
-    const { Resend } = require('resend');
-    resend = new Resend(process.env.RESEND_API_KEY);
-  } catch (e) {
-    console.warn('[Webhook] Resend init failed:', e.message);
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Helper: buffer readable stream (needed for raw body / Stripe signature)
 // ---------------------------------------------------------------------------
 const buffer = async (readable) => {
@@ -38,90 +25,113 @@ const buffer = async (readable) => {
 };
 
 // ---------------------------------------------------------------------------
-// Helper: send HTML confirmation email via Resend
+// Helper: build confirmation email HTML (same template as success-show.html)
 // ---------------------------------------------------------------------------
-async function sendConfirmationEmail({ ticketId, nom, cognoms, email, numPersones, totalEur }) {
-  const fromEmail = process.env.FROM_EMAIL || 'noreply@vitalqua.org';
+function buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants = [] }) {
+  const qty   = parseInt(numPersones, 10) || 1;
+  const total = parseFloat(totalEur)      || 0;
 
-  const qty      = parseInt(numPersones, 10) || 1;
-  const total    = parseFloat(totalEur)      || 0;
-  const totalFmt = total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const titularRow =
+    '<tr style="border-bottom:1px solid #EBF4FA">' +
+      '<td style="padding:10px 12px;font-size:13px;color:#6B7890;white-space:nowrap">Titular</td>' +
+      '<td style="padding:10px 12px;font-size:13px;color:#0F1A2E;font-weight:600">' + nom + ' ' + cognoms + '</td>' +
+      '<td style="padding:10px 12px;font-size:13px;color:#2A85B3;font-weight:600;text-align:right;white-space:nowrap">10,00&nbsp;&euro;</td>' +
+    '</tr>';
 
-  const html = `<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Entrada confirmada — The Vitalqua Show</title>
-</head>
-<body style="font-family:Inter,system-ui,sans-serif;background:#F0F4F8;margin:0;padding:32px 16px;">
-  <div style="max-width:540px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(15,26,46,.10);">
-
-    <!-- Header -->
-    <div style="background:linear-gradient(135deg,#0F1A2E 0%,#1B4F72 100%);padding:40px 36px 32px;text-align:center;">
-      <p style="margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#4FB3D9;">The Vitalqua Show · 16 Julio 2026</p>
-      <h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;line-height:1.2;">¡Tu entrada está confirmada!</h1>
-      <p style="margin:14px 0 0;font-size:15px;color:rgba(163,208,227,.85);">Gracias por apoyar el acceso al agua limpia en Kenia</p>
-    </div>
-
-    <!-- Body -->
-    <div style="padding:36px;">
-
-      <p style="margin:0 0 24px;font-size:15px;color:#3F4F6B;line-height:1.65;">
-        Hola <strong style="color:#0F1A2E;">${nom} ${cognoms}</strong>,<br>
-        hemos registrado tu aportación con éxito. ¡Te esperamos en el evento!
-      </p>
-
-      <!-- Ticket ID card -->
-      <div style="background:#F5F9FC;border:2px dashed #A3D0E3;border-radius:14px;padding:20px 24px;margin-bottom:24px;text-align:center;">
-        <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#6B7890;">Tu ID de entrada</p>
-        <p style="margin:0;font-size:28px;font-weight:700;letter-spacing:.12em;color:#0F1A2E;font-family:'Courier New',monospace;">${ticketId}</p>
-        <p style="margin:8px 0 0;font-size:12px;color:#9EAEC0;">Guarda este ID — lo necesitarás en la puerta</p>
-      </div>
-
-      <!-- Event details table -->
-      <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
-        <tr>
-          <td style="padding:10px 0;border-bottom:1px solid #EBF4FA;font-size:13px;color:#6B7890;font-weight:600;width:42%;">Evento</td>
-          <td style="padding:10px 0;border-bottom:1px solid #EBF4FA;font-size:14px;color:#0F1A2E;font-weight:500;">The Vitalqua Show</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 0;border-bottom:1px solid #EBF4FA;font-size:13px;color:#6B7890;font-weight:600;">Fecha y hora</td>
-          <td style="padding:10px 0;border-bottom:1px solid #EBF4FA;font-size:14px;color:#0F1A2E;font-weight:500;">16 de julio de 2026 · 19:00–23:00 h</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 0;border-bottom:1px solid #EBF4FA;font-size:13px;color:#6B7890;font-weight:600;">Lugar</td>
-          <td style="padding:10px 0;border-bottom:1px solid #EBF4FA;font-size:14px;color:#0F1A2E;font-weight:500;">UIC Barcelona</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 0;border-bottom:1px solid #EBF4FA;font-size:13px;color:#6B7890;font-weight:600;">Entradas</td>
-          <td style="padding:10px 0;border-bottom:1px solid #EBF4FA;font-size:14px;color:#0F1A2E;font-weight:500;">${qty} entrada${qty !== 1 ? 's' : ''}</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 0;font-size:13px;color:#6B7890;font-weight:600;">Aportación total</td>
-          <td style="padding:10px 0;font-size:18px;font-weight:700;color:#2A85B3;">${totalFmt} €</td>
-        </tr>
-      </table>
-
-      <!-- Footer note -->
-      <p style="margin:0;font-size:12px;color:#A3B5CD;text-align:center;line-height:1.7;">
-        ¿Tienes alguna pregunta?<br>
-        Escríbenos a <a href="mailto:vitalquaproject@gmail.com" style="color:#2A85B3;text-decoration:none;">vitalquaproject@gmail.com</a>
-      </p>
-
-    </div>
-  </div>
-</body>
-</html>`;
-
-  await resend.emails.send({
-    from:    `The Vitalqua Show <${fromEmail}>`,
-    to:      [email],
-    subject: `🎟️ Entrada confirmada · ${ticketId} · The Vitalqua Show`,
-    html,
+  let acompRows = '';
+  acompanyants.forEach(function (a, i) {
+    const isLast = (i === acompanyants.length - 1);
+    acompRows +=
+      '<tr' + (isLast ? '' : ' style="border-bottom:1px solid #EBF4FA"') + '>' +
+        '<td style="padding:10px 12px;font-size:13px;color:#6B7890;white-space:nowrap">Acomp. ' + (i + 1) + '</td>' +
+        '<td style="padding:10px 12px;font-size:13px;color:#0F1A2E;font-weight:500">' + (a.nom || a.name || '') + '</td>' +
+        '<td style="padding:10px 12px;font-size:13px;color:#2A85B3;font-weight:600;text-align:right;white-space:nowrap">10,00&nbsp;&euro;</td>' +
+      '</tr>';
   });
 
-  console.log(`[Webhook] Confirmation email sent to ${email} (ticket ${ticketId}).`);
+  const totalRow =
+    '<tr style="background:#EBF4FA">' +
+      '<td colspan="2" style="padding:12px 12px;font-size:14px;font-weight:700;color:#0F1A2E">TOTAL</td>' +
+      '<td style="padding:12px 12px;font-size:16px;font-weight:800;color:#1B5F85;text-align:right;white-space:nowrap">' +
+        total.toLocaleString('ca-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '&nbsp;&euro;' +
+      '</td>' +
+    '</tr>';
+
+  return (
+    '<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:0 auto;background:#F5F9FC">' +
+    '<div style="background:linear-gradient(135deg,#0D1E38 0%,#1B5F85 100%);padding:28px 32px 24px;border-radius:16px 16px 0 0">' +
+      '<h1 style="margin:0 0 6px;font-size:22px;font-weight:800;color:#ffffff;line-height:1.2">Reserva confirmada &#10003;</h1>' +
+      '<p style="margin:0;font-size:13px;color:rgba(163,208,227,.85)">Concert Ben&egrave;fic &middot; 16 de Juliol &middot; UIC Barcelona</p>' +
+    '</div>' +
+    '<div style="background:#ffffff;padding:28px 32px;border:1px solid #D6EEF6;border-top:none">' +
+      '<p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:#3F4F6B">' +
+        'Hola <strong style="color:#0F1A2E">' + nom + ' ' + cognoms + '</strong>,<br><br>' +
+        'La teva inscripci&oacute; al <strong style="color:#0F1A2E">Concert Ben&egrave;fic Vitalqua</strong> ha estat confirmada. ' +
+        'T\'esperem el <strong style="color:#0F1A2E">16 de Juliol</strong> a les <strong style="color:#0F1A2E">19:00h</strong> a <strong style="color:#0F1A2E">UIC Barcelona</strong>.' +
+      '</p>' +
+      '<div style="border:1px solid #D6EEF6;border-radius:12px;overflow:hidden;margin-bottom:20px">' +
+        '<div style="background:#EBF4FA;padding:10px 12px">' +
+          '<p style="margin:0;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#6B7890">Assistents i preus</p>' +
+        '</div>' +
+        '<table style="width:100%;border-collapse:collapse">' +
+          '<thead><tr style="border-bottom:2px solid #D6EEF6">' +
+            '<th style="padding:8px 12px;font-size:11px;font-weight:700;color:#A3B5CD;text-align:left;letter-spacing:.1em;text-transform:uppercase">Rol</th>' +
+            '<th style="padding:8px 12px;font-size:11px;font-weight:700;color:#A3B5CD;text-align:left;letter-spacing:.1em;text-transform:uppercase">Nom</th>' +
+            '<th style="padding:8px 12px;font-size:11px;font-weight:700;color:#A3B5CD;text-align:right;letter-spacing:.1em;text-transform:uppercase">Preu</th>' +
+          '</tr></thead>' +
+          '<tbody>' + titularRow + acompRows + '</tbody>' +
+          '<tfoot>' + totalRow + '</tfoot>' +
+        '</table>' +
+      '</div>' +
+      '<p style="margin:0;font-size:13px;line-height:1.7;color:#6B7890">' +
+        'El 100% del preu de la teva entrada va directament al projecte d\'aigua neta per a 500 estudiants a Narok, Kenya. ' +
+        'Gr&agrave;cies per fer possible aquest projecte. &#128149;' +
+      '</p>' +
+    '</div>' +
+    '<div style="padding:14px 32px;border:1px solid #D6EEF6;border-top:none;border-radius:0 0 16px 16px;background:#F5F9FC">' +
+      '<p style="margin:0;font-size:12px;color:#A3B5CD">' +
+        'Vitalqua Project &middot; <a href="mailto:vitalquaproject@gmail.com" style="color:#A3B5CD;text-decoration:none">vitalquaproject@gmail.com</a>' +
+      '</p>' +
+    '</div>' +
+    '</div>'
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Helper: send confirmation email via EmailJS REST API (no domain needed)
+// ---------------------------------------------------------------------------
+async function sendConfirmationEmail({ nom, cognoms, email, numPersones, totalEur, acompanyants }) {
+  const serviceId  = process.env.EMAILJS_SERVICE_ID;
+  const templateId = process.env.EMAILJS_TEMPLATE_ID;
+  const publicKey  = process.env.EMAILJS_PUBLIC_KEY;
+
+  if (!serviceId || !templateId || !publicKey) {
+    throw new Error('EmailJS env vars not configured (EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY).');
+  }
+
+  const messageHtml = buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants });
+
+  const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      service_id:  serviceId,
+      template_id: templateId,
+      user_id:     publicKey,
+      template_params: {
+        to_email:     email,
+        to_name:      (nom + ' ' + cognoms).trim(),
+        message_html: messageHtml,
+      },
+    }),
+  });
+
+  const body = await response.text().catch(() => '');
+  if (!response.ok) {
+    throw new Error(`EmailJS ${response.status}: ${body}`);
+  }
+
+  console.log(`[Webhook] Confirmation email sent to ${email} via EmailJS.`);
 }
 
 // ---------------------------------------------------------------------------
@@ -166,23 +176,24 @@ module.exports = async function handler(req, res) {
       console.error('[Webhook] Firestore error:', err);
     }
 
-    // ── Send confirmation email via Resend ────────────────────────────────
+    // ── Send confirmation email via EmailJS ──────────────────────────────
     const email = meta.email || session.customer_email || session.customer_details?.email || '';
-    if (resend && email) {
+    if (email) {
+      let acompanyants = [];
+      try { acompanyants = JSON.parse(meta.acompanyants || '[]'); } catch { acompanyants = []; }
+
       try {
         await sendConfirmationEmail({
-          ticketId:   pagamentsId,
-          nom:        meta.nom      || '',
-          cognoms:    meta.cognoms  || '',
+          nom:         meta.nom         || '',
+          cognoms:     meta.cognoms     || '',
           email,
           numPersones: meta.numPersones || '1',
           totalEur:    meta.totalEur    || '0',
+          acompanyants,
         });
       } catch (err) {
-        console.error('[Webhook] Email error:', err);
+        console.error('[Webhook] Email error:', err.message);
       }
-    } else if (!resend) {
-      console.warn('[Webhook] Resend not configured — email not sent.');
     } else {
       console.warn('[Webhook] No email address found in session — email not sent.');
     }

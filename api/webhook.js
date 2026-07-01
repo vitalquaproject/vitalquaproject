@@ -1,26 +1,42 @@
-const Stripe = require('stripe');
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const Stripe     = require('stripe');
+const stripe     = new Stripe(process.env.STRIPE_SECRET_KEY);
+const getRawBody = require('raw-body');
+const nodemailer = require('nodemailer');
+const admin      = require('firebase-admin');
 
-const admin = require('firebase-admin');
-
+// ---------------------------------------------------------------------------
+// Firebase Admin SDK (singleton)
+// ---------------------------------------------------------------------------
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(
       JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-    )
+    ),
   });
 }
-
 const db = admin.firestore();
 
 // ---------------------------------------------------------------------------
-// Helper: read raw body reliably (required for Stripe signature verification)
-// raw-body is a dependency of express/body-parser, already available
+// Helper: read raw body — handles both stream and pre-buffered Vercel runtimes
 // ---------------------------------------------------------------------------
-const getRawBody = require('raw-body');
+async function readRawBody(req) {
+  // Newer Vercel runtimes may pre-buffer the body as a Buffer on req.body
+  if (Buffer.isBuffer(req.body)) {
+    return req.body;
+  }
+
+  // Standard: body is a readable stream (default for plain Node.js serverless)
+  const buf = await getRawBody(req, {
+    length:   req.headers['content-length'],
+    limit:    '1mb',
+    encoding: false,   // always return a Buffer, never a string
+  });
+
+  return buf;
+}
 
 // ---------------------------------------------------------------------------
-// Helper: build confirmation email HTML (same template as success-show.html)
+// Helper: build confirmation email HTML
 // ---------------------------------------------------------------------------
 function buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants = [] }) {
   const qty   = parseInt(numPersones, 10) || 1;
@@ -103,9 +119,10 @@ async function sendConfirmationEmail({ nom, cognoms, email, numPersones, totalEu
     throw new Error('Gmail env vars not configured (GMAIL_USER, GMAIL_APP_PASSWORD).');
   }
 
-  const nodemailer  = require('nodemailer');
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host:   'smtp.gmail.com',
+    port:   465,
+    secure: true,
     auth: { user: gmailUser, pass: gmailPass },
   });
 
@@ -116,7 +133,7 @@ async function sendConfirmationEmail({ nom, cognoms, email, numPersones, totalEu
     html:    buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants }),
   });
 
-  console.log(`[Webhook] Confirmation email sent to ${email} via Gmail SMTP.`);
+  console.log(`[Webhook] Email de confirmació enviat a ${email}.`);
 }
 
 // ---------------------------------------------------------------------------
@@ -128,48 +145,73 @@ module.exports = async function handler(req, res) {
   }
 
   const sig = req.headers['stripe-signature'];
-  let event;
+  if (!sig) {
+    console.error('[Webhook] Manca la capçalera stripe-signature');
+    return res.status(400).send('Missing stripe-signature header');
+  }
 
+  // ── Read raw body ─────────────────────────────────────────────────────────
+  let rawBody;
   try {
-    const rawBody = await getRawBody(req, {
-      length:   req.headers['content-length'],
-      limit:    '1mb',
-      encoding: false,
-    });
+    rawBody = await readRawBody(req);
+  } catch (err) {
+    console.error('[Webhook] Error llegint el body:', err.message);
+    return res.status(400).send(`Body read error: ${err.message}`);
+  }
+
+  if (!rawBody || rawBody.length === 0) {
+    console.error('[Webhook] Body buit rebut de Stripe');
+    return res.status(400).send('Empty body');
+  }
+
+  // ── Verify Stripe signature ───────────────────────────────────────────────
+  let event;
+  try {
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    console.error('[Webhook] Signature error:', err.message);
+    console.error('[Webhook] Error de signatura:', err.message);
+    console.error('[Webhook] Body length:', rawBody.length, 'sig prefix:', sig.slice(0, 40));
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+  console.log('[Webhook] Event verificat:', event.type, event.id);
+
+  // ── Handle checkout.session.completed ────────────────────────────────────
   if (event.type === 'checkout.session.completed') {
     const session     = event.data.object;
     const pagamentsId = session.client_reference_id;
     const meta        = session.metadata || {};
 
-    console.log('[Webhook] Pago confirmado:', pagamentsId);
+    console.log('[Webhook] Pagament confirmat, pagamentsId:', pagamentsId);
 
-    // ── Update Firestore ──────────────────────────────────────────────────
+    // Update Firestore
     try {
       await db.collection('pagaments-show').doc(pagamentsId).update({
         status:          'paid',
         stripeSessionId: session.id,
         paidAt:          admin.firestore.FieldValue.serverTimestamp(),
       });
-      console.log(`[Webhook] Firestore updated for ${pagamentsId}.`);
+      console.log(`[Webhook] Firestore actualitzat per ${pagamentsId}.`);
     } catch (err) {
-      console.error('[Webhook] Firestore error:', err);
+      console.error('[Webhook] Error Firestore:', err.message);
     }
 
-    // ── Send confirmation email via EmailJS ──────────────────────────────
-    const email = meta.email || session.customer_email || session.customer_details?.email || '';
-    if (email) {
+    // Send confirmation email
+    const email =
+      meta.email ||
+      session.customer_email ||
+      session.customer_details?.email ||
+      '';
+
+    if (!email) {
+      console.warn('[Webhook] Sense adreça email — email no enviat.');
+    } else {
       let acompanyants = [];
-      try { acompanyants = JSON.parse(meta.acompanyants || '[]'); } catch { acompanyants = []; }
+      try { acompanyants = JSON.parse(meta.acompanyants || '[]'); } catch { /* empty */ }
 
       try {
         await sendConfirmationEmail({
@@ -181,13 +223,10 @@ module.exports = async function handler(req, res) {
           acompanyants,
         });
       } catch (err) {
-        console.error('[Webhook] Email error:', err.message);
+        console.error('[Webhook] Error enviant email:', err.message);
       }
-    } else {
-      console.warn('[Webhook] No email address found in session — email not sent.');
     }
   }
 
   return res.json({ received: true });
 };
-

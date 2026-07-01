@@ -372,6 +372,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
         nom,
         cognoms,
         telefon,
+        email,
         numPersones: String(qty),
         totalEur:    String(total),
         pagamentsId,
@@ -436,7 +437,6 @@ app.get('/api/verify-session/:sessionId', async (req, res) => {
 //app.get('/', (req, res) => {
 //  res.sendFile(path.join(__dirname, 'index.html'));
 //});
-``
 // ---------------------------------------------------------------------------
 // Email helper — sends confirmation HTML email via Resend
 // ---------------------------------------------------------------------------

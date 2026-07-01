@@ -517,13 +517,40 @@
       }
 
       try {
-        /* ── 1. Obtenir pagamentsId des de localStorage ── */
-        var pagamentsId = localStorage.getItem('vq_pagaments_id');
-        if (!pagamentsId) {
+        var pagamentsId = null;
+
+        try {
+          const verifyRes = await fetch('/api/verify-session/' + encodeURIComponent(sessionId));
+          const verifyData = await verifyRes.json();
+
+          if (!verifyRes.ok || !verifyData.paid) {
+            showErr(
+              'No hem pogut verificar el pagament amb Stripe.<br>' +
+              'Si has pagat, escriu-nos a <strong>vitalquaproject@gmail.com</strong>.'
+            );
+            return;
+          }
+
+          pagamentsId = verifyData.clientReferenceId;
+
+          // fallback por si Stripe no devuelve client_reference_id
+          if (!pagamentsId) {
+            pagamentsId = localStorage.getItem('vq_pagaments_id');
+          }
+
+          if (!pagamentsId) {
+            showErr(
+              'Pagament rebut, però no hem pogut recuperar la referència interna.<br>' +
+              'Escriu-nos a <strong>vitalquaproject@gmail.com</strong> indicant el teu email.'
+            );
+            return;
+          }
+
+        } catch (e) {
+          console.error('[Vitalqua] verify-session error:', e);
           showErr(
-            'No s\'hem pogut recuperar la refer\u00e8ncia del pagament.<br>' +
-            'Si has pagat, escriu-nos a <strong>vitalquaproject@gmail.com</strong> ' +
-            'indicant el teu email i la data del pagament.'
+            'No hem pogut verificar el pagament.<br>' +
+            'Si has pagat, escriu-nos a <strong>vitalquaproject@gmail.com</strong>.'
           );
           return;
         }
@@ -619,9 +646,9 @@
         }
 
         /* ── 7. Netejar localStorage ── */
-        ['vq_uid', 'vq_session_doc', 'vq_pagaments_id'].forEach(function (k) {
-          localStorage.removeItem(k);
-        });
+        //['vq_uid', 'vq_session_doc', 'vq_pagaments_id'].forEach(function (k) {
+        //  localStorage.removeItem(k);
+        //});
 
         /* ── 8. Mostrar UI de confirmació ── */
         showOk(data, pagamentsId);

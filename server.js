@@ -415,9 +415,9 @@ app.get('/api/verify-session/:sessionId', async (req, res) => {
 // ---------------------------------------------------------------------------
 // Default SPA fallback — redirect unknown paths to show.html
 // ---------------------------------------------------------------------------
-app.use((req, res) => {
-  res.redirect('/show.html');
-});
+// app.use((req, res) => {
+//   res.redirect('/show.html');
+// });
 
 // ---------------------------------------------------------------------------
 // Email helper — sends confirmation HTML email via Resend

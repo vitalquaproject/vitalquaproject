@@ -419,6 +419,10 @@ app.get('/api/verify-session/:sessionId', async (req, res) => {
 //   res.redirect('/show.html');
 // });
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+``
 // ---------------------------------------------------------------------------
 // Email helper — sends confirmation HTML email via Resend
 // ---------------------------------------------------------------------------

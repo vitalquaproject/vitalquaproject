@@ -130,41 +130,6 @@
     }
     .body-text strong { color: var(--gold); }
 
-    /* QR ticket */
-    .qr-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-    .qr-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--faint);
-    }
-    .qr-box {
-      background: #fff;
-      border-radius: 14px;
-      padding: 12px;
-      display: inline-block;
-      box-shadow: 0 4px 20px rgba(15,26,46,.18);
-    }
-    .qr-id {
-      font-family: 'Courier New', monospace;
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,.85);
-      margin-top: 6px;
-    }
-    .qr-hint {
-      font-size: 0.75rem;
-      color: var(--faint);
-      line-height: 1.5;
-    }
 
     /* Donation pill */
     .donation-pill {
@@ -238,13 +203,6 @@
     <!-- Llista d'acompanyants (injectada per JS) -->
     <div id="companionsWrap" style="display:none;width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:14px 16px;margin-bottom:4px;text-align:left"></div>
 
-    <!-- QR entrada digital -->
-    <div class="qr-wrap" id="qrWrap" style="display:none">
-      <span class="qr-label">La teva entrada digital</span>
-      <div class="qr-box" id="qrCanvas"></div>
-      <span class="qr-id" id="qrTicketId"></span>
-      <span class="qr-hint">Mostra aquest QR a la porta de l'event</span>
-    </div>
 
     <p class="body-text" style="margin-top:4px;font-size:.88rem">
       Rebràs un correu de confirmació amb tots els detalls. Ens veiem el
@@ -265,8 +223,6 @@
     </a>
   </div>
 
-  <!-- QR Code generator -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -355,20 +311,6 @@
         compWrap.style.display = 'block';
       }
 
-      /* QR */
-      var qrWrap     = document.getElementById('qrWrap');
-      var qrCanvas   = document.getElementById('qrCanvas');
-      var qrTicketId = document.getElementById('qrTicketId');
-      if (qrWrap && qrCanvas && pagamentsId && typeof QRCode !== 'undefined') {
-        new QRCode(qrCanvas, {
-          text: pagamentsId,
-          width: 160, height: 160,
-          colorDark: '#0F1A2E', colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.H,
-        });
-        if (qrTicketId) qrTicketId.textContent = pagamentsId;
-        qrWrap.style.display = 'flex';
-      }
 
       document.getElementById('cardOk').classList.add('show');
     }

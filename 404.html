@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Redirigint — Vitalqua</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0F1A2E;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    p { opacity: .7; font-size: 15px; }
+    a { color: #4FB3D9; }
+  </style>
+  <script>
+    (function () {
+      var base    = '/vitalquaproject';
+      var newHost = 'https://vitalquaproject.vercel.app';
+      var path    = window.location.pathname;
+
+      // Strip the GitHub Pages repo prefix
+      if (path.startsWith(base)) {
+        path = path.slice(base.length) || '/';
+      }
+
+      var dest = newHost + path + window.location.search + window.location.hash;
+      window.location.replace(dest);
+    })();
+  </script>
+</head>
+<body>
+  <div>
+    <p>Redirigint al nou lloc web…</p>
+    <p><a id="link" href="https://vitalquaproject.vercel.app">Fes clic aquí si no es redirigeix</a></p>
+  </div>
+  <script>
+    // Update fallback link with the computed destination
+    var base    = '/vitalquaproject';
+    var newHost = 'https://vitalquaproject.vercel.app';
+    var path    = window.location.pathname;
+    if (path.startsWith(base)) path = path.slice(base.length) || '/';
+    document.getElementById('link').href = newHost + path + window.location.search + window.location.hash;
+  </script>
+</body>
+</html>

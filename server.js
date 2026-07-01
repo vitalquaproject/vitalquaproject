@@ -175,8 +175,13 @@ app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (re
 // ---------------------------------------------------------------------------
 // Standard JSON parsing + static file serving (after the raw-body webhook)
 // ---------------------------------------------------------------------------
+
 app.use(express.json());
+
+// Servir archivos estáticos
+app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use(express.static(path.join(__dirname)));
+
 
 // ---------------------------------------------------------------------------
 // Price catalogue — server-side source of truth (EUR per ticket)

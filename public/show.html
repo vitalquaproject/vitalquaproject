@@ -2521,18 +2521,7 @@
            · URL d'èxit: https://EL_TEU_DOMINI/success-show.html?session_id={CHECKOUT_SESSION_ID}
          Substitueix cada REPLACE per la URL real.
          ================================================================ */
-      var STRIPE_PAYMENT_LINKS = {
-        10:  'https://buy.stripe.com/test_5kQfZg27TbNe9jD7WL5Rm00',
-        20:  'https://buy.stripe.com/bJecN528U9JT9MwdWY8EM03',
-        30:  'https://buy.stripe.com/4gM7sL6paf4de2M1ac8EM04',
-        40:  'https://buy.stripe.com/dRm6oHaFqe09gaU3ik8EM05',
-        50:  'https://buy.stripe.com/8x2dR99Bme09bUE4mo8EM06',
-        60:  'https://buy.stripe.com/aFa00j14QaNX2k4aKM8EM07',
-        70:  'https://buy.stripe.com/aFa5kD00Mf4d7Eo1ac8EM08',
-        80:  'https://buy.stripe.com/6oU5kD4h21dncYIf128EM09',
-        90:  'https://buy.stripe.com/28E8wP9Bm2hr9Mwf128EM0a',
-        100: 'https://buy.stripe.com/bJedR9aFqf4d7Eo5qs8EM0b',
-      };
+
 
       /* ---- Missatges d'impacte per total (20€ = 1 estudiant 20 anys) ---- */
       var IMPACT_MSGS = {
@@ -2723,21 +2712,30 @@
           localStorage.setItem('vq_num_persones', String(numPersones));
           localStorage.setItem('vq_total',        String(totalEur));
 
-          /* ── 5. Obtenir Payment Link pel total ── */
-          var baseLink = STRIPE_PAYMENT_LINKS[totalEur];
-          if (!baseLink || baseLink.includes('REPLACE')) {
-            throw new Error(
-              'El Payment Link per a ' + totalEur + '\u00A0\u20AC encara no est\u00E0 configurat. ' +
-              'Contacta <strong>vitalquaproject@gmail.com</strong>.'
-            );
+          const response = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              nom,
+              cognoms,
+              telefon,
+              email,
+              numPersones,
+              totalEur,
+              pagamentsId,
+              acompanyants
+            })
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || !result.url) {
+            throw new Error(result.error || 'No s’ha pogut iniciar el pagament.');
           }
 
-          /* ── 6. Redirecció a Stripe Payment Link (quantitat=1, preu total fix) ── */
-          var urlParams = new URLSearchParams({
-            client_reference_id: pagamentsId,
-            prefilled_email:     email,
-          });
-          window.location.assign(baseLink + '?' + urlParams.toString());
+          window.location.assign(result.url);
 
         } catch (err) {
           console.error('[Vitalqua] handleSubmit error:', err);

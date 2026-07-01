@@ -176,7 +176,16 @@ app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (re
 // Standard JSON parsing + static file serving (after the raw-body webhook)
 // ---------------------------------------------------------------------------
 
+
 app.use(express.json());
+
+// Servir archivos estáticos desde /public
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Página principal
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Servir archivos estáticos
 app.use('/img', express.static(path.join(__dirname, 'img')));

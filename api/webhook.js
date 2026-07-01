@@ -14,15 +14,10 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 // ---------------------------------------------------------------------------
-// Helper: buffer readable stream (needed for raw body / Stripe signature)
+// Helper: read raw body reliably (required for Stripe signature verification)
+// raw-body is a dependency of express/body-parser, already available
 // ---------------------------------------------------------------------------
-const buffer = async (readable) => {
-  const chunks = [];
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-  }
-  return Buffer.concat(chunks);
-};
+const getRawBody = require('raw-body');
 
 // ---------------------------------------------------------------------------
 // Helper: build confirmation email HTML (same template as success-show.html)
@@ -98,40 +93,30 @@ function buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants = []
 }
 
 // ---------------------------------------------------------------------------
-// Helper: send confirmation email via EmailJS REST API (no domain needed)
+// Helper: send confirmation email via Nodemailer + Gmail SMTP
 // ---------------------------------------------------------------------------
 async function sendConfirmationEmail({ nom, cognoms, email, numPersones, totalEur, acompanyants }) {
-  const serviceId  = process.env.EMAILJS_SERVICE_ID;
-  const templateId = process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey  = process.env.EMAILJS_PUBLIC_KEY;
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_APP_PASSWORD;
 
-  if (!serviceId || !templateId || !publicKey) {
-    throw new Error('EmailJS env vars not configured (EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY).');
+  if (!gmailUser || !gmailPass) {
+    throw new Error('Gmail env vars not configured (GMAIL_USER, GMAIL_APP_PASSWORD).');
   }
 
-  const messageHtml = buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants });
-
-  const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      service_id:  serviceId,
-      template_id: templateId,
-      user_id:     publicKey,
-      template_params: {
-        to_email:     email,
-        to_name:      (nom + ' ' + cognoms).trim(),
-        message_html: messageHtml,
-      },
-    }),
+  const nodemailer  = require('nodemailer');
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user: gmailUser, pass: gmailPass },
   });
 
-  const body = await response.text().catch(() => '');
-  if (!response.ok) {
-    throw new Error(`EmailJS ${response.status}: ${body}`);
-  }
+  await transporter.sendMail({
+    from:    `Concert Benèfic Vitalqua <${gmailUser}>`,
+    to:      email,
+    subject: 'Reserva confirmada ✓ · Concert Benèfic Vitalqua',
+    html:    buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants }),
+  });
 
-  console.log(`[Webhook] Confirmation email sent to ${email} via EmailJS.`);
+  console.log(`[Webhook] Confirmation email sent to ${email} via Gmail SMTP.`);
 }
 
 // ---------------------------------------------------------------------------
@@ -146,7 +131,11 @@ module.exports = async function handler(req, res) {
   let event;
 
   try {
-    const rawBody = await buffer(req);
+    const rawBody = await getRawBody(req, {
+      length:   req.headers['content-length'],
+      limit:    '1mb',
+      encoding: false,
+    });
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
@@ -202,11 +191,3 @@ module.exports = async function handler(req, res) {
   return res.json({ received: true });
 };
 
-// ---------------------------------------------------------------------------
-// Vercel config — disable body parser so we can read raw body for Stripe
-// ---------------------------------------------------------------------------
-module.exports.config = {
-  api: {
-    bodyParser: false,
-  },
-};

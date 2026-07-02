@@ -759,6 +759,11 @@
     @media (max-width: 640px) {
       .tier-grid { grid-template-columns: repeat(2, 1fr); }
     }
+    /* Price picker uses 3 fixed presets + 1 full-width custom row */
+    #priceGrid { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 480px) {
+      #priceGrid { grid-template-columns: repeat(3, 1fr); }
+    }
 
     .tier-card {
       position: relative;
@@ -2030,36 +2035,73 @@
 
           <div class="form-divider"></div>
 
-          <!-- PRICE STEPPER -->
+          <!-- PRICE PICKER (tier cards) -->
           <div class="field" id="field-price">
             <div class="tier-label-row">
-              <span class="tier-label-title">Contribució total</span>
-              <span class="tier-label-hint">mínim 10&nbsp;€&nbsp;/&nbsp;persona - 20&nbsp;€ = 1 estudiant 20 anys</span>
+              <span class="tier-label-title">Contribució per entrada</span>
+              <span class="tier-label-hint">mínim 10&nbsp;€ · 20&nbsp;€ = 1 estudiant 20 anys</span>
             </div>
-            <div class="persons-counter" id="priceCounter">
-              <button type="button" class="btn-counter" id="btnPriceMinus"
-                      aria-label="Reduir contribució" disabled>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2.8" stroke-linecap="round" aria-hidden="true">
-                  <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
+            <div class="tier-grid" id="priceGrid">
+
+              <!-- 10 € -->
+              <button type="button" class="tier-card" data-price="10">
+                <div class="tier-check">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="tier-persons">
+                  <div class="tier-person half"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <div class="tier-amount">10&nbsp;€</div>
+                <div class="tier-students">½ estudiant</div>
               </button>
-              <div class="price-counter-display">
-                <span class="counter-value" id="priceDisplay" aria-live="polite">10</span>
-                <span class="price-counter-eur">&nbsp;€</span>
-              </div>
-              <button type="button" class="btn-counter" id="btnPricePlus"
-                      aria-label="Augmentar contribució">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2.8" stroke-linecap="round" aria-hidden="true">
-                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
+
+              <!-- 20 € — popular -->
+              <button type="button" class="tier-card" data-price="20">
+                <div class="tier-check">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="tier-tag">⭐ Popular</div>
+                <div class="tier-persons">
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <div class="tier-amount">20&nbsp;€</div>
+                <div class="tier-students">1 estudiant</div>
               </button>
-            </div>
+
+              <!-- 30 € -->
+              <button type="button" class="tier-card" data-price="30">
+                <div class="tier-check">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="tier-persons">
+                  <div class="tier-person"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                  <div class="tier-person half"><div class="tier-person-head"></div><div class="tier-person-body"></div></div>
+                </div>
+                <div class="tier-amount">30&nbsp;€</div>
+                <div class="tier-students">1½ estudiants</div>
+              </button>
+
+              <!-- Preu lliure — spans full width -->
+              <button type="button" class="tier-card tier-custom" data-price="custom">
+                <div class="tier-check">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="tier-amount">Altre import</div>
+                <div class="custom-input-wrap">
+                  <span class="custom-euro-prefix">€</span>
+                  <input type="number" class="custom-input" id="customPriceInput"
+                         min="10" step="1" placeholder="10"
+                         aria-label="Import personalitzat per persona" />
+                  <span class="custom-min-note">mínim 10&nbsp;€ per persona</span>
+                </div>
+                <div class="custom-hint-error" id="customPriceError">Import mínim 10&nbsp;€</div>
+              </button>
+
+            </div><!-- /priceGrid -->
             <div class="impact-msg" id="impactMsg">
-              <span id="impactText">💧 Amb <strong>10&nbsp;€</strong> finances la matrícula de <strong>½ estudiant</strong> durant un mes a Kenya.</span>
+              <span id="impactText">💧 Amb <strong>20&nbsp;€</strong> finances <strong>1 estudiant</strong> durant 20 anys amb aigua potable.</span>
             </div>
-            <span class="tier-hint-error" id="priceHintError" style="display:none">Import no vàlid.</span>
+            <span class="tier-hint-error" id="priceHintError" style="display:none">Selecciona o introdueix un import vàlid.</span>
           </div>
 
           <div class="form-divider"></div>
@@ -2295,8 +2337,9 @@
 
       /* ---- Refresca el resum de preu ---- */
       function refreshPrice() {
-        var minTotal = numPersones * 10;
-        var total    = Math.max(window._VQ_PRICE || minTotal, minTotal);
+        var pp    = window._VQ_PRICE_PER_PERSON || 0;
+        var total = pp * numPersones;
+        window._VQ_PRICE = total;
         var label    = numPersones === 1 ? '1 persona' : numPersones + ' persones';
         var students = total / 20;
         var studentsStr = (students % 1 === 0)
@@ -2304,19 +2347,20 @@
           : students.toFixed(1).replace('.0', '');
 
         document.getElementById('psSummaryTitle').textContent  = label;
-        document.getElementById('psSummarySub').textContent    =
-          studentsStr + ' estudiant' + (students !== 1 ? 's' : '') + ' \u00b7 20 anys d\'aigua potable';
-        document.getElementById('psSummaryAmount').textContent = total + '\u00A0\u20AC';
-        document.getElementById('submitBtnText').textContent   = 'Pagar ' + total + '\u00A0\u20AC';
+        document.getElementById('psSummarySub').textContent    = pp
+          ? (pp + '\u00A0\u20AC per persona \u00B7 ' + studentsStr + ' estudiant' + (students !== 1 ? 's' : '') + ' en total')
+          : 'Selecciona una contribuci\u00F3';
+        document.getElementById('psSummaryAmount').textContent = pp ? (total + '\u00A0\u20AC') : '\u2014';
+        document.getElementById('submitBtnText').textContent   = pp ? ('Pagar ' + total + '\u00A0\u20AC') : 'Pagar';
 
-        /* Etiqueta mínim total (visible quan hi ha >1 persona) */
+        /* Desglossament (visible quan hi ha >1 persona) */
         var psMin = document.getElementById('psSummaryMin');
         if (psMin) {
-          if (numPersones > 1) {
-            psMin.textContent    = 'm\u00EDnim ' + minTotal + '\u00A0\u20AC en total (' + numPersones + '\u00A0\u00D7\u00A010\u00A0\u20AC)';
-            psMin.style.display  = '';
+          if (numPersones > 1 && pp) {
+            psMin.textContent   = pp + '\u00A0\u20AC \u00D7 ' + numPersones + ' persones';
+            psMin.style.display = '';
           } else {
-            psMin.style.display  = 'none';
+            psMin.style.display = 'none';
           }
         }
       }
@@ -2386,12 +2430,11 @@
         btnMinus.disabled        = (numPersones <= MIN);
         btnPlus.disabled         = (numPersones >= MAX);
         buildCompanionInputs();
-        /* Re-clamp price (setPrice crida refreshPrice internament) */
-        if (window._VQ_SET_PRICE) {
-          window._VQ_SET_PRICE(window._VQ_PRICE || numPersones * 10);
-        } else {
-          refreshPrice();
+        /* Update total when person count changes */
+        if (window._VQ_PRICE_PER_PERSON) {
+          window._VQ_PRICE = window._VQ_PRICE_PER_PERSON * numPersones;
         }
+        refreshPrice();
       }
 
       btnMinus.addEventListener('click', function () { setCount(numPersones - 1); });
@@ -2538,32 +2581,88 @@
       };
       window._VQ_IMPACT_MSGS = IMPACT_MSGS;
 
-      /* ---- Stepper de preu ---- */
-      var PRICE_MIN  = 10;
-      var PRICE_MAX  = 100;
-      var PRICE_STEP = 10;
+      /* ---- Selector de preu per persona (tier cards) ---- */
+      var impactText  = document.getElementById('impactText');
+      var priceCards  = Array.prototype.slice.call(document.querySelectorAll('#priceGrid .tier-card'));
+      var customInput = document.getElementById('customPriceInput');
+      var customError = document.getElementById('customPriceError');
 
-      var btnPriceMinus = document.getElementById('btnPriceMinus');
-      var btnPricePlus  = document.getElementById('btnPricePlus');
-      var priceDisplay  = document.getElementById('priceDisplay');
-      var impactText    = document.getElementById('impactText');
+      function getImpactMsg(pp) {
+        if (IMPACT_MSGS[pp]) return IMPACT_MSGS[pp];
+        var students = pp / 20;
+        var s = (students % 1 === 0)
+          ? String(students)
+          : (Math.floor(students * 2) / 2).toFixed(1).replace('.0', '');
+        return '\uD83D\uDCA7 Amb <strong>' + pp + '\u00A0\u20AC</strong> per persona, finances <strong>' + s + ' estudiant' + (students !== 1 ? 's' : '') + '</strong> durant 20 anys d\'aigua potable.';
+      }
 
-      function setPrice(p) {
-        var minTotal = (window._VQ_PERSONS_COUNT || 1) * PRICE_MIN;
-        p = Math.max(minTotal, Math.min(PRICE_MAX, Math.round(p / PRICE_STEP) * PRICE_STEP));
-        window._VQ_PRICE         = p;
-        priceDisplay.textContent = p;
-        btnPriceMinus.disabled   = (p <= minTotal);
-        btnPricePlus.disabled    = (p >= PRICE_MAX);
-        impactText.innerHTML     = IMPACT_MSGS[p] || '';
+      function setPricePerPerson(pp) {
+        window._VQ_PRICE_PER_PERSON = pp;
+        window._VQ_PRICE            = pp * (window._VQ_PERSONS_COUNT || 1);
+        impactText.innerHTML        = getImpactMsg(pp);
         document.getElementById('priceHintError').style.display = 'none';
         if (window._VQ_REFRESH_PRICE) window._VQ_REFRESH_PRICE();
       }
-      window._VQ_SET_PRICE = setPrice;
 
-      btnPriceMinus.addEventListener('click', function () { setPrice(window._VQ_PRICE - PRICE_STEP); });
-      btnPricePlus.addEventListener('click',  function () { setPrice(window._VQ_PRICE + PRICE_STEP); });
-      setPrice(10);
+      function selectCard(card) {
+        priceCards.forEach(function (c) { c.classList.remove('selected'); });
+        card.classList.add('selected');
+
+        var raw = card.dataset.price;
+        if (raw === 'custom') {
+          var val = parseFloat(customInput.value);
+          if (Number.isFinite(val) && val >= 10) {
+            customError.classList.remove('show');
+            customInput.classList.remove('invalid');
+            setPricePerPerson(Math.round(val * 100) / 100);
+          } else {
+            window._VQ_PRICE_PER_PERSON = null;
+            window._VQ_PRICE            = 0;
+            if (window._VQ_REFRESH_PRICE) window._VQ_REFRESH_PRICE();
+            setTimeout(function () { customInput.focus(); }, 50);
+          }
+        } else {
+          setPricePerPerson(parseInt(raw, 10));
+        }
+      }
+
+      priceCards.forEach(function (card) {
+        card.addEventListener('click', function (e) {
+          if (e.target === customInput) return;
+          selectCard(card);
+        });
+      });
+
+      customInput.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var customCard = document.querySelector('#priceGrid .tier-custom');
+        if (customCard && !customCard.classList.contains('selected')) {
+          selectCard(customCard);
+        }
+      });
+
+      customInput.addEventListener('input', function () {
+        var val = parseFloat(this.value);
+        if (Number.isFinite(val) && val >= 10) {
+          customError.classList.remove('show');
+          this.classList.remove('invalid');
+          setPricePerPerson(Math.round(val * 100) / 100);
+        } else {
+          window._VQ_PRICE_PER_PERSON = null;
+          window._VQ_PRICE            = 0;
+          if (window._VQ_REFRESH_PRICE) window._VQ_REFRESH_PRICE();
+          if (this.value !== '') {
+            customError.classList.add('show');
+            this.classList.add('invalid');
+          }
+        }
+      });
+
+      /* Default: select 20 € (Popular) */
+      (function () {
+        var defaultCard = document.querySelector('#priceGrid [data-price="20"]');
+        if (defaultCard) selectCard(defaultCard);
+      })();
 
 
       var firebaseConfig = {
@@ -2626,11 +2725,16 @@
         return ok;
       }
 
-      /* ---- Valida que el total cobreixi el mínim per persona ---- */
+      /* ---- Valida que hi hagi un preu per persona vàlid ---- */
       function validatePrice(numPersones) {
+        var pp    = window._VQ_PRICE_PER_PERSON || 0;
         var total = window._VQ_PRICE || 0;
-        if (total < numPersones * 10) {
+        if (!pp || pp < 10 || total < numPersones * 10) {
           document.getElementById('priceHintError').style.display = '';
+          if (pp && pp < 10) {
+            var custErr = document.getElementById('customPriceError');
+            if (custErr) custErr.classList.add('show');
+          }
           return null;
         }
         return total;
@@ -2696,7 +2800,7 @@
             acompanyants:   acompanyants,
             numPersones:    numPersones,
             totalEur:       totalEur,
-            preuPerPersona: Math.round(totalEur / numPersones),
+            preuPerPersona: window._VQ_PRICE_PER_PERSON,
             status:         'pending',
             uid:            uid,
             createdAt:      firebase.firestore.FieldValue.serverTimestamp(),
@@ -2724,6 +2828,7 @@
               email,
               numPersones,
               totalEur,
+              pricePerPerson: window._VQ_PRICE_PER_PERSON,
               pagamentsId,
               acompanyants
             })

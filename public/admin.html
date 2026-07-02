@@ -414,14 +414,15 @@
 
     <!-- Event tabs -->
     <nav class="event-tabs" aria-label="Selector de evento">
-      <button class="event-tab active" data-event="concert" aria-label="Ver entradas del Concierto ADESCI">
-        🎸 Concierto · ADESCI
-        <span class="tab-count" id="tabCountConcert">—</span>
-      </button>
       <button class="event-tab" data-event="show" aria-label="Ver entradas de The Vitalqua Show">
         ✨ The Vitalqua Show
         <span class="tab-count" id="tabCountShow">—</span>
       </button>
+      <button class="event-tab active" data-event="concert" aria-label="Ver entradas del Concierto ADESCI">
+        🎸 The Vitalqua Party
+        <span class="tab-count" id="tabCountConcert">—</span>
+      </button>
+      
     </nav>
 
     <main class="content">
@@ -430,7 +431,7 @@
       <div class="stats-bar">
         <div class="stat-card">
           <div class="stat-label">Total entradas</div>
-          <div class="stat-value green" id="tabCountShow">—</div>
+          <div class="stat-value green" id="statTotal">—</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Escaneadas</div>

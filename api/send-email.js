@@ -1,8 +1,5 @@
-const Stripe     = require('stripe');
-const stripe     = new Stripe(process.env.STRIPE_SECRET_KEY);
-const getRawBody = require('raw-body');
-const nodemailer = require('nodemailer');
 const admin      = require('firebase-admin');
+const nodemailer = require('nodemailer');
 
 // ---------------------------------------------------------------------------
 // Firebase Admin SDK (singleton)
@@ -17,26 +14,7 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 // ---------------------------------------------------------------------------
-// Helper: read raw body — handles both stream and pre-buffered Vercel runtimes
-// ---------------------------------------------------------------------------
-async function readRawBody(req) {
-  // Newer Vercel runtimes may pre-buffer the body as a Buffer on req.body
-  if (Buffer.isBuffer(req.body)) {
-    return req.body;
-  }
-
-  // Standard: body is a readable stream (default for plain Node.js serverless)
-  const buf = await getRawBody(req, {
-    length:   req.headers['content-length'],
-    limit:    '1mb',
-    encoding: false,   // always return a Buffer, never a string
-  });
-
-  return buf;
-}
-
-// ---------------------------------------------------------------------------
-// Helper: build confirmation email HTML
+// Helper: build confirmation email HTML (shared template)
 // ---------------------------------------------------------------------------
 function buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants = [] }) {
   const qty   = parseInt(numPersones, 10) || 1;
@@ -109,127 +87,81 @@ function buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants = []
 }
 
 // ---------------------------------------------------------------------------
-// Helper: send confirmation email via Nodemailer + Gmail SMTP
-// ---------------------------------------------------------------------------
-async function sendConfirmationEmail({ nom, cognoms, email, numPersones, totalEur, acompanyants }) {
-  const gmailUser = process.env.GMAIL_USER;
-  const gmailPass = process.env.GMAIL_APP_PASSWORD;
-
-  if (!gmailUser || !gmailPass) {
-    throw new Error('Gmail env vars not configured (GMAIL_USER, GMAIL_APP_PASSWORD).');
-  }
-
-  const transporter = nodemailer.createTransport({
-    host:   'smtp.gmail.com',
-    port:   465,
-    secure: true,
-    auth: { user: gmailUser, pass: gmailPass },
-  });
-
-  await transporter.sendMail({
-    from:    `Concert Benèfic Vitalqua <${gmailUser}>`,
-    to:      email,
-    subject: 'Reserva confirmada ✓ · Concert Benèfic Vitalqua',
-    html:    buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants }),
-  });
-
-  console.log(`[Webhook] Email de confirmació enviat a ${email}.`);
-}
-
-// ---------------------------------------------------------------------------
-// Serverless handler
+// Serverless handler — backup email endpoint called from success-show.html
 // ---------------------------------------------------------------------------
 module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  // Allow CORS preflight from the same origin
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const { pagamentsId } = req.body || {};
+  if (!pagamentsId) {
+    return res.status(400).json({ error: 'Falta pagamentsId' });
   }
 
-  const sig = req.headers['stripe-signature'];
-  if (!sig) {
-    console.error('[Webhook] Manca la capçalera stripe-signature');
-    return res.status(400).send('Missing stripe-signature header');
-  }
-
-  // ── Read raw body ─────────────────────────────────────────────────────────
-  let rawBody;
   try {
-    rawBody = await readRawBody(req);
-  } catch (err) {
-    console.error('[Webhook] Error llegint el body:', err.message);
-    return res.status(400).send(`Body read error: ${err.message}`);
-  }
+    const docRef = db.collection('pagaments-show').doc(pagamentsId);
+    const doc    = await docRef.get();
 
-  if (!rawBody || rawBody.length === 0) {
-    console.error('[Webhook] Body buit rebut de Stripe');
-    return res.status(400).send('Empty body');
-  }
-
-  // ── Verify Stripe signature ───────────────────────────────────────────────
-  let event;
-  try {
-    event = stripe.webhooks.constructEvent(
-      rawBody,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    console.error('[Webhook] Error de signatura:', err.message);
-    console.error('[Webhook] Body length:', rawBody.length, 'sig prefix:', sig.slice(0, 40));
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  console.log('[Webhook] Event verificat:', event.type, event.id);
-
-  // ── Handle checkout.session.completed ────────────────────────────────────
-  if (event.type === 'checkout.session.completed') {
-    const session     = event.data.object;
-    const pagamentsId = session.client_reference_id;
-    const meta        = session.metadata || {};
-
-    console.log('[Webhook] Pagament confirmat, pagamentsId:', pagamentsId);
-
-    // Update Firestore
-    try {
-      await db.collection('pagaments-show').doc(pagamentsId).update({
-        status:          'paid',
-        stripeSessionId: session.id,
-        paidAt:          admin.firestore.FieldValue.serverTimestamp(),
-      });
-      console.log(`[Webhook] Firestore actualitzat per ${pagamentsId}.`);
-    } catch (err) {
-      console.error('[Webhook] Error Firestore:', err.message);
+    if (!doc.exists) {
+      return res.status(404).json({ error: 'Document no trobat' });
     }
 
-    // Send confirmation email
-    const email =
-      meta.email ||
-      session.customer_email ||
-      session.customer_details?.email ||
-      '';
+    const data = doc.data();
 
+    // Idempotència: si el webhook ja va enviar l'email no el tornem a enviar
+    if (data.emailSent === true) {
+      console.log(`[send-email] Email ja enviat per al webhook (${pagamentsId}), s'omet.`);
+      return res.json({ sent: false, reason: 'already_sent' });
+    }
+
+    const email = data.email || '';
     if (!email) {
-      console.warn('[Webhook] Sense adreça email — email no enviat.');
-    } else {
-      let acompanyants = [];
-      try { acompanyants = JSON.parse(meta.acompanyants || '[]'); } catch { /* empty */ }
-
-      try {
-        await sendConfirmationEmail({
-          nom:         meta.nom         || '',
-          cognoms:     meta.cognoms     || '',
-          email,
-          numPersones: meta.numPersones || '1',
-          totalEur:    meta.totalEur    || '0',
-          acompanyants,
-        });
-        // Marca emailSent perquè success-show.html no enviï un duplicat
-        await db.collection('pagaments-show').doc(pagamentsId).update({ emailSent: true });
-      } catch (err) {
-        console.error('[Webhook] Error enviant email:', err.message);
-        // No marquem emailSent → success-show.html activarà el backup
-      }
+      return res.status(400).json({ error: 'No hi ha email al document de Firestore' });
     }
-  }
 
-  return res.json({ received: true });
+    const gmailUser = process.env.GMAIL_USER;
+    const gmailPass = process.env.GMAIL_APP_PASSWORD;
+
+    if (!gmailUser || !gmailPass) {
+      return res.status(500).json({ error: 'Gmail env vars not configured' });
+    }
+
+    let acompanyants = [];
+    try { acompanyants = JSON.parse(data.acompanyants || '[]'); } catch { /* empty */ }
+
+    const transporter = nodemailer.createTransport({
+      host:   'smtp.gmail.com',
+      port:   465,
+      secure: true,
+      auth: { user: gmailUser, pass: gmailPass },
+    });
+
+    await transporter.sendMail({
+      from:    `Concert Benèfic Vitalqua <${gmailUser}>`,
+      to:      email,
+      subject: 'Reserva confirmada ✓ · Concert Benèfic Vitalqua',
+      html:    buildEmailHtml({
+        nom:         data.nom         || '',
+        cognoms:     data.cognoms     || '',
+        numPersones: data.numPersones || '1',
+        totalEur:    data.totalEur    || '0',
+        acompanyants,
+      }),
+    });
+
+    // Marca com a enviat per evitar futurs duplicats
+    await docRef.update({ emailSent: true });
+
+    console.log(`[send-email] Email de backup enviat a ${email} (${pagamentsId}).`);
+    return res.json({ sent: true });
+
+  } catch (err) {
+    console.error('[send-email] Error:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
 };

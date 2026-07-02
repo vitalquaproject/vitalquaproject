@@ -519,6 +519,14 @@
 
         if (data.status === 'paid') {
           showOk(data, pagamentsId);
+          // Backup: si el webhook va fallar enviant l'email, ho fem ara
+          if (!data.emailSent) {
+            fetch('/api/send-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ pagamentsId }),
+            }).catch(function (e) { console.warn('[Email backup] Error:', e); });
+          }
           return;
         }
 
@@ -531,6 +539,12 @@
 
         /* ── 6. Mostrar UI de confirmació ── */
         showOk(data, pagamentsId);
+        // Backup email (el webhook encara no ha pogut marcar emailSent)
+        fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pagamentsId }),
+        }).catch(function (e) { console.warn('[Email backup] Error:', e); });
 
       } catch (err) {
         console.error('[Vitalqua Success] Error:', err);

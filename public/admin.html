@@ -414,11 +414,11 @@
 
     <!-- Event tabs -->
     <nav class="event-tabs" aria-label="Selector de evento">
-      <button class="event-tab" data-event="show" aria-label="Ver entradas de The Vitalqua Show">
+      <button class="event-tab active" data-event="show" aria-label="Ver entradas de The Vitalqua Show">
         ✨ The Vitalqua Show
         <span class="tab-count" id="tabCountShow">—</span>
       </button>
-      <button class="event-tab active" data-event="concert" aria-label="Ver entradas del Concierto ADESCI">
+      <button class="event-tab" data-event="concert" aria-label="Ver entradas del Concierto ADESCI">
         🎸 The Vitalqua Party
         <span class="tab-count" id="tabCountConcert">—</span>
       </button>
@@ -584,7 +584,7 @@
       },
     };
 
-    let currentEvent = 'concert';
+    let currentEvent = 'show';
 
     function ticketsCol() {
       const ev = EVENTS[currentEvent];
@@ -649,9 +649,12 @@
       /* Stats (always over full set, not filtered) */
       const scanned = tickets.filter(t => t.scanned).length;
       const revenue = EVENTS[currentEvent].revenue(tickets);
-      document.getElementById('statTotal').textContent   = tickets.length;
+      const totalPersones = currentEvent === 'show'
+        ? tickets.reduce((sum, t) => sum + (t.numPersones || 1), 0)
+        : tickets.length;
+      document.getElementById('statTotal').textContent   = totalPersones;
       document.getElementById('statScanned').textContent = scanned;
-      document.getElementById('statPending').textContent = tickets.length - scanned;
+      document.getElementById('statPending').textContent = totalPersones - scanned;
       document.getElementById('statRevenue').textContent =
         `${revenue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 

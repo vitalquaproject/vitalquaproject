@@ -39,14 +39,19 @@ async function readRawBody(req) {
 // Helper: build confirmation email HTML
 // ---------------------------------------------------------------------------
 function buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants = [] }) {
-  const qty   = parseInt(numPersones, 10) || 1;
-  const total = parseFloat(totalEur)      || 0;
+  const qty          = parseInt(numPersones, 10) || 1;
+  const total        = parseFloat(totalEur)      || 0;
+  const pricePerPerson = total / qty;
+
+  function fmtPrice(val) {
+    return val.toLocaleString('ca-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '&nbsp;&euro;';
+  }
 
   const titularRow =
     '<tr style="border-bottom:1px solid #EBF4FA">' +
       '<td style="padding:10px 12px;font-size:13px;color:#6B7890;white-space:nowrap">Titular</td>' +
       '<td style="padding:10px 12px;font-size:13px;color:#0F1A2E;font-weight:600">' + nom + ' ' + cognoms + '</td>' +
-      '<td style="padding:10px 12px;font-size:13px;color:#2A85B3;font-weight:600;text-align:right;white-space:nowrap">10,00&nbsp;&euro;</td>' +
+      '<td style="padding:10px 12px;font-size:13px;color:#2A85B3;font-weight:600;text-align:right;white-space:nowrap">' + fmtPrice(pricePerPerson) + '</td>' +
     '</tr>';
 
   let acompRows = '';
@@ -56,7 +61,7 @@ function buildEmailHtml({ nom, cognoms, numPersones, totalEur, acompanyants = []
       '<tr' + (isLast ? '' : ' style="border-bottom:1px solid #EBF4FA"') + '>' +
         '<td style="padding:10px 12px;font-size:13px;color:#6B7890;white-space:nowrap">Acomp. ' + (i + 1) + '</td>' +
         '<td style="padding:10px 12px;font-size:13px;color:#0F1A2E;font-weight:500">' + (a.nom || a.name || '') + '</td>' +
-        '<td style="padding:10px 12px;font-size:13px;color:#2A85B3;font-weight:600;text-align:right;white-space:nowrap">10,00&nbsp;&euro;</td>' +
+        '<td style="padding:10px 12px;font-size:13px;color:#2A85B3;font-weight:600;text-align:right;white-space:nowrap">' + fmtPrice(pricePerPerson) + '</td>' +
       '</tr>';
   });
 

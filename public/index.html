@@ -856,6 +856,166 @@
     /* =================================================================
        prova ernest
        ================================================================= */
+
+    /* =================================================================
+       Hamburger button & Mobile Drawer
+       ================================================================= */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px; height: 40px;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      background: none; border: none;
+      color: var(--navy);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 180ms ease;
+    }
+    .hamburger:hover { background: var(--bg-soft); }
+    .hamburger span {
+      display: block;
+      width: 20px; height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+      transition: transform 300ms var(--ease), opacity 200ms ease;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    @media (max-width: 760px) {
+      .hamburger { display: flex; }
+      .nav-cta   { display: none; }
+    }
+
+    /* Overlay fosc darrere el drawer */
+    .drawer-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15,26,46,.5);
+      backdrop-filter: blur(4px);
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 300ms var(--ease);
+    }
+    .drawer-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Drawer panel */
+    .mobile-drawer {
+      position: fixed;
+      top: 0; left: 0;
+      width: min(320px, 88vw);
+      height: 100dvh;
+      background: var(--surface);
+      z-index: 200;
+      padding: 24px 24px 40px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      transform: translateX(-100%);
+      transition: transform 340ms var(--ease);
+    }
+    .mobile-drawer.open { transform: translateX(0); }
+
+    .drawer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .drawer-close {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      color: var(--ink-soft);
+      transition: background 180ms ease, color 180ms ease;
+    }
+    .drawer-close:hover { background: var(--bg-soft); color: var(--navy); }
+
+    .drawer-section { margin-bottom: 24px; }
+    .drawer-section-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      padding-left: 12px;
+    }
+
+    .drawer-nav {
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .drawer-nav a {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.93rem; font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .drawer-nav a:hover { background: var(--cy-xlt); color: var(--cy-xdk); }
+    .drawer-nav a .di {
+      font-size: 1.05em; line-height: 1;
+      width: 22px; text-align: center; flex-shrink: 0;
+    }
+
+    .drawer-divider {
+      height: 1px; background: var(--bg-soft);
+      margin: 4px 0 24px;
+    }
+
+    /* Mini targetes d'event dins el drawer */
+    .drawer-event-card {
+      display: flex; flex-direction: column; gap: 3px;
+      padding: 13px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      border: 1px solid var(--bg-soft);
+      margin-bottom: 8px;
+      text-decoration: none;
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+    .drawer-event-card:last-child { margin-bottom: 0; }
+    .drawer-event-card:hover { background: var(--cy-xlt); border-color: var(--cy-lt); }
+    .drawer-event-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--cy-dk);
+      margin-bottom: 4px;
+    }
+    .drawer-event-name {
+      font-size: 0.9rem; font-weight: 600; color: var(--navy);
+      line-height: 1.3;
+    }
+    .drawer-event-meta {
+      font-size: 0.78rem; color: var(--muted);
+    }
+
+    .drawer-footer {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid var(--bg-soft);
+    }
+    .drawer-footer a {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.88rem; font-weight: 600;
+      color: var(--cy-dk);
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      transition: background 160ms ease;
+    }
+    .drawer-footer a:hover { background: var(--cy-xlt); }
   </style>
 </head>
 <body>
@@ -875,6 +1035,9 @@
         <a href="#impact">Impact</a>
         <a href="#partner">Partner</a>
       </nav>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Obrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
         <a href="process.html" class="nav-cta nav-cta--gold">
   <svg id="goldWave" style="position:absolute;bottom:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;" viewBox="0 0 200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -895,6 +1058,64 @@
 </a>
     </div>
   </header>
+
+  <!-- Overlay fosc -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+
+  <!-- Drawer lateral -->
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Menú de navegació" aria-hidden="true">
+
+    <div class="drawer-head">
+      <a href="#top" class="logo" style="font-size:0.9rem;">
+        <img src="/img/logo.svg" alt="" width="28" height="28" class="logo-mark" />
+        Vitalqua Project
+      </a>
+      <button class="drawer-close" id="drawerClose" aria-label="Tancar menú">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2l14 14M16 2L2 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Secció: pàgina principal -->
+    <div class="drawer-section">
+      <p class="drawer-section-label">Pàgina principal</p>
+      <nav class="drawer-nav">
+        <a href="/#today"><span class="di">💧</span> La situació avui</a>
+        <a href="/#solution"><span class="di">☀️</span> La solució</a>
+        <a href="/#impact"><span class="di">📊</span> Impacte</a>
+        <a href="/#partner"><span class="di">🤝</span> Col·labora</a>
+      </nav>
+    </div>
+
+    <div class="drawer-divider"></div>
+
+    <!-- Secció: Events -->
+    <div class="drawer-section">
+      <p class="drawer-section-label">Events benèfics</p>
+      <a href="/concert.html" class="drawer-event-card">
+        <span class="drawer-event-badge">🎸 Concert</span>
+        <span class="drawer-event-name">Concierto Benéfico</span>
+        <span class="drawer-event-meta">Vitalqua Project × ADESCI</span>
+      </a>
+      <a href="/show.html" class="drawer-event-card">
+        <span class="drawer-event-badge">🎵 Concert</span>
+        <span class="drawer-event-name">Concert Benèfic · UIC × ADESCI</span>
+        <span class="drawer-event-meta">16 de juliol</span>
+      </a>
+    </div>
+
+    <!-- Footer del drawer -->
+    <div class="drawer-footer">
+      <a href="/process.html">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Veure el procés
+      </a>
+    </div>
+
+  </aside>
 
   <!-- =================================================================
        HERO — text left, single photo right
@@ -1273,6 +1494,50 @@
       const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 20);
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
+    })();
+
+    // Hamburger / Mobile Drawer
+    (function () {
+      const btn     = document.getElementById('hamburgerBtn');
+      const drawer  = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('drawerClose');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('visible');
+        btn.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('visible');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      btn.addEventListener('click', () => {
+        drawer.classList.contains('open') ? closeDrawer() : openDrawer();
+      });
+      closeBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+
+      // Tanca el drawer en navegar a un anchor de la mateixa pàgina
+      drawer.querySelectorAll('a[href^="/#"]').forEach(a => {
+        a.addEventListener('click', closeDrawer);
+      });
+
+      // Tanca amb Escape
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+      });
     })();
 
     // Hero triangle wobble (cohesive with /process page)

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merchandising — Vitalqua Project</title>
+  <meta name="description" content="Buy the Vitalqua Project solidarity t-shirt and help bring clean water to Kenya." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/img/logo.svg" />
+
+  <style>
+    :root {
+      --bg:        #F6F8FB;
+      --bg-soft:   #ECF1F5;
+      --surface:   #FFFFFF;
+      --navy:      #0F1A2E;
+      --cy-xlt:    #D6EEF6;
+      --cy-lt:     #A3D0E3;
+      --cy:        #4FB3D9;
+      --cy-dk:     #2A85B3;
+      --cy-xdk:    #1B5F85;
+      --ink:       #0F1A2E;
+      --ink-soft:  #3F4F6B;
+      --muted:     #6B7890;
+      --faint:     #A3B5CD;
+      --sand:      #C89464;
+      --radius-sm: 10px;
+      --radius:    16px;
+      --radius-lg: 24px;
+      --shadow-sm: 0 1px 2px rgba(15,26,46,.05), 0 4px 14px rgba(15,26,46,.04);
+      --shadow-md: 0 4px 16px rgba(15,26,46,.08), 0 20px 40px rgba(15,26,46,.06);
+      --shadow-lg: 0 8px 28px rgba(15,26,46,.12), 0 36px 60px rgba(15,26,46,.08);
+      --ease: cubic-bezier(.22,.61,.36,1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.58;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+    }
+
+    /* ---- Header ---- */
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 14px 0;
+      background: rgba(246,248,251,0);
+      backdrop-filter: blur(0);
+      border-bottom: 1px solid transparent;
+      transition: background 260ms var(--ease), backdrop-filter 260ms var(--ease),
+                  border-color 260ms var(--ease), padding 260ms var(--ease);
+    }
+    .site-header.scrolled {
+      background: rgba(246,248,251,.88);
+      backdrop-filter: blur(14px) saturate(1.15);
+      border-bottom-color: rgba(15,26,46,.06);
+      padding: 10px 0;
+    }
+    .nav {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-weight: 600; font-size: 1rem;
+      letter-spacing: -0.02em; color: var(--navy);
+    }
+    .logo-mark { width: auto; height: 34px; display: block; flex-shrink: 0; }
+
+    /* Hamburger */
+    .hamburger {
+      display: flex; flex-direction: column; justify-content: center; gap: 5px;
+      width: 40px; height: 40px; padding: 8px;
+      border-radius: var(--radius-sm);
+      background: none; border: none; color: var(--navy);
+      cursor: pointer; flex-shrink: 0;
+      transition: background 180ms ease;
+    }
+    .hamburger:hover { background: var(--bg-soft); }
+    .hamburger span {
+      display: block; width: 20px; height: 2px;
+      background: currentColor; border-radius: 2px;
+      transition: transform 300ms var(--ease), opacity 200ms ease;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Drawer overlay */
+    .drawer-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15,26,46,.5);
+      backdrop-filter: blur(4px);
+      z-index: 150; opacity: 0; pointer-events: none;
+      transition: opacity 300ms var(--ease);
+    }
+    .drawer-overlay.visible { opacity: 1; pointer-events: all; }
+
+    /* Drawer */
+    .mobile-drawer {
+      position: fixed; top: 0; left: 0;
+      width: min(320px, 88vw); height: 100dvh;
+      background: var(--surface); z-index: 200;
+      padding: 24px 24px 40px;
+      display: flex; flex-direction: column;
+      overflow-y: auto; box-shadow: var(--shadow-lg);
+      transform: translateX(-100%);
+      transition: transform 340ms var(--ease);
+    }
+    .mobile-drawer.open { transform: translateX(0); }
+    .drawer-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .drawer-title {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .drawer-close {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%; color: var(--muted);
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .drawer-close:hover { background: var(--bg-soft); color: var(--navy); }
+    .drawer-nav { display: flex; flex-direction: column; gap: 2px; }
+    .drawer-nav > a {
+      display: block; padding: 11px 14px; border-radius: var(--radius-sm);
+      font-size: 0.95rem; font-weight: 500; color: var(--ink);
+      text-decoration: none; transition: background 140ms ease, color 140ms ease;
+    }
+    .drawer-nav > a:hover { background: var(--bg-soft); color: var(--cy-dk); }
+    .drawer-nav-group { margin: 4px 0; }
+    .drawer-nav-group-label {
+      display: block; padding: 8px 14px 4px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .drawer-nav-sub {
+      display: block; padding: 8px 14px 8px 24px; border-radius: var(--radius-sm);
+      font-size: 0.88rem; font-weight: 400; color: var(--ink-soft);
+      text-decoration: none; transition: background 140ms ease, color 140ms ease;
+    }
+    .drawer-nav-sub:hover { background: var(--bg-soft); color: var(--cy-dk); }
+    .drawer-nav-soon {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 11px 14px; border-radius: var(--radius-sm);
+      font-size: 0.95rem; font-weight: 500; color: var(--faint);
+      text-decoration: none; cursor: default; pointer-events: none;
+    }
+    .drawer-soon-tag {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--faint);
+      background: var(--bg-soft); padding: 2px 8px; border-radius: 99px;
+    }
+
+    /* ---- Page content ---- */
+    .page-wrap {
+      min-height: 100vh;
+      padding-top: 90px;
+      padding-bottom: clamp(60px, 8vw, 100px);
+    }
+
+    .page-header {
+      padding: clamp(40px, 6vw, 72px) 0 clamp(32px, 4vw, 52px);
+      border-bottom: 1px solid var(--bg-soft);
+      margin-bottom: clamp(40px, 6vw, 64px);
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--cy-dk); margin-bottom: 14px;
+    }
+    .eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--cy-dk); }
+    .page-header h1 {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700; letter-spacing: -0.03em; color: var(--navy);
+      line-height: 1.08; margin-bottom: 12px;
+    }
+    .page-header p {
+      font-size: 1rem; color: var(--ink-soft); max-width: 520px;
+    }
+
+    /* Product layout */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(20px, 3vw, 36px);
+      margin-bottom: clamp(40px, 6vw, 64px);
+    }
+    @media (max-width: 640px) {
+      .product-grid { grid-template-columns: 1fr; }
+    }
+
+    .product-img-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--bg-soft);
+      aspect-ratio: 3/4;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .product-img-card img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      padding: 20px;
+    }
+    .product-img-label {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* Purchase card */
+    .purchase-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--bg-soft);
+      box-shadow: var(--shadow-md);
+      padding: clamp(28px, 4vw, 44px);
+      max-width: 560px;
+    }
+    .purchase-card h2 {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700; letter-spacing: -0.025em; color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .purchase-card .product-desc {
+      font-size: 0.95rem; color: var(--ink-soft); line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .price-row {
+      display: flex; align-items: baseline; gap: 8px;
+      margin-bottom: 28px;
+    }
+    .price {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: 2.6rem; font-weight: 700;
+      color: var(--navy); letter-spacing: -0.03em; line-height: 1;
+    }
+    .price-note {
+      font-size: 0.82rem; color: var(--muted); font-weight: 500;
+    }
+
+    .btn-buy {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 28px;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 999px;
+      font-size: 0.95rem; font-weight: 600;
+      letter-spacing: 0.01em;
+      transition: background 180ms ease, transform 180ms var(--ease);
+      text-decoration: none;
+      border: none; cursor: pointer;
+    }
+    .btn-buy:hover { background: var(--cy-dk); transform: translateY(-1px); }
+    .btn-buy svg { flex-shrink: 0; }
+
+    .contact-note {
+      margin-top: 16px;
+      font-size: 0.83rem; color: var(--muted);
+    }
+    .contact-note a {
+      color: var(--cy-dk); font-weight: 500;
+      text-decoration: underline; text-underline-offset: 3px;
+    }
+
+    .solidarity-banner {
+      margin-top: clamp(40px, 6vw, 64px);
+      background: var(--cy-xlt);
+      border-radius: var(--radius-lg);
+      padding: clamp(24px, 4vw, 40px) clamp(24px, 4vw, 44px);
+      display: flex; align-items: center; gap: 20px;
+    }
+    .solidarity-banner .icon {
+      font-size: 2rem; flex-shrink: 0; line-height: 1;
+    }
+    .solidarity-banner h3 {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-size: 1rem; font-weight: 600; color: var(--cy-xdk);
+      margin-bottom: 4px;
+    }
+    .solidarity-banner p {
+      font-size: 0.88rem; color: var(--cy-dk); line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header" id="siteHeader">
+    <div class="wrap nav">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="/index.html" class="logo" aria-label="Vitalqua Project">
+        <img src="/img/logo.svg" alt="" width="34" height="34" class="logo-mark" />
+        Vitalqua Project
+      </a>
+    </div>
+  </header>
+
+  <!-- Overlay -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+
+  <!-- Drawer -->
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Navigation menu" aria-hidden="true">
+    <div class="drawer-head">
+      <span class="drawer-title">Menu</span>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="drawer-nav">
+      <a href="/process.html">The process</a>
+      <div class="drawer-nav-group">
+        <span class="drawer-nav-group-label">Events</span>
+        <a href="/concert.html" class="drawer-nav-sub">Concierto Benéfico</a>
+        <a href="/show.html" class="drawer-nav-sub">Concert Benèfic · UIC × ADESCI</a>
+      </div>
+      <a href="/colaboradors.html" class="drawer-nav-soon">
+        Collaborators
+        <span class="drawer-soon-tag">Coming soon</span>
+      </a>
+      <a href="/merchandising.html">Merchandising</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="page-wrap">
+    <div class="wrap">
+
+      <div class="page-header">
+        <span class="eyebrow">Vitalqua Project</span>
+        <h1>Merchandising</h1>
+        <p>Wear the project. Every purchase goes directly towards bringing clean water to Kenya.</p>
+      </div>
+
+      <!-- T-shirt images -->
+      <div class="product-grid">
+        <div>
+          <div class="product-img-card">
+            <img src="/img/camidavant.png" alt="Vitalqua t-shirt — front" />
+          </div>
+          <p class="product-img-label">Front</p>
+        </div>
+        <div>
+          <div class="product-img-card">
+            <img src="/img/camidarrere.png" alt="Vitalqua t-shirt — back" />
+          </div>
+          <p class="product-img-label">Back</p>
+        </div>
+      </div>
+
+      <!-- Purchase info -->
+      <div class="purchase-card">
+        <h2>Solidarity T-shirt</h2>
+        <p class="product-desc">
+          100% cotton t-shirt with the official Vitalqua Project design.
+          Available on order — write to us and we'll confirm size and availability.
+        </p>
+
+        <div class="price-row">
+          <span class="price">15 €</span>
+          <span class="price-note">per unit · IVA included</span>
+        </div>
+
+        <a href="mailto:vitalquaproject@gmail.com?subject=T-shirt%20order%20%E2%80%94%20Vitalqua&body=Hi%2C%20I%27d%20like%20to%20order%20a%20t-shirt.%20My%20size%20is%3A%20"
+           class="btn-buy">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 3h12a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M1 4l7 5 7-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          Order by email
+        </a>
+
+        <p class="contact-note">
+          Or write directly to
+          <a href="mailto:vitalquaproject@gmail.com">vitalquaproject@gmail.com</a>
+        </p>
+      </div>
+
+      <!-- Solidarity banner -->
+      <div class="solidarity-banner">
+        <span class="icon">💧</span>
+        <div>
+          <h3>One purchase, one real impact</h3>
+          <p>All proceeds go directly towards funding the water purification plant at the school in Kenya.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Header scroll
+    (function () {
+      const header = document.getElementById('siteHeader');
+      const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 20);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+
+    // Hamburger drawer
+    (function () {
+      const btn      = document.getElementById('hamburgerBtn');
+      const drawer   = document.getElementById('mobileDrawer');
+      const overlay  = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('drawerClose');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('visible');
+        btn.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('visible');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      btn.addEventListener('click', () => drawer.classList.contains('open') ? closeDrawer() : openDrawer());
+      closeBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+    })();
+  </script>
+
+</body>
+</html>

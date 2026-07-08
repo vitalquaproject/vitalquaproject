@@ -1,0 +1,158 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#0F1A2E"/>
+      <stop offset="100%" stop-color="#07101E"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="78%" cy="50%" r="40%">
+      <stop offset="0%"   stop-color="#4FB3D9" stop-opacity="0.13"/>
+      <stop offset="100%" stop-color="#07101E" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowL" cx="10%" cy="55%" r="45%">
+      <stop offset="0%"   stop-color="#2A85B3" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#07101E" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#glowL)"/>
+
+  <!-- Accent line left -->
+  <rect x="58" y="62" width="3" height="506" fill="#4FB3D9" opacity="0.55" rx="1.5"/>
+
+  <!-- Top badge -->
+  <text x="78" y="108"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="18" fill="#4FB3D9" opacity="0.85"
+        letter-spacing="3.5">UIC BARCELONA · ADESCI · VITALQUA PROJECT</text>
+
+  <!-- Separator line under badge -->
+  <line x1="78" y1="122" x2="680" y2="122" stroke="#4FB3D9" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- Main title: Concert -->
+  <text x="78" y="245"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="118" font-weight="700"
+        fill="white" letter-spacing="-3" opacity="0.97">Concert</text>
+
+  <!-- Main title: Benèfic -->
+  <text x="78" y="360"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="118" font-weight="700"
+        fill="#4FB3D9" letter-spacing="-3">Benèfic</text>
+
+  <!-- Year -->
+  <text x="84" y="435"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="68" font-weight="400"
+        fill="white" opacity="0.35" letter-spacing="6">2026</text>
+
+  <!-- Date & place -->
+  <text x="78" y="510"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="26" fill="white" opacity="0.88">16 Juliol · 19:00 h · UIC Barcelona</text>
+
+  <!-- Bottom URL -->
+  <text x="78" y="570"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="17" fill="#4FB3D9" opacity="0.55"
+        letter-spacing="0.5">vitalquaproject.vercel.app</text>
+
+  <!-- ===================== GUITAR ===================== -->
+  <!-- Original viewBox: 0 0 160 340  ’ scale 1.62, translate(855, 25) -->
+  <!-- Resulting size: ~259 × ~551  but 630 height so scale(1.55) ’ 248 × 527, y=(630-527)/2=51 -->
+  <g transform="translate(868, 51) scale(1.55)">
+    <polygon points="46,0  114,0  114,25" fill="#4A2508"/>
+    <polygon points="46,0   46,25  114,25" fill="#321605"/>
+    <polygon points="53,3  72,3  72,22"   fill="#140800" opacity=".7"/>
+    <polygon points="53,3  53,22  72,22"   fill="#0C0400" opacity=".7"/>
+    <polygon points="88,3  107,3  107,22"  fill="#140800" opacity=".7"/>
+    <polygon points="88,3   88,22  107,22"  fill="#0C0400" opacity=".7"/>
+    <polygon points="72,0  88,0  88,25"   fill="#6B3A18" opacity=".75"/>
+    <polygon points="72,0  72,25  88,25"   fill="#8A4C22" opacity=".75"/>
+    <polygon points="46,0  53,0  53,6"    fill="#1E0A02" opacity=".5"/>
+    <polygon points="107,0 114,0 107,6"   fill="#1E0A02" opacity=".5"/>
+    <polygon points="70,119 90,119 90,122" fill="#EED898"/>
+    <polygon points="70,119 70,122 90,122" fill="#D8C080"/>
+    <polygon points="70,25  90,25  90,49"  fill="#9E5A28"/>
+    <polygon points="70,25  70,49  90,49"  fill="#7A3E18"/>
+    <polygon points="70,49  90,49  90,73"  fill="#7A3E18"/>
+    <polygon points="70,49  70,73  90,73"  fill="#9E5A28"/>
+    <polygon points="70,73  90,73  90,97"  fill="#9E5A28"/>
+    <polygon points="70,73  70,97  90,97"  fill="#7A3E18"/>
+    <polygon points="70,97  90,97  90,119" fill="#7A3E18"/>
+    <polygon points="70,97  70,119 90,119" fill="#9E5A28"/>
+    <polygon points="70,120 80,120  58,126" fill="#C8A862"/>
+    <polygon points="90,120 80,120 102,126" fill="#C8A862"/>
+    <polygon points="80,163  80,120  102,126" fill="#F5EAD0"/>
+    <polygon points="80,163 102,126  117,142" fill="#EDD9AA"/>
+    <polygon points="80,163 117,142  123,163" fill="#DCCA88"/>
+    <polygon points="80,163 123,163  117,185" fill="#CAAA66"/>
+    <polygon points="80,163 117,185  102,200" fill="#B89048"/>
+    <polygon points="80,163 102,200   80,206" fill="#A87E38"/>
+    <polygon points="80,163  80,206   58,200" fill="#9A7232"/>
+    <polygon points="80,163  58,200   43,185" fill="#A87E38"/>
+    <polygon points="80,163  43,185   37,163" fill="#B89048"/>
+    <polygon points="80,163  37,163   43,142" fill="#CAAA66"/>
+    <polygon points="80,163  43,142   58,126" fill="#DCCA88"/>
+    <polygon points="80,163  58,126   80,120" fill="#EDD9AA"/>
+    <polygon points=" 58,200 102,200  80,217" fill="#B89048"/>
+    <polygon points=" 58,200  52,218  80,217" fill="#A87E38"/>
+    <polygon points="102,200 108,218  80,217" fill="#A87E38"/>
+    <polygon points="80,217  52,218  51,225" fill="#A87E38"/>
+    <polygon points="80,217 108,218 109,225" fill="#A87E38"/>
+    <polygon points="80,275  80,217  109,225" fill="#DCCA88"/>
+    <polygon points="80,275 109,225  130,246" fill="#CAAA66"/>
+    <polygon points="80,275 130,246  138,275" fill="#B89048"/>
+    <polygon points="80,275 138,275  130,304" fill="#CAAA66"/>
+    <polygon points="80,275 130,304  109,325" fill="#A87E38"/>
+    <polygon points="80,275 109,325   80,333" fill="#8B6B28"/>
+    <polygon points="80,275  80,333   51,325" fill="#8B6B28"/>
+    <polygon points="80,275  51,325   30,304" fill="#9A7232"/>
+    <polygon points="80,275  30,304   22,275" fill="#B89048"/>
+    <polygon points="80,275  22,275   30,246" fill="#CAAA66"/>
+    <polygon points="80,275  30,246   51,225" fill="#DCCA88"/>
+    <polygon points="80,275  51,225   80,217" fill="#CAAA66"/>
+    <circle cx="80" cy="163" r="20"   fill="none" stroke="#7A5018" stroke-width="4"   opacity=".5"/>
+    <circle cx="80" cy="163" r="18"   fill="none" stroke="#E8C060" stroke-width="1.5" opacity=".5"/>
+    <circle cx="80" cy="163" r="16.2" fill="none" stroke="#7A5018" stroke-width="1"   opacity=".4"/>
+    <circle cx="80" cy="163" r="14.8" fill="none" stroke="#E8C060" stroke-width=".8"  opacity=".3"/>
+    <circle cx="80" cy="163" r="13.5" fill="#0E0700" opacity=".97"/>
+    <line x1="70" y1="37"  x2="90" y2="37"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
+    <line x1="70" y1="49"  x2="90" y2="49"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
+    <line x1="70" y1="61"  x2="90" y2="61"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
+    <line x1="70" y1="73"  x2="90" y2="73"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
+    <line x1="70" y1="85"  x2="90" y2="85"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
+    <line x1="70" y1="97"  x2="90" y2="97"  stroke="#EAD898" stroke-width=".6" opacity=".4"/>
+    <line x1="70" y1="109" x2="90" y2="109" stroke="#EAD898" stroke-width=".6" opacity=".4"/>
+    <line x1="75" y1="12" x2="75" y2="297" stroke="#E8D050" stroke-width=".5"  opacity=".55"/>
+    <line x1="77" y1="12" x2="77" y2="297" stroke="#E8D050" stroke-width=".5"  opacity=".55"/>
+    <line x1="79" y1="12" x2="79" y2="297" stroke="#E8D050" stroke-width=".55" opacity=".55"/>
+    <line x1="81" y1="12" x2="81" y2="297" stroke="#C8A848" stroke-width=".7"  opacity=".5"/>
+    <line x1="83" y1="12" x2="83" y2="297" stroke="#C8A848" stroke-width=".9"  opacity=".5"/>
+    <line x1="85" y1="12" x2="85" y2="297" stroke="#C8A848" stroke-width="1.1" opacity=".45"/>
+    <polygon points="62,297  98,297  98,311" fill="#180C00"/>
+    <polygon points="62,297  62,311  98,311" fill="#0C0500"/>
+    <polygon points="73,295  87,295  87,299" fill="#F0EAC8"/>
+    <polygon points="73,295  73,299  87,299" fill="#DDDAAA"/>
+    <circle cx="75" cy="306" r="1.4" fill="#000" opacity=".55"/>
+    <circle cx="77" cy="306" r="1.4" fill="#000" opacity=".55"/>
+    <circle cx="79" cy="306" r="1.4" fill="#000" opacity=".55"/>
+    <circle cx="81" cy="306" r="1.4" fill="#000" opacity=".55"/>
+    <circle cx="83" cy="306" r="1.4" fill="#000" opacity=".55"/>
+    <circle cx="85" cy="306" r="1.4" fill="#000" opacity=".55"/>
+    <circle cx="54" cy="6"  r="2.6" fill="#D4AF37" opacity=".85"/>
+    <circle cx="54" cy="13" r="2.6" fill="#D4AF37" opacity=".85"/>
+    <circle cx="54" cy="20" r="2.6" fill="#D4AF37" opacity=".85"/>
+    <circle cx="106" cy="6"  r="2.6" fill="#D4AF37" opacity=".85"/>
+    <circle cx="106" cy="13" r="2.6" fill="#D4AF37" opacity=".85"/>
+    <circle cx="106" cy="20" r="2.6" fill="#D4AF37" opacity=".85"/>
+  </g>
+  <!-- ==================== END GUITAR ==================== -->
+
+  <!-- Subtle vertical divider between text and guitar -->
+  <line x1="820" y1="80" x2="820" y2="550" stroke="#4FB3D9" stroke-width="0.6" opacity="0.15"/>
+
+</svg>

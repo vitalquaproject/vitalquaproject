@@ -1,200 +1,143 @@
-<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <defs>
-    <!-- Background gradient -->
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
-      <stop offset="0%"   stop-color="#0D1B30"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0D1B30"/>
       <stop offset="100%" stop-color="#061018"/>
     </linearGradient>
-
-    <!-- Warm halo behind guitar -->
-    <radialGradient id="guitarHalo" cx="980" cy="315" r="280" gradientUnits="userSpaceOnUse">
-      <stop offset="0%"   stop-color="#8A4C22" stop-opacity="0.28"/>
-      <stop offset="60%"  stop-color="#3A1A08" stop-opacity="0.12"/>
+    <radialGradient id="haloG" cx="980" cy="315" r="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8A4C22" stop-opacity="0.30"/>
       <stop offset="100%" stop-color="#061018" stop-opacity="0"/>
     </radialGradient>
-
-    <!-- Cyan glow top-left -->
-    <radialGradient id="cyanHalo" cx="200" cy="200" r="400" gradientUnits="userSpaceOnUse">
-      <stop offset="0%"   stop-color="#4FB3D9" stop-opacity="0.08"/>
+    <radialGradient id="haloC" cx="200" cy="200" r="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4FB3D9" stop-opacity="0.09"/>
       <stop offset="100%" stop-color="#061018" stop-opacity="0"/>
     </radialGradient>
   </defs>
 
-  <!-- Layers de fons -->
-  <rect width="1200" height="630" fill="url(#bgGrad)"/>
-  <rect width="1200" height="630" fill="url(#cyanHalo)"/>
-  <rect width="1200" height="630" fill="url(#guitarHalo)"/>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#haloC)"/>
+  <rect width="1200" height="630" fill="url(#haloG)"/>
 
-  <!-- Línia accent esquerra -->
+  <!-- Left accent bar -->
   <rect x="60" y="68" width="4" height="494" rx="2" fill="#4FB3D9" opacity="0.7"/>
 
-  <!-- ?? ZONA TEXT (esquerra) ?? -->
+  <!-- Organizers label -->
+  <text x="82" y="114" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="#4FB3D9" opacity="0.8" letter-spacing="3">UIC BARCELONA &#xB7; ADESCI &#xB7; VITALQUA PROJECT</text>
 
-  <!-- Label organitzadors -->
-  <text x="82" y="115"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="15" font-weight="600"
-    fill="#4FB3D9" opacity="0.8" letter-spacing="3.5">
-    UIC BARCELONA · ADESCI · VITALQUA PROJECT
-  </text>
+  <!-- Separator -->
+  <line x1="82" y1="128" x2="740" y2="128" stroke="#4FB3D9" stroke-width="0.7" opacity="0.25"/>
 
-  <!-- Separador -->
-  <line x1="82" y1="128" x2="750" y2="128" stroke="#4FB3D9" stroke-width="0.7" opacity="0.25"/>
+  <!-- Concert -->
+  <text x="82" y="260" font-family="Georgia,'Times New Roman',serif" font-size="124" font-weight="700" fill="#FFFFFF" letter-spacing="-2">Concert</text>
 
-  <!-- "Concert" -->
-  <text x="82" y="258"
-    font-family="Georgia, 'Times New Roman', serif"
-    font-size="126" font-weight="700"
-    fill="#FFFFFF" opacity="1" letter-spacing="-2">Concert</text>
+  <!-- Benèfic -->
+  <text x="82" y="378" font-family="Georgia,'Times New Roman',serif" font-size="124" font-weight="700" fill="#4FB3D9" letter-spacing="-2">Ben&#xe8;fic</text>
 
-  <!-- "Benèfic" en cyan -->
-  <text x="82" y="375"
-    font-family="Georgia, 'Times New Roman', serif"
-    font-size="126" font-weight="700"
-    fill="#4FB3D9" letter-spacing="-2">Benèfic</text>
+  <!-- Separator 2 -->
+  <line x1="82" y1="403" x2="660" y2="403" stroke="#4FB3D9" stroke-width="0.7" opacity="0.20"/>
 
-  <!-- Línia decorativa -->
-  <line x1="82" y1="400" x2="650" y2="400" stroke="#4FB3D9" stroke-width="0.7" opacity="0.20"/>
+  <!-- Date -->
+  <text x="82" y="454" font-family="Arial,Helvetica,sans-serif" font-size="28" fill="#FFFFFF" opacity="0.88">16 Juliol &#xB7; 19:00 h &#xB7; UIC Barcelona</text>
 
-  <!-- Data i lloc -->
-  <text x="82" y="454"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="28" fill="#FFFFFF" opacity="0.85">
-    16 Juliol · 19:00 h · UIC Barcelona
-  </text>
-
-  <!-- Subtítol solidari -->
-  <text x="82" y="495"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="18" fill="#A3D0E3" opacity="0.70">
-    Una nit de música solidària per a 500 estudiants a Kenya
-  </text>
+  <!-- Subtitle -->
+  <text x="82" y="496" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#A3D0E3" opacity="0.70">Una nit de m&#xFA;sica solid&#xE0;ria per a 500 estudiants a Kenya</text>
 
   <!-- URL -->
-  <text x="82" y="562"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="16" fill="#4FB3D9" opacity="0.50" letter-spacing="0.5">
-    vitalquaproject.vercel.app
-  </text>
+  <text x="82" y="562" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#4FB3D9" opacity="0.50" letter-spacing="0.5">vitalquaproject.vercel.app</text>
 
-  <!-- ?? GUITARRA ?? -->
-  <!-- Fons clar darrere la guitarra per contrast -->
-  <ellipse cx="985" cy="300" rx="155" ry="260" fill="#1C0A02" opacity="0.55"/>
+  <!-- Guitar background ellipse for contrast -->
+  <ellipse cx="985" cy="305" rx="150" ry="255" fill="#1C0A02" opacity="0.55"/>
 
-  <!-- Guitar group: translate+scale per centrar a la dreta -->
-  <!-- viewBox original: 160×340 ? escalar 1.58 ? 253×537 ? massa alt -->
-  <!-- escalar 1.45 ? 232×493 ? y_off = (630-493)/2 = 68, x_off = 870 -->
-  <g transform="translate(870, 68) scale(1.45)">
-    <!-- HEAD -->
-    <polygon points="46,0  114,0  114,25" fill="#5A3010"/>
-    <polygon points="46,0   46,25  114,25" fill="#3D1A08"/>
-    <polygon points="53,3  72,3  72,22"   fill="#200D02" opacity=".75"/>
-    <polygon points="53,3  53,22  72,22"   fill="#160800" opacity=".75"/>
-    <polygon points="88,3  107,3  107,22"  fill="#200D02" opacity=".75"/>
-    <polygon points="88,3   88,22  107,22"  fill="#160800" opacity=".75"/>
-    <polygon points="72,0  88,0  88,25"   fill="#7A4020" opacity=".8"/>
-    <polygon points="72,0  72,25  88,25"   fill="#9A5528" opacity=".8"/>
-    <polygon points="46,0  53,0  53,6"    fill="#280F03" opacity=".5"/>
-    <polygon points="107,0 114,0 107,6"   fill="#280F03" opacity=".5"/>
-
-    <!-- NUT -->
+  <!-- GUITAR — original viewBox 160x340, scale 1.45, translate(870,68) -->
+  <g transform="translate(870,68) scale(1.45)">
+    <polygon points="46,0 114,0 114,25" fill="#5A3010"/>
+    <polygon points="46,0 46,25 114,25" fill="#3D1A08"/>
+    <polygon points="53,3 72,3 72,22" fill="#200D02" opacity=".75"/>
+    <polygon points="53,3 53,22 72,22" fill="#160800" opacity=".75"/>
+    <polygon points="88,3 107,3 107,22" fill="#200D02" opacity=".75"/>
+    <polygon points="88,3 88,22 107,22" fill="#160800" opacity=".75"/>
+    <polygon points="72,0 88,0 88,25" fill="#7A4020" opacity=".8"/>
+    <polygon points="72,0 72,25 88,25" fill="#9A5528" opacity=".8"/>
+    <polygon points="46,0 53,0 53,6" fill="#280F03" opacity=".5"/>
+    <polygon points="107,0 114,0 107,6" fill="#280F03" opacity=".5"/>
     <polygon points="70,119 90,119 90,122" fill="#F0D898"/>
     <polygon points="70,119 70,122 90,122" fill="#DABB78"/>
-
-    <!-- NECK -->
-    <polygon points="70,25  90,25  90,49"  fill="#B06030"/>
-    <polygon points="70,25  70,49  90,49"  fill="#8A4420"/>
-    <polygon points="70,49  90,49  90,73"  fill="#8A4420"/>
-    <polygon points="70,49  70,73  90,73"  fill="#B06030"/>
-    <polygon points="70,73  90,73  90,97"  fill="#B06030"/>
-    <polygon points="70,73  70,97  90,97"  fill="#8A4420"/>
-    <polygon points="70,97  90,97  90,119" fill="#8A4420"/>
-    <polygon points="70,97  70,119 90,119" fill="#B06030"/>
-
-    <!-- UPPER BOUT -->
-    <polygon points="70,120 80,120  58,126" fill="#D4B462"/>
+    <polygon points="70,25 90,25 90,49" fill="#B06030"/>
+    <polygon points="70,25 70,49 90,49" fill="#8A4420"/>
+    <polygon points="70,49 90,49 90,73" fill="#8A4420"/>
+    <polygon points="70,49 70,73 90,73" fill="#B06030"/>
+    <polygon points="70,73 90,73 90,97" fill="#B06030"/>
+    <polygon points="70,73 70,97 90,97" fill="#8A4420"/>
+    <polygon points="70,97 90,97 90,119" fill="#8A4420"/>
+    <polygon points="70,97 70,119 90,119" fill="#B06030"/>
+    <polygon points="70,120 80,120 58,126" fill="#D4B462"/>
     <polygon points="90,120 80,120 102,126" fill="#D4B462"/>
-    <polygon points="80,163  80,120  102,126" fill="#FAECD0"/>
-    <polygon points="80,163 102,126  117,142" fill="#F0D8AA"/>
-    <polygon points="80,163 117,142  123,163" fill="#DECA88"/>
-    <polygon points="80,163 123,163  117,185" fill="#CEAA66"/>
-    <polygon points="80,163 117,185  102,200" fill="#BC9050"/>
-    <polygon points="80,163 102,200   80,206" fill="#AC8040"/>
-    <polygon points="80,163  80,206   58,200" fill="#9C7232"/>
-    <polygon points="80,163  58,200   43,185" fill="#AC8040"/>
-    <polygon points="80,163  43,185   37,163" fill="#BC9050"/>
-    <polygon points="80,163  37,163   43,142" fill="#CEAA66"/>
-    <polygon points="80,163  43,142   58,126" fill="#DECA88"/>
-    <polygon points="80,163  58,126   80,120" fill="#F0D8AA"/>
-
-    <!-- WAIST -->
-    <polygon points=" 58,200 102,200  80,217" fill="#BC9050"/>
-    <polygon points=" 58,200  52,218  80,217" fill="#AC8040"/>
-    <polygon points="102,200 108,218  80,217" fill="#AC8040"/>
-    <polygon points="80,217  52,218  51,225" fill="#AC8040"/>
+    <polygon points="80,163 80,120 102,126" fill="#FAECD0"/>
+    <polygon points="80,163 102,126 117,142" fill="#F0D8AA"/>
+    <polygon points="80,163 117,142 123,163" fill="#DECA88"/>
+    <polygon points="80,163 123,163 117,185" fill="#CEAA66"/>
+    <polygon points="80,163 117,185 102,200" fill="#BC9050"/>
+    <polygon points="80,163 102,200 80,206" fill="#AC8040"/>
+    <polygon points="80,163 80,206 58,200" fill="#9C7232"/>
+    <polygon points="80,163 58,200 43,185" fill="#AC8040"/>
+    <polygon points="80,163 43,185 37,163" fill="#BC9050"/>
+    <polygon points="80,163 37,163 43,142" fill="#CEAA66"/>
+    <polygon points="80,163 43,142 58,126" fill="#DECA88"/>
+    <polygon points="80,163 58,126 80,120" fill="#F0D8AA"/>
+    <polygon points="58,200 102,200 80,217" fill="#BC9050"/>
+    <polygon points="58,200 52,218 80,217" fill="#AC8040"/>
+    <polygon points="102,200 108,218 80,217" fill="#AC8040"/>
+    <polygon points="80,217 52,218 51,225" fill="#AC8040"/>
     <polygon points="80,217 108,218 109,225" fill="#AC8040"/>
-
-    <!-- LOWER BOUT -->
-    <polygon points="80,275  80,217  109,225" fill="#DECA88"/>
-    <polygon points="80,275 109,225  130,246" fill="#CEAA66"/>
-    <polygon points="80,275 130,246  138,275" fill="#BC9050"/>
-    <polygon points="80,275 138,275  130,304" fill="#CEAA66"/>
-    <polygon points="80,275 130,304  109,325" fill="#AC8040"/>
-    <polygon points="80,275 109,325   80,333" fill="#8E6C2A"/>
-    <polygon points="80,275  80,333   51,325" fill="#8E6C2A"/>
-    <polygon points="80,275  51,325   30,304" fill="#9C7232"/>
-    <polygon points="80,275  30,304   22,275" fill="#BC9050"/>
-    <polygon points="80,275  22,275   30,246" fill="#CEAA66"/>
-    <polygon points="80,275  30,246   51,225" fill="#DECA88"/>
-    <polygon points="80,275  51,225   80,217" fill="#CEAA66"/>
-
-    <!-- SOUNDHOLE rings -->
-    <circle cx="80" cy="163" r="20"   fill="none" stroke="#8A5818" stroke-width="4"   opacity=".6"/>
-    <circle cx="80" cy="163" r="18"   fill="none" stroke="#ECCC68" stroke-width="1.5" opacity=".6"/>
-    <circle cx="80" cy="163" r="16.2" fill="none" stroke="#8A5818" stroke-width="1"   opacity=".5"/>
-    <circle cx="80" cy="163" r="14.8" fill="none" stroke="#ECCC68" stroke-width=".8"  opacity=".4"/>
+    <polygon points="80,275 80,217 109,225" fill="#DECA88"/>
+    <polygon points="80,275 109,225 130,246" fill="#CEAA66"/>
+    <polygon points="80,275 130,246 138,275" fill="#BC9050"/>
+    <polygon points="80,275 138,275 130,304" fill="#CEAA66"/>
+    <polygon points="80,275 130,304 109,325" fill="#AC8040"/>
+    <polygon points="80,275 109,325 80,333" fill="#8E6C2A"/>
+    <polygon points="80,275 80,333 51,325" fill="#8E6C2A"/>
+    <polygon points="80,275 51,325 30,304" fill="#9C7232"/>
+    <polygon points="80,275 30,304 22,275" fill="#BC9050"/>
+    <polygon points="80,275 22,275 30,246" fill="#CEAA66"/>
+    <polygon points="80,275 30,246 51,225" fill="#DECA88"/>
+    <polygon points="80,275 51,225 80,217" fill="#CEAA66"/>
+    <circle cx="80" cy="163" r="20" fill="none" stroke="#8A5818" stroke-width="4" opacity=".6"/>
+    <circle cx="80" cy="163" r="18" fill="none" stroke="#ECCC68" stroke-width="1.5" opacity=".6"/>
+    <circle cx="80" cy="163" r="16.2" fill="none" stroke="#8A5818" stroke-width="1" opacity=".5"/>
+    <circle cx="80" cy="163" r="14.8" fill="none" stroke="#ECCC68" stroke-width=".8" opacity=".4"/>
     <circle cx="80" cy="163" r="13.5" fill="#100900" opacity=".97"/>
-
-    <!-- FRETS -->
-    <line x1="70" y1="37"  x2="90" y2="37"  stroke="#F0D898" stroke-width=".7" opacity=".5"/>
-    <line x1="70" y1="49"  x2="90" y2="49"  stroke="#F0D898" stroke-width=".7" opacity=".5"/>
-    <line x1="70" y1="61"  x2="90" y2="61"  stroke="#F0D898" stroke-width=".7" opacity=".5"/>
-    <line x1="70" y1="73"  x2="90" y2="73"  stroke="#F0D898" stroke-width=".7" opacity=".5"/>
-    <line x1="70" y1="85"  x2="90" y2="85"  stroke="#F0D898" stroke-width=".7" opacity=".5"/>
-    <line x1="70" y1="97"  x2="90" y2="97"  stroke="#F0D898" stroke-width=".7" opacity=".5"/>
+    <line x1="70" y1="37" x2="90" y2="37" stroke="#F0D898" stroke-width=".7" opacity=".5"/>
+    <line x1="70" y1="49" x2="90" y2="49" stroke="#F0D898" stroke-width=".7" opacity=".5"/>
+    <line x1="70" y1="61" x2="90" y2="61" stroke="#F0D898" stroke-width=".7" opacity=".5"/>
+    <line x1="70" y1="73" x2="90" y2="73" stroke="#F0D898" stroke-width=".7" opacity=".5"/>
+    <line x1="70" y1="85" x2="90" y2="85" stroke="#F0D898" stroke-width=".7" opacity=".5"/>
+    <line x1="70" y1="97" x2="90" y2="97" stroke="#F0D898" stroke-width=".7" opacity=".5"/>
     <line x1="70" y1="109" x2="90" y2="109" stroke="#F0D898" stroke-width=".7" opacity=".5"/>
-
-    <!-- STRINGS -->
-    <line x1="75" y1="12" x2="75" y2="297" stroke="#ECD858" stroke-width=".5"  opacity=".65"/>
-    <line x1="77" y1="12" x2="77" y2="297" stroke="#ECD858" stroke-width=".5"  opacity=".65"/>
-    <line x1="79" y1="12" x2="79" y2="297" stroke="#ECD858" stroke-width=".6"  opacity=".65"/>
+    <line x1="75" y1="12" x2="75" y2="297" stroke="#ECD858" stroke-width=".5" opacity=".65"/>
+    <line x1="77" y1="12" x2="77" y2="297" stroke="#ECD858" stroke-width=".5" opacity=".65"/>
+    <line x1="79" y1="12" x2="79" y2="297" stroke="#ECD858" stroke-width=".6" opacity=".65"/>
     <line x1="81" y1="12" x2="81" y2="297" stroke="#CCA848" stroke-width=".75" opacity=".6"/>
-    <line x1="83" y1="12" x2="83" y2="297" stroke="#CCA848" stroke-width="1"   opacity=".6"/>
+    <line x1="83" y1="12" x2="83" y2="297" stroke="#CCA848" stroke-width="1" opacity=".6"/>
     <line x1="85" y1="12" x2="85" y2="297" stroke="#CCA848" stroke-width="1.2" opacity=".55"/>
-
-    <!-- BRIDGE -->
-    <polygon points="62,297  98,297  98,311" fill="#200E00"/>
-    <polygon points="62,297  62,311  98,311" fill="#100600"/>
-    <polygon points="73,295  87,295  87,299" fill="#F4ECC8"/>
-    <polygon points="73,295  73,299  87,299" fill="#E0DAAA"/>
-
-    <!-- BRIDGE PINS -->
+    <polygon points="62,297 98,297 98,311" fill="#200E00"/>
+    <polygon points="62,297 62,311 98,311" fill="#100600"/>
+    <polygon points="73,295 87,295 87,299" fill="#F4ECC8"/>
+    <polygon points="73,295 73,299 87,299" fill="#E0DAAA"/>
     <circle cx="75" cy="306" r="1.6" fill="#111" opacity=".6"/>
     <circle cx="77" cy="306" r="1.6" fill="#111" opacity=".6"/>
     <circle cx="79" cy="306" r="1.6" fill="#111" opacity=".6"/>
     <circle cx="81" cy="306" r="1.6" fill="#111" opacity=".6"/>
     <circle cx="83" cy="306" r="1.6" fill="#111" opacity=".6"/>
     <circle cx="85" cy="306" r="1.6" fill="#111" opacity=".6"/>
-
-    <!-- TUNING PEGS -->
-    <circle cx="54" cy="6"  r="3" fill="#D4AF37" opacity=".9"/>
+    <circle cx="54" cy="6" r="3" fill="#D4AF37" opacity=".9"/>
     <circle cx="54" cy="13" r="3" fill="#D4AF37" opacity=".9"/>
     <circle cx="54" cy="20" r="3" fill="#D4AF37" opacity=".9"/>
-    <circle cx="106" cy="6"  r="3" fill="#D4AF37" opacity=".9"/>
+    <circle cx="106" cy="6" r="3" fill="#D4AF37" opacity=".9"/>
     <circle cx="106" cy="13" r="3" fill="#D4AF37" opacity=".9"/>
     <circle cx="106" cy="20" r="3" fill="#D4AF37" opacity=".9"/>
   </g>
 
-  <!-- Línia divisòria vertical subtil -->
+  <!-- Divider -->
   <line x1="830" y1="90" x2="830" y2="540" stroke="#4FB3D9" stroke-width="0.5" opacity="0.12"/>
 </svg>

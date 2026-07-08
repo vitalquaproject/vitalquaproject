@@ -24,6 +24,17 @@ http.createServer((req, res) => {
   const ext = path.extname(filePath).toLowerCase();
 
   fs.readFile(filePath, (err, data) => {
+    if (err && !path.extname(urlPath)) {
+      const withHtml = path.join(root, urlPath + '.html');
+      return fs.readFile(withHtml, (err2, data2) => {
+        if (err2) {
+          res.writeHead(404, { 'Content-Type': 'text/plain' });
+          return res.end('404 Not Found: ' + urlPath);
+        }
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(data2);
+      });
+    }
     if (err) {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       return res.end('404 Not Found: ' + urlPath);

@@ -14,42 +14,19 @@
       <stop offset="100%" stop-color="#061018" stop-opacity="0"/>
     </radialGradient>
   </defs>
-
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#haloC)"/>
   <rect width="1200" height="630" fill="url(#haloG)"/>
-
-  <!-- Left accent bar -->
   <rect x="60" y="68" width="4" height="494" rx="2" fill="#4FB3D9" opacity="0.7"/>
-
-  <!-- Organizers label -->
   <text x="82" y="114" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="#4FB3D9" opacity="0.8" letter-spacing="3">UIC BARCELONA &#xB7; ADESCI &#xB7; VITALQUA PROJECT</text>
-
-  <!-- Separator -->
   <line x1="82" y1="128" x2="740" y2="128" stroke="#4FB3D9" stroke-width="0.7" opacity="0.25"/>
-
-  <!-- Concert -->
   <text x="82" y="260" font-family="Georgia,'Times New Roman',serif" font-size="124" font-weight="700" fill="#FFFFFF" letter-spacing="-2">Concert</text>
-
-  <!-- Benèfic -->
   <text x="82" y="378" font-family="Georgia,'Times New Roman',serif" font-size="124" font-weight="700" fill="#4FB3D9" letter-spacing="-2">Ben&#xe8;fic</text>
-
-  <!-- Separator 2 -->
   <line x1="82" y1="403" x2="660" y2="403" stroke="#4FB3D9" stroke-width="0.7" opacity="0.20"/>
-
-  <!-- Date -->
   <text x="82" y="454" font-family="Arial,Helvetica,sans-serif" font-size="28" fill="#FFFFFF" opacity="0.88">16 Juliol &#xB7; 19:00 h &#xB7; UIC Barcelona</text>
-
-  <!-- Subtitle -->
   <text x="82" y="496" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#A3D0E3" opacity="0.70">Una nit de m&#xFA;sica solid&#xE0;ria per a 500 estudiants a Kenya</text>
-
-  <!-- URL -->
   <text x="82" y="562" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#4FB3D9" opacity="0.50" letter-spacing="0.5">vitalquaproject.vercel.app</text>
-
-  <!-- Guitar background ellipse for contrast -->
   <ellipse cx="985" cy="305" rx="150" ry="255" fill="#1C0A02" opacity="0.55"/>
-
-  <!-- GUITAR — original viewBox 160x340, scale 1.45, translate(870,68) -->
   <g transform="translate(870,68) scale(1.45)">
     <polygon points="46,0 114,0 114,25" fill="#5A3010"/>
     <polygon points="46,0 46,25 114,25" fill="#3D1A08"/>
@@ -137,7 +114,5 @@
     <circle cx="106" cy="13" r="3" fill="#D4AF37" opacity=".9"/>
     <circle cx="106" cy="20" r="3" fill="#D4AF37" opacity=".9"/>
   </g>
-
-  <!-- Divider -->
   <line x1="830" y1="90" x2="830" y2="540" stroke="#4FB3D9" stroke-width="0.5" opacity="0.12"/>
 </svg>

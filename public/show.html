@@ -734,8 +734,16 @@
     }
     .promo-name-row {
       display: flex;
-      gap: 8px;
       align-items: center;
+      gap: 10px;
+    }
+    .promo-name-num {
+      flex-shrink: 0;
+      width: 22px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--faint);
+      text-align: right;
     }
     .promo-name-input {
       flex: 1;
@@ -750,33 +758,6 @@
     }
     .promo-name-input:focus { border-color: var(--cy); }
     .promo-name-input::placeholder { color: var(--faint); }
-    .promo-btn-add {
-      flex-shrink: 0;
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(79,179,217,.35);
-      background: var(--bg-soft);
-      color: var(--cy-dk);
-      font-size: 1.2rem;
-      line-height: 1;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 150ms, border-color 150ms;
-    }
-    .promo-btn-add:hover { background: var(--cy-xlt); border-color: var(--cy); }
-    .promo-btn-remove {
-      flex-shrink: 0;
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      border: none;
-      background: transparent;
-      color: var(--faint);
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: color 150ms;
-    }
-    .promo-btn-remove:hover { color: #c0392b; }
     .promo-send-btn {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 11px 22px;
@@ -2225,12 +2206,20 @@
           <!-- Email form -->
           <hr class="promo-divider">
           <label class="promo-form-label">
-            Qui vindrà amb tu? Apunta els seus noms:
+            Qui vindrà amb tu? Apunta els 3 noms:
           </label>
           <div class="promo-name-list" id="promoNameList">
             <div class="promo-name-row">
+              <span class="promo-name-num">1.</span>
               <input type="text" class="promo-name-input" placeholder="Nom del convidat 1" aria-label="Convidat 1">
-              <button type="button" class="promo-btn-add" id="promoAddBtn" aria-label="Afegir convidat">+</button>
+            </div>
+            <div class="promo-name-row">
+              <span class="promo-name-num">2.</span>
+              <input type="text" class="promo-name-input" placeholder="Nom del convidat 2" aria-label="Convidat 2">
+            </div>
+            <div class="promo-name-row">
+              <span class="promo-name-num">3.</span>
+              <input type="text" class="promo-name-input" placeholder="Nom del convidat 3" aria-label="Convidat 3">
             </div>
           </div>
           <button type="button" class="promo-send-btn" id="promoSendBtn">
@@ -3175,35 +3164,19 @@
   <script>
     (function () {
       const list    = document.getElementById('promoNameList');
-      const addBtn  = document.getElementById('promoAddBtn');
       const sendBtn = document.getElementById('promoSendBtn');
       const sentMsg = document.getElementById('promoSentMsg');
-      if (!list || !addBtn || !sendBtn) return;
-
-      let count = 1;
-
-      addBtn.addEventListener('click', () => {
-        count++;
-        const row = document.createElement('div');
-        row.className = 'promo-name-row';
-        row.innerHTML = `
-          <input type="text" class="promo-name-input" placeholder="Nom del convidat ${count}" aria-label="Convidat ${count}">
-          <button type="button" class="promo-btn-remove" aria-label="Eliminar convidat">×</button>`;
-        row.querySelector('.promo-btn-remove').addEventListener('click', () => {
-          row.remove();
-        });
-        list.appendChild(row);
-        row.querySelector('input').focus();
-      });
+      if (!list || !sendBtn) return;
 
       sendBtn.addEventListener('click', () => {
         const inputs = list.querySelectorAll('.promo-name-input');
-        const names  = Array.from(inputs)
-          .map(i => i.value.trim())
-          .filter(Boolean);
+        const names  = Array.from(inputs).map(i => i.value.trim());
+        const empty  = Array.from(inputs).find(i => !i.value.trim());
 
-        if (!names.length) {
-          inputs[0] && inputs[0].focus();
+        if (names.filter(Boolean).length < 3) {
+          empty && empty.focus();
+          empty && (empty.style.borderColor = '#e74c3c');
+          setTimeout(() => { if (empty) empty.style.borderColor = ''; }, 1800);
           return;
         }
 

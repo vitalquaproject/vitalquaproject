@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Col·laboradors — Vitalqua Project</title>
-  <meta name="description" content="Entitats acadèmiques, finançadors, suport tècnic i patrocinadors que fan possible el Vitalqua Project." />
+  <title>Collaborators — Vitalqua Project</title>
+  <meta name="description" content="Academic institutions, funders, technical partners and sponsors that make the Vitalqua Project possible." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,12 +22,10 @@
       --cy-lt:     #A3D0E3;
       --cy:        #4FB3D9;
       --cy-dk:     #2A85B3;
-      --cy-xdk:    #1B5F85;
       --ink:       #0F1A2E;
       --ink-soft:  #3F4F6B;
       --muted:     #6B7890;
       --faint:     #A3B5CD;
-      --sand:      #C89464;
       --radius-sm: 10px;
       --radius:    16px;
       --radius-lg: 24px;
@@ -51,114 +49,75 @@
     button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
     .wrap {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 0 clamp(18px, 5vw, 48px);
     }
 
     .eyebrow {
       display: inline-flex; align-items: center; gap: 10px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
       color: var(--cy-dk);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-    .eyebrow::before {
-      content: ""; width: 22px; height: 1px;
-      background: var(--cy-dk);
-    }
+    .eyebrow::before,
+    .eyebrow::after { content: ""; width: 22px; height: 1px; background: var(--cy-dk); }
 
     h1, h2, h3, h4 {
       font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
-      color: var(--navy);
-      font-weight: 600;
-      letter-spacing: -0.022em;
-      line-height: 1.1;
+      color: var(--navy); font-weight: 600;
+      letter-spacing: -0.022em; line-height: 1.1;
     }
-    h1 { font-weight: 700; }
-    h2 {
-      font-size: clamp(1.85rem, 4vw, 2.6rem);
-      font-weight: 600;
-      margin-bottom: clamp(20px, 3vw, 36px);
-      letter-spacing: -0.025em;
-    }
-    p { color: var(--ink-soft); }
 
     /* ================================================================= 
        Header
        ================================================================= */
     .site-header {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       padding: 14px 0;
-      background: rgba(246, 248, 251, 0);
+      background: rgba(246,248,251,0);
       backdrop-filter: blur(0);
       border-bottom: 1px solid transparent;
-      transition: background 260ms var(--ease),
-                  backdrop-filter 260ms var(--ease),
-                  border-color 260ms var(--ease),
-                  padding 260ms var(--ease);
+      transition: background 260ms var(--ease), backdrop-filter 260ms var(--ease),
+                  border-color 260ms var(--ease), padding 260ms var(--ease);
     }
     .site-header.scrolled {
-      background: rgba(246, 248, 251, 0.88);
+      background: rgba(246,248,251,0.88);
       backdrop-filter: blur(14px) saturate(1.15);
       border-bottom-color: rgba(15,26,46,.06);
       padding: 10px 0;
     }
-    .nav {
-      display: flex; align-items: center; justify-content: space-between; gap: 20px;
-    }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
     .logo {
       display: inline-flex; align-items: center; gap: 10px;
       font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: -0.02em;
-      color: var(--navy);
+      font-weight: 600; font-size: 1rem;
+      letter-spacing: -0.02em; color: var(--navy);
     }
     .logo-mark { width: auto; height: 34px; display: block; flex-shrink: 0; }
-    .nav-links {
-      display: flex; gap: 26px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--ink-soft);
-    }
-    .nav-links a {
-      position: relative;
-      transition: color 180ms ease;
-    }
+    .nav-links { display: flex; gap: 26px; font-size: 0.88rem; font-weight: 600; color: var(--ink-soft); }
+    .nav-links a { position: relative; transition: color 180ms ease; }
     .nav-links a::after {
-      content: "";
-      position: absolute; left: 0; right: 0; bottom: -6px;
-      height: 2px;
-      background: var(--cy-dk);
-      transform: scaleX(0);
-      transform-origin: left;
+      content: ""; position: absolute; left: 0; right: 0; bottom: -6px;
+      height: 2px; background: var(--cy-dk);
+      transform: scaleX(0); transform-origin: left;
       transition: transform 240ms var(--ease);
     }
     .nav-links a:hover { color: var(--navy); }
-    .nav-links a:hover::after { transform: scaleX(1); }
-    .nav-links a.active { color: var(--cy-dk); }
+    .nav-links a:hover::after,
     .nav-links a.active::after { transform: scaleX(1); }
+    .nav-links a.active { color: var(--cy-dk); }
     .nav-cta {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: var(--navy);
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.85rem;
+      padding: 10px 18px; border-radius: 999px;
+      background: var(--navy); color: #fff;
+      font-weight: 600; font-size: 0.85rem;
       letter-spacing: 0.02em;
       transition: background 180ms ease, transform 180ms var(--ease);
     }
     .nav-cta:hover { background: var(--cy-dk); transform: translateY(-1px); }
-
-    @media (max-width: 760px) {
-      .nav-links { display: none; }
-      .nav-cta { display: none; }
-    }
+    @media (max-width: 760px) { .nav-links { display: none; } .nav-cta { display: none; } }
 
     /* Hamburger */
     .hamburger {
@@ -180,10 +139,9 @@
     .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     .drawer-overlay {
-      position: fixed; inset: 0;
-      background: rgba(15,26,46,.5);
-      backdrop-filter: blur(4px);
-      z-index: 150; opacity: 0; pointer-events: none;
+      position: fixed; inset: 0; background: rgba(15,26,46,.5);
+      backdrop-filter: blur(4px); z-index: 150;
+      opacity: 0; pointer-events: none;
       transition: opacity 300ms var(--ease);
     }
     .drawer-overlay.visible { opacity: 1; pointer-events: all; }
@@ -198,14 +156,8 @@
       transition: transform 340ms var(--ease);
     }
     .mobile-drawer.open { transform: translateX(0); }
-    .drawer-head {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 28px;
-    }
-    .drawer-title {
-      font-size: 0.72rem; font-weight: 600;
-      letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
-    }
+    .drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    .drawer-title { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
     .drawer-close {
       display: flex; align-items: center; justify-content: center;
       width: 32px; height: 32px; border-radius: 50%; color: var(--muted);
@@ -215,7 +167,7 @@
     .drawer-nav { display: flex; flex-direction: column; gap: 2px; }
     .drawer-nav > a {
       display: block; padding: 11px 14px; border-radius: var(--radius-sm);
-      font-size: 0.95rem; font-weight: 500; color: var(--ink); text-decoration: none;
+      font-size: 0.95rem; font-weight: 500; color: var(--ink);
       transition: background 140ms ease, color 140ms ease;
     }
     .drawer-nav > a:hover { background: var(--bg-soft); color: var(--cy-dk); }
@@ -228,133 +180,85 @@
     }
     .drawer-nav-sub {
       display: block; padding: 8px 14px 8px 24px; border-radius: var(--radius-sm);
-      font-size: 0.88rem; font-weight: 400; color: var(--ink-soft); text-decoration: none;
+      font-size: 0.88rem; font-weight: 400; color: var(--ink-soft);
       transition: background 140ms ease, color 140ms ease;
     }
     .drawer-nav-sub:hover { background: var(--bg-soft); color: var(--cy-dk); }
-    .drawer-divider { height: 1px; background: var(--bg-soft); margin: 8px 0; }
 
     /* ================================================================= 
        Page hero
        ================================================================= */
     .page-hero {
-      padding: clamp(120px, 16vw, 180px) 0 clamp(52px, 7vw, 80px);
+      padding: clamp(120px, 16vw, 180px) 0 clamp(56px, 8vw, 88px);
       background:
         radial-gradient(ellipse at 80% 0%, #E4F2F8 0%, transparent 55%),
         radial-gradient(ellipse at 10% 100%, #EBF3F8 0%, transparent 50%),
         var(--bg);
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden; text-align: center;
     }
-    .page-hero-bg {
-      position: absolute; inset: 0; pointer-events: none; z-index: 0;
-    }
+    .page-hero-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
     .page-hero-bg svg { width: 100%; height: 100%; display: block; }
     .page-hero .wrap { position: relative; z-index: 2; }
     .page-hero h1 {
       font-size: clamp(2.4rem, 7vw, 4.2rem);
-      font-weight: 700;
-      letter-spacing: -0.032em;
-      line-height: 1.04;
-      color: var(--navy);
-      max-width: 18ch;
-      margin-bottom: 18px;
+      font-weight: 700; letter-spacing: -0.032em; line-height: 1.04;
+      color: var(--navy); margin: 0 auto 18px;
     }
     .page-hero p.lede {
       font-size: clamp(1rem, 1.6vw, 1.15rem);
-      color: var(--ink-soft);
-      max-width: 520px;
-      line-height: 1.68;
+      color: var(--ink-soft); max-width: 560px;
+      line-height: 1.68; margin: 0 auto;
     }
 
     /* ================================================================= 
-       Collaborators sections
+       Collaborator sections — centered, no cards
        ================================================================= */
     .collab-section {
-      padding: clamp(56px, 8vw, 96px) 0;
-      position: relative;
+      padding: clamp(64px, 9vw, 104px) 0;
+      text-align: center;
     }
-    .collab-section:nth-child(even) { background: var(--surface); }
     .collab-section:nth-child(odd)  { background: var(--bg); }
+    .collab-section:nth-child(even) { background: var(--surface); }
 
-    .collab-section-inner {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: clamp(32px, 5vw, 72px);
-      align-items: start;
+    .collab-head {
+      margin-bottom: clamp(36px, 5vw, 56px);
     }
-    @media (max-width: 820px) {
-      .collab-section-inner { grid-template-columns: 1fr; gap: 28px; }
+    .collab-head .eyebrow { justify-content: center; }
+    .collab-head h2 {
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 700; letter-spacing: -0.025em;
+      margin-bottom: 12px;
     }
-
-    .collab-label { padding-top: 6px; }
-    .collab-label .cat-number {
-      display: inline-flex;
-      align-items: center; justify-content: center;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--cy-xlt), var(--cy-lt));
-      border: 1.5px solid rgba(42,133,179,.2);
-      font-family: 'Inter Tight', sans-serif;
-      font-size: 0.9rem; font-weight: 700;
-      color: var(--cy-dk);
-      margin-bottom: 14px;
-    }
-    .collab-label h2 {
-      font-size: clamp(1.25rem, 2.2vw, 1.55rem);
-      font-weight: 700;
-      margin-bottom: 10px;
-      letter-spacing: -0.025em;
-    }
-    .collab-label p {
-      font-size: 0.92rem;
+    .collab-head p {
+      font-size: 0.98rem; color: var(--muted);
+      max-width: 480px; margin: 0 auto;
       line-height: 1.65;
-      color: var(--muted);
     }
 
-    /* Logo grid */
-    .logo-grid {
+    /* Logo row — no cards, just images */
+    .logo-row {
       display: flex;
       flex-wrap: wrap;
-      gap: clamp(20px, 4vw, 36px);
       align-items: center;
+      justify-content: center;
+      gap: clamp(32px, 6vw, 72px);
     }
-
-    .logo-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: clamp(20px, 3vw, 32px) clamp(24px, 4vw, 44px);
-      background: var(--surface);
-      border-radius: var(--radius);
-      border: 1px solid rgba(42,133,179,.1);
-      box-shadow: var(--shadow-sm);
-      transition: transform 240ms var(--ease), box-shadow 240ms var(--ease), border-color 240ms ease;
-      text-decoration: none;
-      min-width: 140px;
+    .logo-row a {
+      display: block;
+      opacity: 0.75;
+      transition: opacity 220ms ease, transform 220ms var(--ease), filter 220ms ease;
+      filter: grayscale(20%);
     }
-    .collab-section:nth-child(even) .logo-card { background: var(--bg); }
-
-    .logo-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
-      border-color: rgba(42,133,179,.25);
+    .logo-row a:hover {
+      opacity: 1;
+      transform: translateY(-3px);
+      filter: grayscale(0%);
     }
-    .logo-card img {
-      height: clamp(42px, 6vw, 62px);
+    .logo-row img {
+      height: clamp(38px, 5.5vw, 60px);
       width: auto;
       max-width: 160px;
       object-fit: contain;
-      display: block;
-    }
-    .logo-card .logo-name {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-align: center;
     }
 
     /* ================================================================= 
@@ -362,8 +266,7 @@
        ================================================================= */
     .section-divider {
       height: 1px;
-      background: linear-gradient(to right, transparent, rgba(42,133,179,.15), transparent);
-      margin: 0;
+      background: linear-gradient(to right, transparent, rgba(42,133,179,.14), transparent);
     }
 
     /* ================================================================= 
@@ -377,21 +280,13 @@
     .footer-grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 36px;
-      margin-bottom: 48px;
+      gap: 36px; margin-bottom: 48px;
     }
     @media (max-width: 760px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; } }
     @media (max-width: 440px) { .footer-grid { grid-template-columns: 1fr; } }
     .footer-brand .logo { color: #fff; }
-    .footer-brand p {
-      margin-top: 14px; font-size: 0.92rem;
-      line-height: 1.65; color: var(--faint); max-width: 320px;
-    }
-    .footer-col h5 {
-      font-size: 0.7rem; font-weight: 600;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--cy-lt); margin-bottom: 16px;
-    }
+    .footer-brand p { margin-top: 14px; font-size: 0.92rem; line-height: 1.65; color: var(--faint); max-width: 320px; }
+    .footer-col h5 { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cy-lt); margin-bottom: 16px; }
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .footer-col a { color: var(--faint); font-size: 0.9rem; transition: color 180ms ease; }
     .footer-col a:hover { color: #fff; }
@@ -405,23 +300,26 @@
     /* ================================================================= 
        Reveal on scroll
        ================================================================= */
-    .reveal {
-      opacity: 0; transform: translateY(20px);
-      transition: opacity 800ms var(--ease), transform 800ms var(--ease);
-    }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
     .reveal.in { opacity: 1; transform: translateY(0); }
 
-    /* Stagger children */
-    .reveal-stagger > * {
-      opacity: 0; transform: translateY(16px);
-      transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+    .logo-row a {
+      --delay: 0ms;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 500ms var(--ease) var(--delay),
+                  transform 500ms var(--ease) var(--delay),
+                  filter 220ms ease;
+      filter: grayscale(20%);
     }
-    .reveal-stagger.in > *:nth-child(1) { opacity:1; transform:none; transition-delay: 0ms; }
-    .reveal-stagger.in > *:nth-child(2) { opacity:1; transform:none; transition-delay: 80ms; }
-    .reveal-stagger.in > *:nth-child(3) { opacity:1; transform:none; transition-delay: 160ms; }
-    .reveal-stagger.in > *:nth-child(4) { opacity:1; transform:none; transition-delay: 240ms; }
-    .reveal-stagger.in > *:nth-child(5) { opacity:1; transform:none; transition-delay: 320ms; }
-    .reveal-stagger.in > *:nth-child(6) { opacity:1; transform:none; transition-delay: 400ms; }
+    .logo-row.in a { opacity: 0.75; transform: translateY(0); }
+    .logo-row.in a:hover { opacity: 1; transform: translateY(-3px); filter: grayscale(0%); }
+    .logo-row a:nth-child(1) { --delay: 0ms; }
+    .logo-row a:nth-child(2) { --delay: 80ms; }
+    .logo-row a:nth-child(3) { --delay: 160ms; }
+    .logo-row a:nth-child(4) { --delay: 240ms; }
+    .logo-row a:nth-child(5) { --delay: 320ms; }
+    .logo-row a:nth-child(6) { --delay: 400ms; }
   </style>
 </head>
 <body>
@@ -441,17 +339,14 @@
       <nav class="nav-links" aria-label="Primary">
         <a href="/index.html">Home</a>
         <a href="/process.html">The process</a>
-        <a href="/colaboradors.html" class="active">Col·laboradors</a>
+        <a href="/colaboradors.html" class="active">Collaborators</a>
         <a href="/merchandising.html">Merchandising</a>
       </nav>
       <a href="/process.html" class="nav-cta">See the process</a>
     </div>
   </header>
 
-  <!-- Drawer overlay -->
   <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
-
-  <!-- Side drawer -->
   <aside class="mobile-drawer" id="mobileDrawer" aria-label="Navigation menu" aria-hidden="true">
     <div class="drawer-head">
       <span class="drawer-title">Menu</span>
@@ -469,7 +364,7 @@
         <a href="/concert.html" class="drawer-nav-sub">Concierto Benéfico</a>
         <a href="/show.html" class="drawer-nav-sub">Concert Benèfic · UIC × ADESCI</a>
       </div>
-      <a href="/colaboradors.html" class="active">Col·laboradors</a>
+      <a href="/colaboradors.html" class="active">Collaborators</a>
       <a href="/merchandising.html">Merchandising</a>
     </nav>
   </aside>
@@ -484,40 +379,34 @@
       </svg>
     </div>
     <div class="wrap">
-      <div class="eyebrow">Qui ho fa possible</div>
-      <h1>Col·laboradors</h1>
+      <div class="eyebrow">The people behind Vitalqua</div>
+      <h1>Collaborators</h1>
       <p class="lede">
-        El Vitalqua Project existeix gràcies al compromís de moltes entitats. Aquí els reconeixem a tots — des dels que han ideat el projecte fins als que han fet possible els actes benèfics.
+        Vitalqua exists because of the commitment of many organisations — from the universities that designed it to the sponsors who funded the events.
       </p>
     </div>
   </section>
 
   <!-- ================================================================= 
-       1. PROJECTE DUT A TERME PER
+       1. PROJECT CARRIED OUT BY
        ================================================================= -->
   <section class="collab-section reveal" id="projecte">
     <div class="wrap">
-      <div class="collab-section-inner">
-        <div class="collab-label">
-          <div class="cat-number">1</div>
-          <div class="eyebrow">Actors principals</div>
-          <h2>Projecte dut a terme per</h2>
-          <p>Les universitats i organitzacions que han concebut, dissenyat i impulsat el projecte des del primer dia.</p>
-        </div>
-        <div class="logo-grid reveal-stagger">
-          <a class="logo-card" href="https://www.upc.edu/" target="_blank" rel="noopener noreferrer">
-            <img src="/img/upc.png" alt="Universitat Politècnica de Catalunya" />
-            <span class="logo-name">UPC</span>
-          </a>
-          <a class="logo-card" href="https://www.ub.edu/" target="_blank" rel="noopener noreferrer">
-            <img src="/img/ub.png" alt="Universitat de Barcelona" />
-            <span class="logo-name">UB</span>
-          </a>
-          <a class="logo-card" href="http://www.adesci.org/" target="_blank" rel="noopener noreferrer">
-            <img src="/img/adesci.png" alt="ADESCI" />
-            <span class="logo-name">ADESCI</span>
-          </a>
-        </div>
+      <div class="collab-head reveal">
+        <div class="eyebrow">Core team</div>
+        <h2>Project carried out by</h2>
+        <p>The universities and organisations that conceived, designed and driven the project from day one.</p>
+      </div>
+      <div class="logo-row">
+        <a href="https://www.upc.edu/" target="_blank" rel="noopener noreferrer" aria-label="Universitat Politècnica de Catalunya">
+          <img src="/img/upc.png" alt="UPC — Universitat Politècnica de Catalunya" />
+        </a>
+        <a href="https://www.ub.edu/" target="_blank" rel="noopener noreferrer" aria-label="Universitat de Barcelona">
+          <img src="/img/ub.png" alt="UB — Universitat de Barcelona" />
+        </a>
+        <a href="http://www.adesci.org/" target="_blank" rel="noopener noreferrer" aria-label="ADESCI">
+          <img src="/img/adesci.png" alt="ADESCI" />
+        </a>
       </div>
     </div>
   </section>
@@ -525,31 +414,25 @@
   <div class="section-divider"></div>
 
   <!-- ================================================================= 
-       2. FINANÇADORS DEL PROJECTE
+       2. PROJECT FUNDERS
        ================================================================= -->
   <section class="collab-section reveal" id="financadors">
     <div class="wrap">
-      <div class="collab-section-inner">
-        <div class="collab-label">
-          <div class="cat-number">2</div>
-          <div class="eyebrow">Economia del projecte</div>
-          <h2>Finançadors del projecte</h2>
-          <p>Les entitats que han fet possible el finançament necessari per convertir el disseny en realitat sobre el terreny.</p>
-        </div>
-        <div class="logo-grid reveal-stagger">
-          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
-            <img src="/img/roviralta.png" alt="Roviralta" />
-            <span class="logo-name">Roviralta</span>
-          </a>
-          <a class="logo-card" href="https://www.barcelonactua.org/" target="_blank" rel="noopener noreferrer">
-            <img src="/img/logoba.png" alt="Barcelonactua" />
-            <span class="logo-name">Barcelonactua</span>
-          </a>
-          <a class="logo-card" href="https://www.uic.es/" target="_blank" rel="noopener noreferrer">
-            <img src="/img/uic_logo.png" alt="Universitat Internacional de Catalunya" />
-            <span class="logo-name">UIC</span>
-          </a>
-        </div>
+      <div class="collab-head reveal">
+        <div class="eyebrow">Financial support</div>
+        <h2>Project funders</h2>
+        <p>The organisations whose funding has made it possible to turn the engineering design into reality on the ground.</p>
+      </div>
+      <div class="logo-row">
+        <a href="https://www.fundacioroviralta.org/" target="_blank" rel="noopener noreferrer" aria-label="Fundació Roviralta">
+          <img src="/img/roviralta.png" alt="Fundació Roviralta" />
+        </a>
+        <a href="https://www.barcelonactua.org/" target="_blank" rel="noopener noreferrer" aria-label="Barcelonactua">
+          <img src="/img/logoba.png" alt="Barcelonactua" />
+        </a>
+        <a href="https://www.uic.es/" target="_blank" rel="noopener noreferrer" aria-label="Universitat Internacional de Catalunya">
+          <img src="/img/uic_logo.png" alt="UIC — Universitat Internacional de Catalunya" />
+        </a>
       </div>
     </div>
   </section>
@@ -557,27 +440,22 @@
   <div class="section-divider"></div>
 
   <!-- ================================================================= 
-       3. SUPORT TÈCNIC
+       3. TECHNICAL SUPPORT
        ================================================================= -->
   <section class="collab-section reveal" id="suport">
     <div class="wrap">
-      <div class="collab-section-inner">
-        <div class="collab-label">
-          <div class="cat-number">3</div>
-          <div class="eyebrow">Expertise tècnica</div>
-          <h2>Suport tècnic</h2>
-          <p>Empreses i entitats que han aportat el seu coneixement especialitzat per garantir la solidesa de la solució d'enginyeria.</p>
-        </div>
-        <div class="logo-grid reveal-stagger">
-          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
-            <img src="/img/inima.png" alt="Inima" />
-            <span class="logo-name">Inima</span>
-          </a>
-          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
-            <img src="/img/tanina.png" alt="Tanina" />
-            <span class="logo-name">Tanina</span>
-          </a>
-        </div>
+      <div class="collab-head reveal">
+        <div class="eyebrow">Engineering expertise</div>
+        <h2>Technical support</h2>
+        <p>Companies and organisations that have contributed their specialist knowledge to ensure the robustness of the engineering solution.</p>
+      </div>
+      <div class="logo-row">
+        <a href="https://www.inima.es/" target="_blank" rel="noopener noreferrer" aria-label="Inima">
+          <img src="/img/inima.png" alt="Inima" />
+        </a>
+        <a href="https://www.tanina.cat/" target="_blank" rel="noopener noreferrer" aria-label="Tanina">
+          <img src="/img/tanina.png" alt="Tanina" />
+        </a>
       </div>
     </div>
   </section>
@@ -585,43 +463,34 @@
   <div class="section-divider"></div>
 
   <!-- ================================================================= 
-       4. PATROCINADORS DELS EVENTS BENÈFICS
+       4. CHARITY EVENT SPONSORS
        ================================================================= -->
   <section class="collab-section reveal" id="patrocinadors">
     <div class="wrap">
-      <div class="collab-section-inner">
-        <div class="collab-label">
-          <div class="cat-number">4</div>
-          <div class="eyebrow">Esdeveniments benèfics</div>
-          <h2>Patrocinadors dels events benèfics</h2>
-          <p>Marques i organitzacions que han donat suport als concerts i actes de recaptació de fons per al projecte.</p>
-        </div>
-        <div class="logo-grid reveal-stagger">
-          <a class="logo-card" href="https://www.estrelladamm.com/" target="_blank" rel="noopener noreferrer">
-            <img src="/img/estrelladamm.png" alt="Estrella Damm" />
-            <span class="logo-name">Estrella Damm</span>
-          </a>
-          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
-            <img src="/img/bruc.png" alt="Bruc" />
-            <span class="logo-name">Bruc</span>
-          </a>
-          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
-            <img src="/img/tem.png" alt="TEM" />
-            <span class="logo-name">TEM</span>
-          </a>
-          <a class="logo-card" href="https://www.artbarcelona.es/" target="_blank" rel="noopener noreferrer">
-            <img src="/img/artbo.png" alt="ArtBo" />
-            <span class="logo-name">ArtBo</span>
-          </a>
-          <a class="logo-card" href="https://www.arenasdebarcelona.com/" target="_blank" rel="noopener noreferrer">
-            <img src="/img/arenas.png" alt="Arenas de Barcelona" />
-            <span class="logo-name">Arenas</span>
-          </a>
-          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
-            <img src="/img/cuetara.png" alt="Cuétara" />
-            <span class="logo-name">Cuétara</span>
-          </a>
-        </div>
+      <div class="collab-head reveal">
+        <div class="eyebrow">Charity events</div>
+        <h2>Charity event sponsors</h2>
+        <p>Brands and organisations that supported the fundraising concerts and events for the project.</p>
+      </div>
+      <div class="logo-row">
+        <a href="https://www.estrelladamm.com/" target="_blank" rel="noopener noreferrer" aria-label="Estrella Damm">
+          <img src="/img/estrelladamm.png" alt="Estrella Damm" />
+        </a>
+        <a href="https://www.elbruc.com/" target="_blank" rel="noopener noreferrer" aria-label="Bruc">
+          <img src="/img/bruc.png" alt="Bruc" />
+        </a>
+        <a href="https://www.tem.cat/" target="_blank" rel="noopener noreferrer" aria-label="TEM">
+          <img src="/img/tem.png" alt="TEM" />
+        </a>
+        <a href="https://www.artbo.co/" target="_blank" rel="noopener noreferrer" aria-label="ArtBo">
+          <img src="/img/artbo.png" alt="ArtBo" />
+        </a>
+        <a href="https://www.arenasdebarcelona.com/" target="_blank" rel="noopener noreferrer" aria-label="Arenas de Barcelona">
+          <img src="/img/arenas.png" alt="Arenas de Barcelona" />
+        </a>
+        <a href="https://www.cuetara.com/" target="_blank" rel="noopener noreferrer" aria-label="Cuétara">
+          <img src="/img/cuetara.png" alt="Cuétara" />
+        </a>
       </div>
     </div>
   </section>
@@ -652,7 +521,7 @@
           <h5>Partner</h5>
           <ul>
             <li><a href="/index.html#partner">About ADESCI</a></li>
-            <li><a href="/colaboradors.html">Col·laboradors</a></li>
+            <li><a href="/colaboradors.html">Collaborators</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -684,20 +553,18 @@
       const drawer   = document.getElementById('mobileDrawer');
       const overlay  = document.getElementById('drawerOverlay');
       const closeBtn = document.getElementById('drawerClose');
-
       function openDrawer() {
         drawer.classList.add('open'); overlay.classList.add('visible');
-        btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true');
-        drawer.setAttribute('aria-hidden', 'false'); overlay.setAttribute('aria-hidden', 'false');
+        btn.classList.add('open'); btn.setAttribute('aria-expanded','true');
+        drawer.setAttribute('aria-hidden','false'); overlay.setAttribute('aria-hidden','false');
         document.body.style.overflow = 'hidden';
       }
       function closeDrawer() {
         drawer.classList.remove('open'); overlay.classList.remove('visible');
-        btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false');
-        drawer.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true');
+        btn.classList.remove('open'); btn.setAttribute('aria-expanded','false');
+        drawer.setAttribute('aria-hidden','true'); overlay.setAttribute('aria-hidden','true');
         document.body.style.overflow = '';
       }
-
       btn.addEventListener('click', () => drawer.classList.contains('open') ? closeDrawer() : openDrawer());
       closeBtn.addEventListener('click', closeDrawer);
       overlay.addEventListener('click', closeDrawer);
@@ -709,47 +576,39 @@
       const g = document.getElementById('hero-tris');
       if (!g) return;
       const NS = 'http://www.w3.org/2000/svg';
-      const COUNT = 20;
       const tris = [];
-      const rand = (i, salt) => { const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453; return x - Math.floor(x); };
-      const palette = ['#A3D0E3', '#7FBFD6', '#5FAFC7', '#4FB3D9', '#2A85B3'];
-      for (let i = 0; i < COUNT; i++) {
+      const rand = (i, s) => { const x = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453; return x - Math.floor(x); };
+      const palette = ['#A3D0E3','#7FBFD6','#5FAFC7','#4FB3D9','#2A85B3'];
+      for (let i = 0; i < 20; i++) {
         const p = document.createElementNS(NS, 'polygon');
-        const cx = 8 + rand(i, 1) * 144;
-        const cy = 8 + rand(i, 2) * 74;
-        const s  = 1.0 + rand(i, 3) * 3.5;
-        const pts = `${cx},${cy - s} ${cx - s * 0.9},${cy + s * 0.7} ${cx + s * 0.9},${cy + s * 0.7}`;
-        p.setAttribute('points', pts);
-        p.setAttribute('fill', palette[Math.floor(rand(i, 4) * palette.length)]);
-        p.setAttribute('opacity', (0.1 + rand(i, 5) * 0.2).toFixed(2));
+        const cx = 8 + rand(i,1)*144, cy = 8 + rand(i,2)*74, s = 1 + rand(i,3)*3.5;
+        p.setAttribute('points', `${cx},${cy-s} ${cx-s*.9},${cy+s*.7} ${cx+s*.9},${cy+s*.7}`);
+        p.setAttribute('fill', palette[Math.floor(rand(i,4)*palette.length)]);
+        p.setAttribute('opacity', (0.1 + rand(i,5)*0.2).toFixed(2));
         g.appendChild(p);
-        tris.push({ el: p, cx, cy, s, phase: rand(i, 6) * Math.PI * 2, sp: 0.2 + rand(i, 7) * 0.5 });
+        tris.push({ el:p, cx, cy, s, phase: rand(i,6)*Math.PI*2, sp: 0.2+rand(i,7)*0.5 });
       }
       function animate(now) {
-        const t = now / 1000;
+        const t = now/1000;
         for (const tr of tris) {
-          const dx = Math.sin(t * tr.sp + tr.phase) * 2.8;
-          const dy = Math.cos(t * tr.sp * 0.7 + tr.phase * 1.3) * 2.1;
-          const cx = tr.cx + dx, cy = tr.cy + dy, s = tr.s;
-          tr.el.setAttribute('points',
-            `${cx.toFixed(2)},${(cy - s).toFixed(2)} ${(cx - s*0.9).toFixed(2)},${(cy + s*0.7).toFixed(2)} ${(cx + s*0.9).toFixed(2)},${(cy + s*0.7).toFixed(2)}`);
+          const cx = tr.cx + Math.sin(t*tr.sp+tr.phase)*2.8;
+          const cy = tr.cy + Math.cos(t*tr.sp*.7+tr.phase*1.3)*2.1;
+          const s = tr.s;
+          tr.el.setAttribute('points', `${cx.toFixed(2)},${(cy-s).toFixed(2)} ${(cx-s*.9).toFixed(2)},${(cy+s*.7).toFixed(2)} ${(cx+s*.9).toFixed(2)},${(cy+s*.7).toFixed(2)}`);
         }
         requestAnimationFrame(animate);
       }
       requestAnimationFrame(animate);
     })();
 
-    // Reveal on scroll (sections + stagger children)
+    // Reveal on scroll
     (function () {
       const obs = new IntersectionObserver(entries => {
         for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            obs.unobserve(e.target);
-          }
+          if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
         }
-      }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
-      document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => obs.observe(el));
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal, .logo-row').forEach(el => obs.observe(el));
     })();
   </script>
 </body>

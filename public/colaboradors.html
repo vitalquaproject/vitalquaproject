@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Col·laboradors — Vitalqua Project</title>
+  <meta name="description" content="Entitats acadèmiques, finançadors, suport tècnic i patrocinadors que fan possible el Vitalqua Project." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/img/logo.svg" />
+
+  <style>
+    :root {
+      --bg:        #F6F8FB;
+      --bg-soft:   #ECF1F5;
+      --surface:   #FFFFFF;
+      --navy:      #0F1A2E;
+      --navy-dp:   #07101E;
+      --cy-xlt:    #D6EEF6;
+      --cy-lt:     #A3D0E3;
+      --cy:        #4FB3D9;
+      --cy-dk:     #2A85B3;
+      --cy-xdk:    #1B5F85;
+      --ink:       #0F1A2E;
+      --ink-soft:  #3F4F6B;
+      --muted:     #6B7890;
+      --faint:     #A3B5CD;
+      --sand:      #C89464;
+      --radius-sm: 10px;
+      --radius:    16px;
+      --radius-lg: 24px;
+      --shadow-sm: 0 1px 2px rgba(15,26,46,.05), 0 4px 14px rgba(15,26,46,.04);
+      --shadow-md: 0 4px 16px rgba(15,26,46,.08), 0 20px 40px rgba(15,26,46,.06);
+      --shadow-lg: 0 8px 28px rgba(15,26,46,.12), 0 36px 60px rgba(15,26,46,.08);
+      --ease: cubic-bezier(.22,.61,.36,1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.58;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 5vw, 48px);
+    }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cy-dk);
+      margin-bottom: 16px;
+    }
+    .eyebrow::before {
+      content: ""; width: 22px; height: 1px;
+      background: var(--cy-dk);
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      color: var(--navy);
+      font-weight: 600;
+      letter-spacing: -0.022em;
+      line-height: 1.1;
+    }
+    h1 { font-weight: 700; }
+    h2 {
+      font-size: clamp(1.85rem, 4vw, 2.6rem);
+      font-weight: 600;
+      margin-bottom: clamp(20px, 3vw, 36px);
+      letter-spacing: -0.025em;
+    }
+    p { color: var(--ink-soft); }
+
+    /* ================================================================= 
+       Header
+       ================================================================= */
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 14px 0;
+      background: rgba(246, 248, 251, 0);
+      backdrop-filter: blur(0);
+      border-bottom: 1px solid transparent;
+      transition: background 260ms var(--ease),
+                  backdrop-filter 260ms var(--ease),
+                  border-color 260ms var(--ease),
+                  padding 260ms var(--ease);
+    }
+    .site-header.scrolled {
+      background: rgba(246, 248, 251, 0.88);
+      backdrop-filter: blur(14px) saturate(1.15);
+      border-bottom-color: rgba(15,26,46,.06);
+      padding: 10px 0;
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+    }
+    .logo-mark { width: auto; height: 34px; display: block; flex-shrink: 0; }
+    .nav-links {
+      display: flex; gap: 26px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+    .nav-links a {
+      position: relative;
+      transition: color 180ms ease;
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute; left: 0; right: 0; bottom: -6px;
+      height: 2px;
+      background: var(--cy-dk);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 240ms var(--ease);
+    }
+    .nav-links a:hover { color: var(--navy); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-links a.active { color: var(--cy-dk); }
+    .nav-links a.active::after { transform: scaleX(1); }
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+      transition: background 180ms ease, transform 180ms var(--ease);
+    }
+    .nav-cta:hover { background: var(--cy-dk); transform: translateY(-1px); }
+
+    @media (max-width: 760px) {
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: flex; flex-direction: column; justify-content: center;
+      gap: 5px; width: 40px; height: 40px; padding: 8px;
+      border-radius: var(--radius-sm); background: none; border: none;
+      color: var(--navy); cursor: pointer; flex-shrink: 0;
+      transition: background 180ms ease;
+    }
+    .hamburger:hover { background: var(--bg-soft); }
+    .hamburger span {
+      display: block; width: 20px; height: 2px;
+      background: currentColor; border-radius: 2px;
+      transition: transform 300ms var(--ease), opacity 200ms ease;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .drawer-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15,26,46,.5);
+      backdrop-filter: blur(4px);
+      z-index: 150; opacity: 0; pointer-events: none;
+      transition: opacity 300ms var(--ease);
+    }
+    .drawer-overlay.visible { opacity: 1; pointer-events: all; }
+    .mobile-drawer {
+      position: fixed; top: 0; left: 0;
+      width: min(320px, 88vw); height: 100dvh;
+      background: var(--surface); z-index: 200;
+      padding: 24px 24px 40px;
+      display: flex; flex-direction: column;
+      overflow-y: auto; box-shadow: var(--shadow-lg);
+      transform: translateX(-100%);
+      transition: transform 340ms var(--ease);
+    }
+    .mobile-drawer.open { transform: translateX(0); }
+    .drawer-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .drawer-title {
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+    }
+    .drawer-close {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%; color: var(--muted);
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .drawer-close:hover { background: var(--bg-soft); color: var(--navy); }
+    .drawer-nav { display: flex; flex-direction: column; gap: 2px; }
+    .drawer-nav > a {
+      display: block; padding: 11px 14px; border-radius: var(--radius-sm);
+      font-size: 0.95rem; font-weight: 500; color: var(--ink); text-decoration: none;
+      transition: background 140ms ease, color 140ms ease;
+    }
+    .drawer-nav > a:hover { background: var(--bg-soft); color: var(--cy-dk); }
+    .drawer-nav > a.active { color: var(--cy-dk); background: var(--cy-xlt); }
+    .drawer-nav-group { margin: 4px 0; }
+    .drawer-nav-group-label {
+      display: block; padding: 8px 14px 4px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .drawer-nav-sub {
+      display: block; padding: 8px 14px 8px 24px; border-radius: var(--radius-sm);
+      font-size: 0.88rem; font-weight: 400; color: var(--ink-soft); text-decoration: none;
+      transition: background 140ms ease, color 140ms ease;
+    }
+    .drawer-nav-sub:hover { background: var(--bg-soft); color: var(--cy-dk); }
+    .drawer-divider { height: 1px; background: var(--bg-soft); margin: 8px 0; }
+
+    /* ================================================================= 
+       Page hero
+       ================================================================= */
+    .page-hero {
+      padding: clamp(120px, 16vw, 180px) 0 clamp(52px, 7vw, 80px);
+      background:
+        radial-gradient(ellipse at 80% 0%, #E4F2F8 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 100%, #EBF3F8 0%, transparent 50%),
+        var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    }
+    .page-hero-bg svg { width: 100%; height: 100%; display: block; }
+    .page-hero .wrap { position: relative; z-index: 2; }
+    .page-hero h1 {
+      font-size: clamp(2.4rem, 7vw, 4.2rem);
+      font-weight: 700;
+      letter-spacing: -0.032em;
+      line-height: 1.04;
+      color: var(--navy);
+      max-width: 18ch;
+      margin-bottom: 18px;
+    }
+    .page-hero p.lede {
+      font-size: clamp(1rem, 1.6vw, 1.15rem);
+      color: var(--ink-soft);
+      max-width: 520px;
+      line-height: 1.68;
+    }
+
+    /* ================================================================= 
+       Collaborators sections
+       ================================================================= */
+    .collab-section {
+      padding: clamp(56px, 8vw, 96px) 0;
+      position: relative;
+    }
+    .collab-section:nth-child(even) { background: var(--surface); }
+    .collab-section:nth-child(odd)  { background: var(--bg); }
+
+    .collab-section-inner {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: clamp(32px, 5vw, 72px);
+      align-items: start;
+    }
+    @media (max-width: 820px) {
+      .collab-section-inner { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    .collab-label { padding-top: 6px; }
+    .collab-label .cat-number {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cy-xlt), var(--cy-lt));
+      border: 1.5px solid rgba(42,133,179,.2);
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
+      color: var(--cy-dk);
+      margin-bottom: 14px;
+    }
+    .collab-label h2 {
+      font-size: clamp(1.25rem, 2.2vw, 1.55rem);
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.025em;
+    }
+    .collab-label p {
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    /* Logo grid */
+    .logo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(20px, 4vw, 36px);
+      align-items: center;
+    }
+
+    .logo-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: clamp(20px, 3vw, 32px) clamp(24px, 4vw, 44px);
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid rgba(42,133,179,.1);
+      box-shadow: var(--shadow-sm);
+      transition: transform 240ms var(--ease), box-shadow 240ms var(--ease), border-color 240ms ease;
+      text-decoration: none;
+      min-width: 140px;
+    }
+    .collab-section:nth-child(even) .logo-card { background: var(--bg); }
+
+    .logo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(42,133,179,.25);
+    }
+    .logo-card img {
+      height: clamp(42px, 6vw, 62px);
+      width: auto;
+      max-width: 160px;
+      object-fit: contain;
+      display: block;
+    }
+    .logo-card .logo-name {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ================================================================= 
+       Divider
+       ================================================================= */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(42,133,179,.15), transparent);
+      margin: 0;
+    }
+
+    /* ================================================================= 
+       Footer
+       ================================================================= */
+    .site-footer {
+      background: var(--navy-dp);
+      color: var(--faint);
+      padding: 70px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 36px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 760px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; } }
+    @media (max-width: 440px) { .footer-grid { grid-template-columns: 1fr; } }
+    .footer-brand .logo { color: #fff; }
+    .footer-brand p {
+      margin-top: 14px; font-size: 0.92rem;
+      line-height: 1.65; color: var(--faint); max-width: 320px;
+    }
+    .footer-col h5 {
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--cy-lt); margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col a { color: var(--faint); font-size: 0.9rem; transition: color 180ms ease; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom {
+      display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.07);
+      font-size: 0.78rem; color: var(--muted);
+    }
+
+    /* ================================================================= 
+       Reveal on scroll
+       ================================================================= */
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* Stagger children */
+    .reveal-stagger > * {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+    }
+    .reveal-stagger.in > *:nth-child(1) { opacity:1; transform:none; transition-delay: 0ms; }
+    .reveal-stagger.in > *:nth-child(2) { opacity:1; transform:none; transition-delay: 80ms; }
+    .reveal-stagger.in > *:nth-child(3) { opacity:1; transform:none; transition-delay: 160ms; }
+    .reveal-stagger.in > *:nth-child(4) { opacity:1; transform:none; transition-delay: 240ms; }
+    .reveal-stagger.in > *:nth-child(5) { opacity:1; transform:none; transition-delay: 320ms; }
+    .reveal-stagger.in > *:nth-child(6) { opacity:1; transform:none; transition-delay: 400ms; }
+  </style>
+</head>
+<body>
+
+  <!-- ================================================================= 
+       HEADER
+       ================================================================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="wrap nav">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="/index.html" class="logo" aria-label="Vitalqua Project">
+        <img src="/img/logo.svg" alt="" width="34" height="34" class="logo-mark" />
+        Vitalqua Project
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="/index.html">Home</a>
+        <a href="/process.html">The process</a>
+        <a href="/colaboradors.html" class="active">Col·laboradors</a>
+        <a href="/merchandising.html">Merchandising</a>
+      </nav>
+      <a href="/process.html" class="nav-cta">See the process</a>
+    </div>
+  </header>
+
+  <!-- Drawer overlay -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+
+  <!-- Side drawer -->
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Navigation menu" aria-hidden="true">
+    <div class="drawer-head">
+      <span class="drawer-title">Menu</span>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="drawer-nav">
+      <a href="/index.html">Home</a>
+      <a href="/process.html">The process</a>
+      <div class="drawer-nav-group">
+        <span class="drawer-nav-group-label">Events</span>
+        <a href="/concert.html" class="drawer-nav-sub">Concierto Benéfico</a>
+        <a href="/show.html" class="drawer-nav-sub">Concert Benèfic · UIC × ADESCI</a>
+      </div>
+      <a href="/colaboradors.html" class="active">Col·laboradors</a>
+      <a href="/merchandising.html">Merchandising</a>
+    </nav>
+  </aside>
+
+  <!-- ================================================================= 
+       PAGE HERO
+       ================================================================= -->
+  <section class="page-hero">
+    <div class="page-hero-bg" aria-hidden="true">
+      <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+        <g id="hero-tris"></g>
+      </svg>
+    </div>
+    <div class="wrap">
+      <div class="eyebrow">Qui ho fa possible</div>
+      <h1>Col·laboradors</h1>
+      <p class="lede">
+        El Vitalqua Project existeix gràcies al compromís de moltes entitats. Aquí els reconeixem a tots — des dels que han ideat el projecte fins als que han fet possible els actes benèfics.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================================================================= 
+       1. PROJECTE DUT A TERME PER
+       ================================================================= -->
+  <section class="collab-section reveal" id="projecte">
+    <div class="wrap">
+      <div class="collab-section-inner">
+        <div class="collab-label">
+          <div class="cat-number">1</div>
+          <div class="eyebrow">Actors principals</div>
+          <h2>Projecte dut a terme per</h2>
+          <p>Les universitats i organitzacions que han concebut, dissenyat i impulsat el projecte des del primer dia.</p>
+        </div>
+        <div class="logo-grid reveal-stagger">
+          <a class="logo-card" href="https://www.upc.edu/" target="_blank" rel="noopener noreferrer">
+            <img src="/img/upc.png" alt="Universitat Politècnica de Catalunya" />
+            <span class="logo-name">UPC</span>
+          </a>
+          <a class="logo-card" href="https://www.ub.edu/" target="_blank" rel="noopener noreferrer">
+            <img src="/img/ub.png" alt="Universitat de Barcelona" />
+            <span class="logo-name">UB</span>
+          </a>
+          <a class="logo-card" href="http://www.adesci.org/" target="_blank" rel="noopener noreferrer">
+            <img src="/img/adesci.png" alt="ADESCI" />
+            <span class="logo-name">ADESCI</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ================================================================= 
+       2. FINANÇADORS DEL PROJECTE
+       ================================================================= -->
+  <section class="collab-section reveal" id="financadors">
+    <div class="wrap">
+      <div class="collab-section-inner">
+        <div class="collab-label">
+          <div class="cat-number">2</div>
+          <div class="eyebrow">Economia del projecte</div>
+          <h2>Finançadors del projecte</h2>
+          <p>Les entitats que han fet possible el finançament necessari per convertir el disseny en realitat sobre el terreny.</p>
+        </div>
+        <div class="logo-grid reveal-stagger">
+          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
+            <img src="/img/roviralta.png" alt="Roviralta" />
+            <span class="logo-name">Roviralta</span>
+          </a>
+          <a class="logo-card" href="https://www.barcelonactua.org/" target="_blank" rel="noopener noreferrer">
+            <img src="/img/logoba.png" alt="Barcelonactua" />
+            <span class="logo-name">Barcelonactua</span>
+          </a>
+          <a class="logo-card" href="https://www.uic.es/" target="_blank" rel="noopener noreferrer">
+            <img src="/img/uic_logo.png" alt="Universitat Internacional de Catalunya" />
+            <span class="logo-name">UIC</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ================================================================= 
+       3. SUPORT TÈCNIC
+       ================================================================= -->
+  <section class="collab-section reveal" id="suport">
+    <div class="wrap">
+      <div class="collab-section-inner">
+        <div class="collab-label">
+          <div class="cat-number">3</div>
+          <div class="eyebrow">Expertise tècnica</div>
+          <h2>Suport tècnic</h2>
+          <p>Empreses i entitats que han aportat el seu coneixement especialitzat per garantir la solidesa de la solució d'enginyeria.</p>
+        </div>
+        <div class="logo-grid reveal-stagger">
+          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
+            <img src="/img/inima.png" alt="Inima" />
+            <span class="logo-name">Inima</span>
+          </a>
+          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
+            <img src="/img/tanina.png" alt="Tanina" />
+            <span class="logo-name">Tanina</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ================================================================= 
+       4. PATROCINADORS DELS EVENTS BENÈFICS
+       ================================================================= -->
+  <section class="collab-section reveal" id="patrocinadors">
+    <div class="wrap">
+      <div class="collab-section-inner">
+        <div class="collab-label">
+          <div class="cat-number">4</div>
+          <div class="eyebrow">Esdeveniments benèfics</div>
+          <h2>Patrocinadors dels events benèfics</h2>
+          <p>Marques i organitzacions que han donat suport als concerts i actes de recaptació de fons per al projecte.</p>
+        </div>
+        <div class="logo-grid reveal-stagger">
+          <a class="logo-card" href="https://www.estrelladamm.com/" target="_blank" rel="noopener noreferrer">
+            <img src="/img/estrelladamm.png" alt="Estrella Damm" />
+            <span class="logo-name">Estrella Damm</span>
+          </a>
+          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
+            <img src="/img/bruc.png" alt="Bruc" />
+            <span class="logo-name">Bruc</span>
+          </a>
+          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
+            <img src="/img/tem.png" alt="TEM" />
+            <span class="logo-name">TEM</span>
+          </a>
+          <a class="logo-card" href="https://www.artbarcelona.es/" target="_blank" rel="noopener noreferrer">
+            <img src="/img/artbo.png" alt="ArtBo" />
+            <span class="logo-name">ArtBo</span>
+          </a>
+          <a class="logo-card" href="https://www.arenasdebarcelona.com/" target="_blank" rel="noopener noreferrer">
+            <img src="/img/arenas.png" alt="Arenas de Barcelona" />
+            <span class="logo-name">Arenas</span>
+          </a>
+          <a class="logo-card" href="#" target="_blank" rel="noopener noreferrer">
+            <img src="/img/cuetara.png" alt="Cuétara" />
+            <span class="logo-name">Cuétara</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================= 
+       FOOTER
+       ================================================================= -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/index.html" class="logo">
+            <img src="/img/logo.svg" alt="" width="34" height="34" class="logo-mark" />
+            Vitalqua Project
+          </a>
+          <p>Solar-powered, passive water purification. Engineered for autonomy, owned by the community.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Project</h5>
+          <ul>
+            <li><a href="/index.html#today">Today</a></li>
+            <li><a href="/index.html#solution">Our solution</a></li>
+            <li><a href="/process.html">The process</a></li>
+            <li><a href="/index.html#impact">Impact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Partner</h5>
+          <ul>
+            <li><a href="/index.html#partner">About ADESCI</a></li>
+            <li><a href="/colaboradors.html">Col·laboradors</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="mailto:vitalquaproject@gmail.com">vitalquaproject@gmail.com</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© Vitalqua Project · Kenya</span>
+        <span>Built with ADESCI · with the community</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Fixed-header scroll state
+    (function () {
+      const header = document.getElementById('siteHeader');
+      const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 20);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+
+    // Hamburger / Mobile Drawer
+    (function () {
+      const btn      = document.getElementById('hamburgerBtn');
+      const drawer   = document.getElementById('mobileDrawer');
+      const overlay  = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('drawerClose');
+
+      function openDrawer() {
+        drawer.classList.add('open'); overlay.classList.add('visible');
+        btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false'); overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeDrawer() {
+        drawer.classList.remove('open'); overlay.classList.remove('visible');
+        btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      btn.addEventListener('click', () => drawer.classList.contains('open') ? closeDrawer() : openDrawer());
+      closeBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer(); });
+    })();
+
+    // Hero triangle wobble
+    (function () {
+      const g = document.getElementById('hero-tris');
+      if (!g) return;
+      const NS = 'http://www.w3.org/2000/svg';
+      const COUNT = 20;
+      const tris = [];
+      const rand = (i, salt) => { const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453; return x - Math.floor(x); };
+      const palette = ['#A3D0E3', '#7FBFD6', '#5FAFC7', '#4FB3D9', '#2A85B3'];
+      for (let i = 0; i < COUNT; i++) {
+        const p = document.createElementNS(NS, 'polygon');
+        const cx = 8 + rand(i, 1) * 144;
+        const cy = 8 + rand(i, 2) * 74;
+        const s  = 1.0 + rand(i, 3) * 3.5;
+        const pts = `${cx},${cy - s} ${cx - s * 0.9},${cy + s * 0.7} ${cx + s * 0.9},${cy + s * 0.7}`;
+        p.setAttribute('points', pts);
+        p.setAttribute('fill', palette[Math.floor(rand(i, 4) * palette.length)]);
+        p.setAttribute('opacity', (0.1 + rand(i, 5) * 0.2).toFixed(2));
+        g.appendChild(p);
+        tris.push({ el: p, cx, cy, s, phase: rand(i, 6) * Math.PI * 2, sp: 0.2 + rand(i, 7) * 0.5 });
+      }
+      function animate(now) {
+        const t = now / 1000;
+        for (const tr of tris) {
+          const dx = Math.sin(t * tr.sp + tr.phase) * 2.8;
+          const dy = Math.cos(t * tr.sp * 0.7 + tr.phase * 1.3) * 2.1;
+          const cx = tr.cx + dx, cy = tr.cy + dy, s = tr.s;
+          tr.el.setAttribute('points',
+            `${cx.toFixed(2)},${(cy - s).toFixed(2)} ${(cx - s*0.9).toFixed(2)},${(cy + s*0.7).toFixed(2)} ${(cx + s*0.9).toFixed(2)},${(cy + s*0.7).toFixed(2)}`);
+        }
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    })();
+
+    // Reveal on scroll (sections + stagger children)
+    (function () {
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            obs.unobserve(e.target);
+          }
+        }
+      }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+      document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => obs.observe(el));
+    })();
+  </script>
+</body>
+</html>

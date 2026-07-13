@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vitalqua Project · Kènia 2026 — Segueix el projecte en directe</title>
+  <meta name="description" content="Segueix en directe la presentació del Vitalqua Project al Concert Benèfic UIC." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/img/logo.svg" />
+
+  <style>
+    :root {
+      --navy:    #07101E;
+      --navy-2:  #0F1A2E;
+      --navy-3:  #152237;
+      --cy:      #4FB3D9;
+      --cy-dk:   #2A85B3;
+      --cy-lt:   #A3D0E3;
+      --cy-xlt:  #D6EEF6;
+      --sand:    #C89464;
+      --sand-lt: #E8C89A;
+      --white:   #F6F8FB;
+      --muted:   #6B7890;
+      --faint:   #A3B5CD;
+      --ease:    cubic-bezier(.22,.61,.36,1);
+      --ease-out: cubic-bezier(0,.55,.45,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      height: 100%;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      height: 100%;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+
+    /* =========================================================
+       SLIDE BASE
+       ========================================================= */
+    .slide {
+      min-height: 100dvh;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(48px, 8vw, 100px) clamp(24px, 6vw, 80px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* =========================================================
+       PROGRESS BAR
+       ========================================================= */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(to right, var(--cy-dk), var(--cy));
+      z-index: 999;
+      transition: width 200ms var(--ease);
+    }
+
+    /* =========================================================
+       DOTS NAVIGATION
+       ========================================================= */
+    .dots {
+      position: fixed;
+      right: clamp(14px, 3vw, 28px);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(163, 208, 227, 0.25);
+      border: 1px solid rgba(163, 208, 227, 0.35);
+      cursor: pointer;
+      transition: background 240ms ease, transform 240ms ease;
+    }
+    .dot.active {
+      background: var(--cy);
+      transform: scale(1.45);
+      border-color: var(--cy);
+    }
+
+    /* =========================================================
+       PORTADA
+       ========================================================= */
+    #portada {
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(42,133,179,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(79,179,217,.08) 0%, transparent 60%),
+        var(--navy);
+      text-align: center;
+      gap: 0;
+    }
+
+    .portada-kenia {
+      font-size: clamp(0.7rem, 1.2vw, 0.82rem);
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--cy);
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.9s var(--ease) 0.2s forwards;
+    }
+
+    .portada-logo {
+      width: clamp(64px, 10vw, 100px);
+      height: auto;
+      margin: 0 auto 24px;
+      opacity: 0;
+      animation: fadeUp 0.9s var(--ease) 0.35s forwards;
+      filter: drop-shadow(0 0 32px rgba(79,179,217,.35));
+    }
+
+    .portada-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(3rem, 9vw, 7.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp 0.9s var(--ease) 0.5s forwards;
+    }
+    .portada-title span {
+      color: var(--cy);
+      display: block;
+    }
+
+    .portada-year {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--sand-lt);
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeUp 0.9s var(--ease) 0.7s forwards;
+    }
+
+    .portada-sub {
+      font-size: clamp(0.85rem, 1.4vw, 1rem);
+      color: var(--faint);
+      margin-top: 36px;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: fadeUp 0.9s var(--ease) 0.9s forwards;
+    }
+
+    .portada-border {
+      position: absolute;
+      inset: 20px;
+      border: 1px solid rgba(79,179,217,.12);
+      border-radius: 20px;
+      pointer-events: none;
+    }
+
+    .portada-corner {
+      position: absolute;
+      width: 40px; height: 40px;
+      border-color: rgba(79,179,217,.4);
+      border-style: solid;
+    }
+    .portada-corner.tl { top: 20px; left: 20px; border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
+    .portada-corner.tr { top: 20px; right: 20px; border-width: 2px 2px 0 0; border-radius: 0 4px 0 0; }
+    .portada-corner.bl { bottom: 20px; left: 20px; border-width: 0 0 2px 2px; border-radius: 0 0 0 4px; }
+    .portada-corner.br { bottom: 20px; right: 20px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.5s forwards;
+    }
+    .scroll-hint svg { animation: bounce 1.6s ease-in-out infinite; }
+
+    /* =========================================================
+       SLIDE GENERIC STYLES
+       ========================================================= */
+    .slide-eyebrow {
+      font-size: clamp(0.65rem, 1vw, 0.75rem);
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cy);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slide-eyebrow::before,
+    .slide-eyebrow::after {
+      content: '';
+      flex: 0 0 28px;
+      height: 1px;
+      background: var(--cy-dk);
+    }
+
+    .slide-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      color: var(--white);
+      text-align: center;
+      max-width: 900px;
+    }
+    .slide-title .accent { color: var(--cy); }
+    .slide-title .warm   { color: var(--sand-lt); }
+
+    .slide-body {
+      text-align: center;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    /* =========================================================
+       SLIDE 1 — PUNTS CLAU
+       ========================================================= */
+    #slide1 {
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 50%, rgba(42,133,179,.12) 0%, transparent 65%),
+        linear-gradient(180deg, var(--navy) 0%, var(--navy-3) 100%);
+    }
+
+    .keys-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(16px, 2.5vw, 28px);
+      margin-top: clamp(36px, 5vw, 56px);
+      width: 100%;
+      max-width: 840px;
+    }
+    @media (max-width: 600px) { .keys-grid { grid-template-columns: 1fr; } }
+
+    .key-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(79,179,217,.14);
+      border-radius: 18px;
+      padding: clamp(22px, 3vw, 36px);
+      text-align: left;
+      transition: background 300ms ease, border-color 300ms ease;
+    }
+    .key-card:hover {
+      background: rgba(79,179,217,.06);
+      border-color: rgba(79,179,217,.28);
+    }
+
+    .key-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+      line-height: 1;
+    }
+    .key-card h3 {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .key-card p {
+      font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+      color: var(--faint);
+      line-height: 1.6;
+    }
+    .key-card .tag {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 4px 12px;
+      background: rgba(79,179,217,.12);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--cy-lt);
+    }
+
+    /* =========================================================
+       SLIDE 2 — CONTEXT KÈNIA
+       ========================================================= */
+    #slide2 {
+      background:
+        radial-gradient(ellipse 70% 60% at 80% 30%, rgba(200,148,100,.1) 0%, transparent 65%),
+        linear-gradient(170deg, var(--navy-3) 0%, var(--navy) 100%);
+    }
+
+    .context-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(20px, 3vw, 36px);
+      margin-top: clamp(36px, 5vw, 56px);
+      justify-content: center;
+      max-width: 860px;
+    }
+
+    .stat-item {
+      text-align: center;
+      flex: 1 1 180px;
+      max-width: 220px;
+    }
+    .stat-num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--cy);
+    }
+    .stat-num.warm { color: var(--sand-lt); }
+    .stat-label {
+      font-size: clamp(0.78rem, 1.2vw, 0.92rem);
+      color: var(--faint);
+      margin-top: 8px;
+      line-height: 1.4;
+      max-width: 180px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .context-desc {
+      margin-top: clamp(28px, 4vw, 44px);
+      font-size: clamp(0.95rem, 1.5vw, 1.12rem);
+      color: var(--cy-lt);
+      line-height: 1.7;
+      max-width: 640px;
+      text-align: center;
+    }
+
+    /* Divider line */
+    .stat-divider {
+      width: 1px;
+      background: rgba(79,179,217,.15);
+      align-self: stretch;
+      flex: 0 0 1px;
+    }
+    @media (max-width: 600px) { .stat-divider { display: none; } }
+
+    /* =========================================================
+       SLIDE 3 — LA SOLUCIÓ
+       ========================================================= */
+    #slide3 {
+      background:
+        radial-gradient(ellipse 55% 55% at 50% 100%, rgba(15,58,86,.6) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(42,133,179,.08) 0%, transparent 65%),
+        var(--navy);
+    }
+
+    .process-preview {
+      margin-top: clamp(32px, 5vw, 52px);
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(79,179,217,.15);
+      border-radius: 20px;
+      padding: clamp(24px, 4vw, 48px);
+      max-width: 700px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .process-stages {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .process-tri {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1 1 80px;
+    }
+
+    .tri-shape {
+      width: 0; height: 0;
+      border-left: 22px solid transparent;
+      border-right: 22px solid transparent;
+      border-bottom: 38px solid;
+      position: relative;
+    }
+    .tri-shape.t1 { border-bottom-color: rgba(79,179,217,.7); }
+    .tri-shape.t2 { border-bottom-color: rgba(79,179,217,.58); }
+    .tri-shape.t3 { border-bottom-color: rgba(79,179,217,.46); }
+    .tri-shape.t4 { border-bottom-color: rgba(79,179,217,.34); }
+    .tri-shape.t5 { border-bottom-color: rgba(79,179,217,.22); }
+    .tri-shape.t6 { border-bottom-color: rgba(79,179,217,.14); }
+    .tri-shape.t7 { border-bottom-color: rgba(200,148,100,.55); }
+
+    .tri-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-align: center;
+      max-width: 68px;
+      line-height: 1.3;
+    }
+
+    .process-arrow {
+      color: var(--cy-dk);
+      font-size: 1.1rem;
+      flex: 0 0 auto;
+      margin: 0 4px;
+      padding-bottom: 24px;
+    }
+
+    .process-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, var(--cy-dk), var(--cy));
+      color: #fff;
+      font-weight: 700;
+      font-size: clamp(0.85rem, 1.3vw, 1rem);
+      letter-spacing: 0.03em;
+      border-radius: 999px;
+      transition: transform 220ms var(--ease), box-shadow 220ms ease;
+      box-shadow: 0 4px 20px rgba(42,133,179,.4);
+      text-decoration: none;
+    }
+    .process-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(42,133,179,.5);
+    }
+    .process-cta svg { flex-shrink: 0; }
+
+    .process-desc {
+      font-size: clamp(0.85rem, 1.2vw, 0.98rem);
+      color: var(--faint);
+      text-align: center;
+      line-height: 1.6;
+      max-width: 500px;
+    }
+
+    /* =========================================================
+       SLIDE 4 — DINERS / VOTACIÓ
+       ========================================================= */
+    #slide4 {
+      background:
+        radial-gradient(ellipse 60% 60% at 50% 50%, rgba(200,148,100,.07) 0%, transparent 70%),
+        linear-gradient(170deg, var(--navy-3) 0%, var(--navy) 100%);
+    }
+
+    .vote-desc {
+      font-size: clamp(0.88rem, 1.3vw, 1rem);
+      color: var(--faint);
+      margin-top: 16px;
+      text-align: center;
+      max-width: 560px;
+    }
+
+    .vote-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(14px, 2vw, 22px);
+      margin-top: clamp(32px, 5vw, 48px);
+      max-width: 700px;
+      width: 100%;
+    }
+    @media (max-width: 480px) { .vote-grid { grid-template-columns: 1fr; } }
+
+    .vote-card {
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      padding: clamp(22px, 3vw, 36px) clamp(20px, 3vw, 32px);
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      transition: background 280ms ease, border-color 280ms ease, transform 280ms var(--ease);
+    }
+    .vote-card:hover {
+      background: rgba(200,148,100,.08);
+      border-color: rgba(200,148,100,.3);
+      transform: translateY(-2px);
+    }
+
+    .vote-letter {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      color: var(--sand-lt);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .vote-range {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .vote-hint {
+      font-size: clamp(0.72rem, 1vw, 0.82rem);
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .vote-instruction {
+      margin-top: clamp(24px, 3vw, 36px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(79,179,217,.08);
+      border: 1px solid rgba(79,179,217,.2);
+      border-radius: 14px;
+      padding: 14px 20px;
+      max-width: 500px;
+    }
+    .vote-instruction p {
+      font-size: clamp(0.82rem, 1.1vw, 0.92rem);
+      color: var(--cy-lt);
+      line-height: 1.5;
+    }
+    .vote-instruction p strong { color: var(--cy); }
+
+    /* =========================================================
+       SLIDE 5 — PATROCINADORS
+       ========================================================= */
+    #slide5 {
+      background:
+        radial-gradient(ellipse 70% 50% at 10% 50%, rgba(42,133,179,.08) 0%, transparent 60%),
+        linear-gradient(180deg, var(--navy) 0%, var(--navy-3) 100%);
+    }
+
+    .sponsors-desc {
+      font-size: clamp(0.88rem, 1.3vw, 1rem);
+      color: var(--faint);
+      margin-top: 16px;
+      text-align: center;
+      max-width: 560px;
+    }
+
+    .sponsors-group {
+      width: 100%;
+      max-width: 900px;
+      margin-top: clamp(32px, 5vw, 52px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(24px, 3vw, 40px);
+    }
+
+    .sponsor-cat-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cy-dk);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sponsor-cat-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(79,179,217,.15);
+    }
+
+    .sponsor-logos {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(24px, 4vw, 52px);
+    }
+
+    .sponsor-logos a {
+      display: block;
+      opacity: 0.6;
+      filter: grayscale(30%) brightness(1.2);
+      transition: opacity 240ms ease, filter 240ms ease, transform 240ms var(--ease);
+    }
+    .sponsor-logos a:hover {
+      opacity: 1;
+      filter: grayscale(0%) brightness(1.3);
+      transform: translateY(-2px);
+    }
+
+    .sponsor-logos img {
+      height: clamp(36px, 5.5vw, 60px);
+      width: auto;
+      max-width: 160px;
+      object-fit: contain;
+    }
+
+    .sponsor-logos img.logo-tall {
+      height: clamp(44px, 6.5vw, 72px);
+    }
+
+    /* =========================================================
+       SLIDE 6 — DONACIONS
+       ========================================================= */
+    #slide6 {
+      background:
+        radial-gradient(ellipse 70% 70% at 50% 60%, rgba(42,133,179,.15) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 30% at 20% 10%, rgba(79,179,217,.06) 0%, transparent 55%),
+        var(--navy);
+      text-align: center;
+      gap: 0;
+    }
+
+    .dona-tagline {
+      font-size: clamp(0.85rem, 1.3vw, 1rem);
+      color: var(--faint);
+      margin-top: 18px;
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    .dona-tagline em {
+      font-style: normal;
+      color: var(--cy-lt);
+    }
+
+    .dona-amount {
+      margin-top: clamp(28px, 4vw, 44px);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+    }
+
+    .amount-chip {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(79,179,217,.2);
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+      font-weight: 600;
+      color: var(--cy-lt);
+      letter-spacing: 0.02em;
+    }
+
+    .dona-cta-wrap {
+      margin-top: clamp(28px, 4vw, 44px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dona-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: clamp(16px, 2vw, 20px) clamp(32px, 4vw, 52px);
+      background: linear-gradient(135deg, var(--cy-dk) 0%, var(--cy) 100%);
+      color: #fff;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      letter-spacing: -0.01em;
+      border-radius: 999px;
+      box-shadow: 0 6px 32px rgba(42,133,179,.45), 0 0 60px rgba(79,179,217,.15);
+      transition: transform 260ms var(--ease), box-shadow 260ms ease;
+    }
+    .dona-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 48px rgba(42,133,179,.55), 0 0 80px rgba(79,179,217,.2);
+    }
+    .dona-btn:active { transform: translateY(-1px) scale(0.99); }
+
+    .dona-platform {
+      font-size: clamp(0.72rem, 1vw, 0.82rem);
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .dona-platform strong { color: var(--faint); }
+
+    .dona-heart {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    /* =========================================================
+       ANIMATIONS
+       ========================================================= */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(6px); }
+    }
+
+    /* Reveal */
+    .rev {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+    }
+    .rev.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .rev-d1 { transition-delay: 80ms; }
+    .rev-d2 { transition-delay: 160ms; }
+    .rev-d3 { transition-delay: 240ms; }
+    .rev-d4 { transition-delay: 320ms; }
+
+    /* =========================================================
+       TRIANGLE BG DECORATION
+       ========================================================= */
+    .tri-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .slide > *:not(.tri-bg):not(.portada-corner):not(.portada-border) {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* =========================================================
+       RESPONSIVE TWEAKS
+       ========================================================= */
+    @media (max-width: 480px) {
+      .keys-grid { gap: 12px; }
+      .key-card { padding: 18px; }
+      .vote-card { padding: 18px 16px; gap: 12px; }
+      .sponsor-logos img { height: 32px; }
+      .sponsor-logos img.logo-tall { height: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Dots nav -->
+  <nav class="dots" id="dotsNav" aria-label="Navegació de seccions">
+    <button class="dot active" data-slide="portada" aria-label="Portada"></button>
+    <button class="dot" data-slide="slide1" aria-label="Punts clau"></button>
+    <button class="dot" data-slide="slide2" aria-label="Context Kènia"></button>
+    <button class="dot" data-slide="slide3" aria-label="La solució"></button>
+    <button class="dot" data-slide="slide4" aria-label="Diners i votació"></button>
+    <button class="dot" data-slide="slide5" aria-label="Patrocinadors"></button>
+    <button class="dot" data-slide="slide6" aria-label="Donacions"></button>
+  </nav>
+
+  <!-- =========================================================
+       PORTADA
+       ========================================================= -->
+  <section class="slide" id="portada">
+
+    <div class="tri-bg">
+      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <polygon points="20,5 8,28 32,28"   fill="rgba(79,179,217,.07)"/>
+        <polygon points="170,12 155,38 185,38" fill="rgba(79,179,217,.05)"/>
+        <polygon points="95,2 80,32 110,32"  fill="rgba(79,179,217,.04)"/>
+        <polygon points="140,60 128,82 152,82" fill="rgba(200,148,100,.06)"/>
+        <polygon points="40,70 28,92 52,92"  fill="rgba(79,179,217,.05)"/>
+        <polygon points="185,72 174,90 196,90" fill="rgba(79,179,217,.04)"/>
+        <polygon points="65,45 55,63 75,63"  fill="rgba(79,179,217,.06)"/>
+      </svg>
+    </div>
+
+    <div class="portada-corner tl"></div>
+    <div class="portada-corner tr"></div>
+    <div class="portada-corner bl"></div>
+    <div class="portada-corner br"></div>
+
+    <div class="portada-kenia">Concert Benèfic · UIC × ADESCI</div>
+
+    <img src="/img/logo-full.svg" alt="Vitalqua Project" class="portada-logo" />
+
+    <h1 class="portada-title">
+      VITALQUA<span>PROJECT</span>
+    </h1>
+
+    <p class="portada-year">Kènia · 2026</p>
+
+    <p class="portada-sub">Segueix el projecte en directe</p>
+
+    <div class="scroll-hint">
+      <span>Fes scroll</span>
+      <svg width="16" height="22" viewBox="0 0 16 22" fill="none">
+        <rect x="1" y="1" width="14" height="20" rx="7" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="6.5" y="5" width="3" height="5" rx="1.5" fill="currentColor"/>
+      </svg>
+    </div>
+
+  </section>
+
+  <!-- =========================================================
+       SLIDE 1 — PUNTS CLAU
+       ========================================================= -->
+  <section class="slide" id="slide1">
+
+    <div class="tri-bg">
+      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <polygon points="5,10 0,25 15,25"  fill="rgba(79,179,217,.06)"/>
+        <polygon points="190,70 180,88 200,88" fill="rgba(79,179,217,.05)"/>
+        <polygon points="100,80 92,96 108,96" fill="rgba(79,179,217,.04)"/>
+      </svg>
+    </div>
+
+    <div class="slide-body" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="slide-eyebrow rev">El projecte</div>
+      <h2 class="slide-title rev rev-d1">Punts clau</h2>
+
+      <div class="keys-grid">
+        <div class="key-card rev rev-d1">
+          <div class="key-icon">🎓</div>
+          <h3>TFG d'estudiants</h3>
+          <p>Projecte final de grau dissenyat i impulsat per estudiants d'enginyeria en col·laboració amb l'ONG ADESCI.</p>
+          <span class="tag">Enginyeria aplicada</span>
+        </div>
+        <div class="key-card rev rev-d2">
+          <div class="key-icon">📅</div>
+          <h3>Implantació en 2 anys</h3>
+          <p>Cronograma realista amb fases de disseny, prototipatge, transport i construcció sobre el terreny.</p>
+          <span class="tag">2025 – 2027</span>
+        </div>
+        <div class="key-card rev rev-d3">
+          <div class="key-icon">☀️</div>
+          <h3>Comencem aquest estiu</h3>
+          <p>La primera fase arrenca l'estiu del 2026. El compte enrere ha començat.</p>
+          <span class="tag">Estiu 2026</span>
+        </div>
+        <div class="key-card rev rev-d4">
+          <div class="key-icon">🤝</div>
+          <h3>ONG ADESCI</h3>
+          <p>Associació de Cooperació que porta dècades treballant per l'educació i el benestar a Àfrica Oriental.</p>
+          <span class="tag">Soci local</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =========================================================
+       SLIDE 2 — CONTEXT KÈNIA
+       ========================================================= -->
+  <section class="slide" id="slide2">
+
+    <div class="tri-bg">
+      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <polygon points="150,5 138,26 162,26"  fill="rgba(200,148,100,.06)"/>
+        <polygon points="10,55 2,70 18,70"    fill="rgba(200,148,100,.05)"/>
+        <polygon points="180,50 170,66 190,66" fill="rgba(79,179,217,.05)"/>
+      </svg>
+    </div>
+
+    <div class="slide-body" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="slide-eyebrow rev">Kènia</div>
+      <h2 class="slide-title rev rev-d1">El context</h2>
+
+      <div class="context-stats">
+        <div class="stat-item rev rev-d1">
+          <div class="stat-num">500</div>
+          <div class="stat-label">estudiants a l'escola d'Emorogi</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item rev rev-d2">
+          <div class="stat-num warm">2 km</div>
+          <div class="stat-label">fins al llac i pou, caminant cada dia</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item rev rev-d3">
+          <div class="stat-num">0€</div>
+          <div class="stat-label">cost operatiu anual un cop instal·lat</div>
+        </div>
+      </div>
+
+      <p class="context-desc rev rev-d4">
+        L'escola no té accés a aigua potable. Nens i famílies beuen d'un llac i un pou
+        a 2&nbsp;km de distància — sense tractament, amb risc de malalties.
+        <br/><br/>
+        El nostre sistema canviarà això.
+      </p>
+    </div>
+
+  </section>
+
+  <!-- =========================================================
+       SLIDE 3 — LA SOLUCIÓ
+       ========================================================= -->
+  <section class="slide" id="slide3">
+
+    <div class="tri-bg">
+      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <polygon points="30,10 20,28 40,28"   fill="rgba(79,179,217,.06)"/>
+        <polygon points="170,8 160,24 180,24"  fill="rgba(79,179,217,.05)"/>
+        <polygon points="100,85 90,100 110,100" fill="rgba(79,179,217,.04)"/>
+      </svg>
+    </div>
+
+    <div class="slide-body" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="slide-eyebrow rev">Enginyeria</div>
+      <h2 class="slide-title rev rev-d1">La solució</h2>
+
+      <div class="process-preview rev rev-d2">
+        <p class="process-desc">
+          Una planta de purificació d'aigua solar, passiva i autònoma —
+          dissenyada pas a pas per al context de Kènia.
+        </p>
+
+        <div class="process-stages">
+          <div class="process-tri">
+            <div class="tri-shape t1"></div>
+            <div class="tri-label">Bombeig solar</div>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-tri">
+            <div class="tri-shape t2"></div>
+            <div class="tri-label">Dipòsit tampó</div>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-tri">
+            <div class="tri-shape t3"></div>
+            <div class="tri-label">Airejació</div>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-tri">
+            <div class="tri-shape t4"></div>
+            <div class="tri-label">Decantació</div>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-tri">
+            <div class="tri-shape t5"></div>
+            <div class="tri-label">Filtre grava</div>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-tri">
+            <div class="tri-shape t6"></div>
+            <div class="tri-label">Filtre sorra</div>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-tri">
+            <div class="tri-shape t7"></div>
+            <div class="tri-label">Biochar</div>
+          </div>
+        </div>
+
+        <a href="/process.html" target="_blank" class="process-cta">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Explorar el procés en detall
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =========================================================
+       SLIDE 4 — DINERS / VOTACIÓ
+       ========================================================= -->
+  <section class="slide" id="slide4">
+
+    <div class="tri-bg">
+      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <polygon points="20,80 10,96 30,96"   fill="rgba(200,148,100,.06)"/>
+        <polygon points="185,15 175,32 195,32" fill="rgba(200,148,100,.05)"/>
+      </svg>
+    </div>
+
+    <div class="slide-body" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="slide-eyebrow rev">La pregunta clau</div>
+      <h2 class="slide-title rev rev-d1">Quant <span class="warm">costa</span><br/>tot això?</h2>
+
+      <p class="vote-desc rev rev-d2">Aixeca la mà quan sentis la resposta correcta</p>
+
+      <div class="vote-grid">
+        <div class="vote-card rev rev-d2">
+          <div class="vote-letter">A</div>
+          <div>
+            <div class="vote-range">100 – 1.000 €</div>
+            <div class="vote-hint">Menys del que costa un cotxe de 2a mà</div>
+          </div>
+        </div>
+        <div class="vote-card rev rev-d3">
+          <div class="vote-letter">B</div>
+          <div>
+            <div class="vote-range">1.000 – 5.000 €</div>
+            <div class="vote-hint">L'equivalent a unes vacances familiars</div>
+          </div>
+        </div>
+        <div class="vote-card rev rev-d3">
+          <div class="vote-letter">C</div>
+          <div>
+            <div class="vote-range">5.000 – 25.000 €</div>
+            <div class="vote-hint">Com un cotxe nou de gamma mitja</div>
+          </div>
+        </div>
+        <div class="vote-card rev rev-d4">
+          <div class="vote-letter">D</div>
+          <div>
+            <div class="vote-range">25.000 – 100.000 €</div>
+            <div class="vote-hint">Com reformar un pis a Barcelona</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vote-instruction rev rev-d4">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0">
+          <path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm0 3.5v5m0 2.5v.5" stroke="#4FB3D9" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <p>La votació es fa <strong>aixecant la mà</strong> — res de mòbils. El presentador comptarà els vots en directe.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =========================================================
+       SLIDE 5 — PATROCINADORS
+       ========================================================= -->
+  <section class="slide" id="slide5">
+
+    <div class="tri-bg">
+      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <polygon points="5,5 0,18 14,18"     fill="rgba(79,179,217,.05)"/>
+        <polygon points="195,80 186,96 200,96" fill="rgba(79,179,217,.04)"/>
+      </svg>
+    </div>
+
+    <div class="slide-body" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="slide-eyebrow rev">Gràcies</div>
+      <h2 class="slide-title rev rev-d1">Els nostres<br/><span class="accent">patrocinadors</span></h2>
+      <p class="sponsors-desc rev rev-d2">Sense el seu suport, res d'això seria possible.</p>
+
+      <div class="sponsors-group rev rev-d3">
+
+        <!-- Finançadors del projecte -->
+        <div>
+          <div class="sponsor-cat-label">Finançadors del projecte</div>
+          <div class="sponsor-logos">
+            <a href="https://www.uic.es/" target="_blank" rel="noopener" aria-label="UIC">
+              <img src="/img/uic_logo.png" alt="UIC — Universitat Internacional de Catalunya" class="logo-tall" />
+            </a>
+            <a href="https://www.barcelonactua.org/" target="_blank" rel="noopener" aria-label="Barcelonactua">
+              <img src="/img/logoba.png" alt="Barcelonactua" />
+            </a>
+            <a href="https://roviralta.org/" target="_blank" rel="noopener" aria-label="Fundació Roviralta">
+              <img src="/img/roviralta.png" alt="Fundació Roviralta" style="height:clamp(56px,9vw,100px);" />
+            </a>
+          </div>
+        </div>
+
+        <!-- Patrocinadors dels events -->
+        <div>
+          <div class="sponsor-cat-label">Patrocinadors dels events benèfics</div>
+          <div class="sponsor-logos">
+            <a href="https://www.estrelladamm.com/" target="_blank" rel="noopener" aria-label="Estrella Damm">
+              <img src="/img/estrelladamm.png" alt="Estrella Damm" />
+            </a>
+            <a href="https://www.elbruc.com/" target="_blank" rel="noopener" aria-label="Bruc">
+              <img src="/img/bruc.png" alt="Bruc" />
+            </a>
+            <a href="https://artbo.es/" target="_blank" rel="noopener" aria-label="ArtBo">
+              <img src="/img/artbo.png" alt="ArtBo" />
+            </a>
+            <a href="https://arenas.cat/" target="_blank" rel="noopener" aria-label="Arenas de Barcelona">
+              <img src="/img/arenas.png" alt="Arenas de Barcelona" />
+            </a>
+            <a href="https://cuetara.es/" target="_blank" rel="noopener" aria-label="Cuétara">
+              <img src="/img/cuetara.png" alt="Cuétara" />
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =========================================================
+       SLIDE 6 — DONACIONS
+       ========================================================= -->
+  <section class="slide" id="slide6">
+
+    <div class="tri-bg">
+      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <polygon points="15,8 5,26 25,26"    fill="rgba(79,179,217,.06)"/>
+        <polygon points="185,10 175,28 195,28" fill="rgba(79,179,217,.05)"/>
+        <polygon points="100,5 88,26 112,26"  fill="rgba(79,179,217,.04)"/>
+        <polygon points="50,82 40,98 60,98"   fill="rgba(79,179,217,.05)"/>
+        <polygon points="150,78 140,95 160,95" fill="rgba(200,148,100,.05)"/>
+      </svg>
+    </div>
+
+    <div class="slide-eyebrow rev">Ara és el teu torn</div>
+    <h2 class="slide-title rev rev-d1">
+      Confia en<br/>la teva <span class="accent">gota d'aigua</span>
+    </h2>
+
+    <p class="dona-tagline rev rev-d2">
+      A part de les empreses…<br/>
+      <em>confiem en la vostra ajuda personal.</em><br/>
+      Qualsevol aportació fa la diferència — des d'1&nbsp;€ fins al que puguis.
+    </p>
+
+    <div class="dona-amount rev rev-d3">
+      <span class="amount-chip">5 € · Un dia d'aigua neta</span>
+      <span class="amount-chip">20 € · Una setmana</span>
+      <span class="amount-chip">50 € · Un mes</span>
+    </div>
+
+    <div class="dona-cta-wrap rev rev-d4">
+      <a
+        href="https://www.migranodearena.org/reto/agua-y-educacion-para-kenia-construyendo-el-futuro-de-emorogi"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="dona-btn"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 17s-7-4.5-7-9a4 4 0 017-2.65A4 4 0 0117 8c0 4.5-7 9-7 9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" fill="rgba(255,255,255,.2)"/>
+        </svg>
+        Fes la teva aportació
+      </a>
+      <span class="dona-platform">Via <strong>migranodearena.org</strong> · plataforma segura · a favor de l'ONG ADESCI</span>
+    </div>
+
+    <p class="dona-heart">Vitalqua Project · Kènia 2026 · <a href="/index.html" style="color:var(--cy-dk)">vitalquaproject.com</a></p>
+
+  </section>
+
+  <script>
+    (function () {
+
+      // ─── Slides list ───────────────────────────────────────────
+      const slideIds = ['portada','slide1','slide2','slide3','slide4','slide5','slide6'];
+      const slides   = slideIds.map(id => document.getElementById(id));
+      const dots     = document.querySelectorAll('.dot');
+      const progress = document.getElementById('progressBar');
+
+      // ─── Reveal on scroll ──────────────────────────────────────
+      const revObs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            revObs.unobserve(e.target);
+          }
+        }
+      }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+      document.querySelectorAll('.rev').forEach(el => revObs.observe(el));
+
+      // ─── Active dot tracking ───────────────────────────────────
+      let currentSlide = 0;
+
+      function setActive(idx) {
+        if (idx === currentSlide) return;
+        currentSlide = idx;
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        // progress bar
+        const pct = slides.length > 1 ? (idx / (slides.length - 1)) * 100 : 0;
+        progress.style.width = pct + '%';
+      }
+
+      const slideObs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            const idx = slides.indexOf(e.target);
+            if (idx !== -1) setActive(idx);
+          }
+        }
+      }, { threshold: 0.5 });
+      slides.forEach(s => slideObs.observe(s));
+
+      // ─── Dot click → scroll ────────────────────────────────────
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          slides[i].scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // ─── Keyboard navigation ───────────────────────────────────
+      document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+          e.preventDefault();
+          const next = Math.min(currentSlide + 1, slides.length - 1);
+          slides[next].scrollIntoView({ behavior: 'smooth' });
+        }
+        if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+          e.preventDefault();
+          const prev = Math.max(currentSlide - 1, 0);
+          slides[prev].scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

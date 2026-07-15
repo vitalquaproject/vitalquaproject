@@ -369,106 +369,157 @@
     @media (max-width: 600px) { .stat-divider { display: none; } }
 
     /* =========================================================
-       SLIDE 3 — LA SOLUCIÓ
+       SLIDE 3 — LA SOLUCIÓ (PROCÉS INLINE)
        ========================================================= */
     #slide3 {
-      background:
-        radial-gradient(ellipse 55% 55% at 50% 100%, rgba(15,58,86,.6) 0%, transparent 70%),
-        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(42,133,179,.08) 0%, transparent 65%),
-        var(--navy);
+      padding: 0;
+      background: var(--navy);
+      overflow: hidden;
     }
 
-    .process-preview {
-      margin-top: clamp(32px, 5vw, 52px);
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(79,179,217,.15);
-      border-radius: 20px;
-      padding: clamp(24px, 4vw, 48px);
-      max-width: 700px;
-      width: 100%;
+    .proc-scene-fixed {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 24px;
+      z-index: 1;
     }
 
-    .process-stages {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      flex-wrap: wrap;
-      justify-content: center;
+    #procScene {
+      flex: 1;
       width: 100%;
+      min-height: 0;
+      display: block;
+      pointer-events: none;
     }
 
-    .process-tri {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      flex: 1 1 80px;
+    .proc-indicators {
+      height: 72px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 10px 20px;
+      background: rgba(7,16,30,0.88);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(79,179,217,0.15);
+      flex-shrink: 0;
     }
 
-    .tri-shape {
-      width: 0; height: 0;
-      border-left: 22px solid transparent;
-      border-right: 22px solid transparent;
-      border-bottom: 38px solid;
-      position: relative;
-    }
-    .tri-shape.t1 { border-bottom-color: rgba(79,179,217,.7); }
-    .tri-shape.t2 { border-bottom-color: rgba(79,179,217,.58); }
-    .tri-shape.t3 { border-bottom-color: rgba(79,179,217,.46); }
-    .tri-shape.t4 { border-bottom-color: rgba(79,179,217,.34); }
-    .tri-shape.t5 { border-bottom-color: rgba(79,179,217,.22); }
-    .tri-shape.t6 { border-bottom-color: rgba(79,179,217,.14); }
-    .tri-shape.t7 { border-bottom-color: rgba(200,148,100,.55); }
+    .proc-indicator { display: flex; flex-direction: column; gap: 3px; }
 
-    .tri-label {
-      font-size: 0.6rem;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-      text-align: center;
-      max-width: 68px;
-      line-height: 1.3;
-    }
-
-    .process-arrow {
-      color: var(--cy-dk);
-      font-size: 1.1rem;
-      flex: 0 0 auto;
-      margin: 0 4px;
-      padding-bottom: 24px;
-    }
-
-    .process-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 28px;
-      background: linear-gradient(135deg, var(--cy-dk), var(--cy));
-      color: #fff;
+    .proc-ind-label {
+      font-size: 0.58rem;
       font-weight: 700;
-      font-size: clamp(0.85rem, 1.3vw, 1rem);
-      letter-spacing: 0.03em;
-      border-radius: 999px;
-      transition: transform 220ms var(--ease), box-shadow 220ms ease;
-      box-shadow: 0 4px 20px rgba(42,133,179,.4);
-      text-decoration: none;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
-    .process-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(42,133,179,.5);
-    }
-    .process-cta svg { flex-shrink: 0; }
 
-    .process-desc {
-      font-size: clamp(0.85rem, 1.2vw, 0.98rem);
-      color: var(--faint);
-      text-align: center;
-      line-height: 1.6;
-      max-width: 500px;
+    .proc-ind-value {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .proc-ind-bar {
+      display: block;
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .proc-ind-bar-fill {
+      display: block;
+      height: 100%;
+      border-radius: 2px;
+      transition: width 700ms var(--ease), background 500ms var(--ease);
+    }
+
+    .proc-hscroll {
+      position: absolute;
+      inset: 0;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      z-index: 2;
+      touch-action: pan-x;
+    }
+    .proc-hscroll::-webkit-scrollbar { display: none; }
+
+    .proc-hsteps { display: flex; height: 100%; }
+
+    .proc-hstep {
+      flex-shrink: 0;
+      width: 100vw;
+      height: 100%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    .proc-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(calc(-50% - 36px));
+      z-index: 3;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(79,179,217,0.3);
+      background: rgba(7,16,30,0.7);
+      backdrop-filter: blur(8px);
+      color: var(--cy);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 200ms ease, border-color 200ms ease, opacity 200ms ease;
+      pointer-events: all;
+    }
+    .proc-arrow:hover { background: rgba(79,179,217,0.15); border-color: rgba(79,179,217,0.5); }
+    .proc-arrow.disabled { opacity: 0.18; pointer-events: none; }
+    #procPrev { left: clamp(12px, 2vw, 28px); }
+    #procNext { right: clamp(12px, 2vw, 28px); }
+
+    .proc-hdots {
+      position: absolute;
+      bottom: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      background: rgba(7,16,30,0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(79,179,217,0.12);
+      border-radius: 999px;
+      pointer-events: none;
+    }
+    .proc-hdot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(163,208,227,0.22);
+      transition: background 250ms ease, width 250ms var(--ease), border-radius 250ms var(--ease);
+    }
+    .proc-hdot.active {
+      background: var(--cy);
+      width: 12px;
+      border-radius: 3px;
+    }
+
+    @media (max-width: 600px) {
+      .proc-indicators { gap: 8px; padding: 8px 12px; height: 64px; }
+      .proc-ind-label { font-size: 0.52rem; }
+      .proc-ind-value { font-size: 0.95rem; }
+      .proc-arrow { width: 38px; height: 38px; }
+      .proc-hdots { display: none; }
     }
 
     /* =========================================================
@@ -939,73 +990,69 @@
   </section>
 
   <!-- =========================================================
-       SLIDE 3 — LA SOLUCIÓ
+       SLIDE 3 — LA SOLUCIÓ (PROCÉS INLINE)
        ========================================================= -->
   <section class="slide" id="slide3">
 
-    <div class="tri-bg">
-      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
-        <polygon points="30,10 20,28 40,28"   fill="rgba(79,179,217,.06)"/>
-        <polygon points="170,8 160,24 180,24"  fill="rgba(79,179,217,.05)"/>
-        <polygon points="100,85 90,100 110,100" fill="rgba(79,179,217,.04)"/>
-      </svg>
-    </div>
-
-    <div class="slide-body" style="display:flex;flex-direction:column;align-items:center;">
-      <div class="slide-eyebrow rev">Enginyeria</div>
-      <h2 class="slide-title rev rev-d1">La solució</h2>
-
-      <div class="process-preview rev rev-d2">
-        <p class="process-desc">
-          Una planta de purificació d'aigua solar, passiva i autònoma —
-          dissenyada pas a pas per al context de Kènia.
-        </p>
-
-        <div class="process-stages">
-          <div class="process-tri">
-            <div class="tri-shape t1"></div>
-            <div class="tri-label">Bombeig solar</div>
-          </div>
-          <div class="process-arrow">→</div>
-          <div class="process-tri">
-            <div class="tri-shape t2"></div>
-            <div class="tri-label">Dipòsit tampó</div>
-          </div>
-          <div class="process-arrow">→</div>
-          <div class="process-tri">
-            <div class="tri-shape t3"></div>
-            <div class="tri-label">Airejació</div>
-          </div>
-          <div class="process-arrow">→</div>
-          <div class="process-tri">
-            <div class="tri-shape t4"></div>
-            <div class="tri-label">Decantació</div>
-          </div>
-          <div class="process-arrow">→</div>
-          <div class="process-tri">
-            <div class="tri-shape t5"></div>
-            <div class="tri-label">Filtre grava</div>
-          </div>
-          <div class="process-arrow">→</div>
-          <div class="process-tri">
-            <div class="tri-shape t6"></div>
-            <div class="tri-label">Filtre sorra</div>
-          </div>
-          <div class="process-arrow">→</div>
-          <div class="process-tri">
-            <div class="tri-shape t7"></div>
-            <div class="tri-label">Biochar</div>
-          </div>
+    <!-- SVG morphing scene (sits behind the scroll overlay) -->
+    <div class="proc-scene-fixed">
+      <svg id="procScene" viewBox="0 0 160 100" preserveAspectRatio="xMidYMid meet"
+           role="img" aria-label="Water purification plant visualization"></svg>
+      <div class="proc-indicators" aria-label="Contamination levels">
+        <div class="proc-indicator">
+          <span class="proc-ind-label">Turbidity</span>
+          <div class="proc-ind-row"><span id="pval-turb" class="proc-ind-value">100%</span></div>
+          <span class="proc-ind-bar"><span class="proc-ind-bar-fill" id="pbar-turb" style="width:100%;background:#9B7828;"></span></span>
         </div>
-
-        <a href="/process.html" target="_blank" class="process-cta">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Explorar el procés en detall
-        </a>
+        <div class="proc-indicator">
+          <span class="proc-ind-label">Gases</span>
+          <div class="proc-ind-row"><span id="pval-gas" class="proc-ind-value">100%</span></div>
+          <span class="proc-ind-bar"><span class="proc-ind-bar-fill" id="pbar-gas" style="width:100%;background:#6B7890;"></span></span>
+        </div>
+        <div class="proc-indicator">
+          <span class="proc-ind-label">Pathogens</span>
+          <div class="proc-ind-row"><span id="pval-path" class="proc-ind-value">100%</span></div>
+          <span class="proc-ind-bar"><span class="proc-ind-bar-fill" id="pbar-path" style="width:100%;background:#27500A;"></span></span>
+        </div>
+        <div class="proc-indicator">
+          <span class="proc-ind-label">Organics</span>
+          <div class="proc-ind-row"><span id="pval-org" class="proc-ind-value">100%</span></div>
+          <span class="proc-ind-bar"><span class="proc-ind-bar-fill" id="pbar-org" style="width:100%;background:#2A85B3;"></span></span>
+        </div>
       </div>
     </div>
+
+    <!-- Transparent horizontal snap scroll (drives SVG morph) -->
+    <div class="proc-hscroll" id="procHScroll">
+      <div class="proc-hsteps">
+        <div class="proc-hstep" data-step="0"></div>
+        <div class="proc-hstep" data-step="1"></div>
+        <div class="proc-hstep" data-step="2"></div>
+        <div class="proc-hstep" data-step="3"></div>
+        <div class="proc-hstep" data-step="4"></div>
+        <div class="proc-hstep" data-step="5"></div>
+        <div class="proc-hstep" data-step="6"></div>
+        <div class="proc-hstep" data-step="7"></div>
+        <div class="proc-hstep" data-step="8"></div>
+        <div class="proc-hstep" data-step="9"></div>
+        <div class="proc-hstep" data-step="10"></div>
+      </div>
+    </div>
+
+    <!-- Navigation arrows -->
+    <button class="proc-arrow disabled" id="procPrev" aria-label="Etapa anterior">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="proc-arrow" id="procNext" aria-label="Etapa següent">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- Horizontal progress dots -->
+    <div class="proc-hdots" id="procHDots"></div>
 
   </section>
 
@@ -1245,6 +1292,717 @@
       });
 
     })();
+  </script>
+
+
+  <!-- =========================================================
+       PROCESS INLINE ENGINE
+       Adapted from main.js — horizontal snap inside #slide3.
+       No text/descriptions — pure visual morphing flow.
+       ========================================================= -->
+  <script>
+  (function () {
+    'use strict';
+
+    const NS        = 'http://www.w3.org/2000/svg';
+    const N         = 60;
+    const DUR_MORPH = 1100;
+    const STAGGER   = 12;
+
+    const P = {
+      wHi:'#D6EEF6', wLt:'#A3D0E3', w:'#4FB3D9', wDk:'#2A85B3', wXdk:'#1B5F85', sea:'#0F3A56',
+      navy:'#0F1A2E', ink:'#3F4F6B', mut:'#6B7890', fnt:'#A3B5CD',
+      cHi:'#B8B6AE', cMd:'#888780', cDk:'#5F5E5A', cXdk:'#444441', cBlk:'#2C2C2A',
+      sHi:'#F0E4BA', sLt:'#E8D8A8', sMd:'#C8A870', sDk:'#B89858',
+      mud:'#9B7828', mudDk:'#6B4F10', mudXdk:'#3A1A08',
+      grLt:'#6DA843', grMd:'#4A8015', grDk:'#3B6D11', grXdk:'#27500A',
+      aHi:'#FFE066', aMd:'#FFD34E', aLo:'#FFBF3A',
+      moon:'#F4E8C0', moonDk:'#D9C99A', night:'#12213D', nightDp:'#07101E',
+      bg:'#F6F8FB', cy:'#4FB3D9'
+    };
+
+    function T(x1,y1,x2,y2,x3,y3,fill){ return { p:[[x1,y1],[x2,y2],[x3,y3]], f:fill }; }
+    function lerp(a,b,t){ return a+(b-a)*t; }
+    function easeOut(t){ return 1-(1-t)*(1-t)*(1-t); }
+
+    function parseColor(str){
+      if(typeof str!=='string') return [0,0,0,0];
+      if(str.startsWith('rgba')||str.startsWith('rgb')){
+        const m=str.match(/rgba?\(\s*([^,]+),\s*([^,]+),\s*([^,)]+)(?:,\s*([^)]+))?\s*\)/);
+        if(!m) return [0,0,0,0];
+        return [parseFloat(m[1]),parseFloat(m[2]),parseFloat(m[3]),m[4]?parseFloat(m[4]):1];
+      }
+      if(str.startsWith('#')){
+        const h=str.slice(1);
+        if(h.length===6){const n=parseInt(h,16);return[(n>>16)&255,(n>>8)&255,n&255,1];}
+        if(h.length===3){return[parseInt(h[0]+h[0],16),parseInt(h[1]+h[1],16),parseInt(h[2]+h[2],16),1];}
+      }
+      return [0,0,0,0];
+    }
+    function rgbaStr([r,g,b,a]){ return `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a.toFixed(3)})`; }
+    function lerpColor(a,b,t){ return [lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t),lerp(a[3],b[3],t)]; }
+
+    function dummyAt(i){
+      const sx=80+((i*29)%160)-80, sy=2+((i*17)%10);
+      return { p:[[sx,sy],[sx+0.6,sy],[sx+0.3,sy+0.6]], f:'rgba(220,230,240,0)' };
+    }
+    function fill60(tris){
+      const out=tris.slice(0,N);
+      while(out.length<N) out.push(dummyAt(out.length));
+      return out;
+    }
+
+    function F(path,size,fill,speed,phase=0){ return {type:'flow',path,size,f:fill,speed,phase}; }
+    function B(x,yTop,yBot,size,fill,speed,phase=0){ return {type:'bubble',x,yTop,yBot,size,f:fill,speed,phase}; }
+    function D(xMin,xMax,yTop,yBot,size,fill,speed,phase=0){ return {type:'drift',xMin,xMax,yTop,yBot,size,f:fill,speed,phase}; }
+    function Pu(x,y,size,fill,speed,phase=0){ return {type:'pulse',x,y,size,f:fill,speed,phase}; }
+
+    function samplePath(path,t){
+      if(path.length<2) return path[0]||[0,0];
+      const lens=[];let total=0;
+      for(let i=0;i<path.length-1;i++){
+        const dx=path[i+1][0]-path[i][0],dy=path[i+1][1]-path[i][1];
+        const L=Math.hypot(dx,dy); lens.push(L); total+=L;
+      }
+      let target=t*total;
+      for(let i=0;i<lens.length;i++){
+        if(target<=lens[i]||i===lens.length-1){
+          const u=lens[i]>0?target/lens[i]:0;
+          return [lerp(path[i][0],path[i+1][0],u),lerp(path[i][1],path[i+1][1],u)];
+        }
+        target-=lens[i];
+      }
+      return path[path.length-1];
+    }
+    function triAt(cx,cy,size,rot=0){
+      const pts=[];
+      for(let i=0;i<3;i++){
+        const a=rot+(Math.PI/2)+(i*2*Math.PI/3);
+        pts.push([cx+size*Math.cos(a),cy+size*Math.sin(a)]);
+      }
+      return pts;
+    }
+
+    /* ---- Scene 0: Intro ---- */
+    function scene0(){
+      const tris=[],parts=[],cx=80,cy=48,R=18,H=26;
+      for(let i=0;i<8;i++){
+        const a=(i/8)*Math.PI*2,tx=cx+Math.sin(a)*34,ty=cy-Math.cos(a)*34;
+        const bx1=cx+Math.sin(a-0.06)*23,by1=cy-Math.cos(a-0.06)*23;
+        const bx2=cx+Math.sin(a+0.06)*23,by2=cy-Math.cos(a+0.06)*23;
+        tris.push(T(tx,ty,bx1,by1,bx2,by2,P.aMd));
+      }
+      tris.push(T(cx,cy-H,cx-R,cy,cx,cy,P.w));
+      tris.push(T(cx,cy-H,cx,cy,cx+R,cy,P.wHi));
+      const cols=[P.wHi,P.wLt,P.w,P.w,P.wDk,P.wDk];
+      for(let i=0;i<6;i++){
+        const a1=(i/6)*Math.PI,a2=((i+1)/6)*Math.PI;
+        tris.push(T(cx,cy,cx+R*Math.cos(a1),cy+R*Math.sin(a1),cx+R*Math.cos(a2),cy+R*Math.sin(a2),cols[i]));
+      }
+      const corners=[[20,22],[140,22],[16,80],[144,80],[80,12],[80,86]];
+      for(let i=0;i<corners.length;i++){
+        const [fx,fy]=corners[i];
+        tris.push(T(fx,fy-2,fx-1.4,fy+1,fx+1.4,fy+1,i%2?P.wLt:P.wHi));
+      }
+      for(let i=0;i<2;i++){
+        const a=(i/2)*Math.PI*2,path=[];
+        for(let k=0;k<=24;k++){const ang=a+(k/24)*Math.PI*2;path.push([cx+46*Math.cos(ang),cy+30*Math.sin(ang)]);}
+        parts.push(F(path,1.0,P.wLt,0.04,i*0.5));
+      }
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 1: Night ---- */
+    function scene1(){
+      const tris=[],parts=[];
+      tris.push(T(0,72,28,58,48,70,P.sea)); tris.push(T(48,70,68,62,92,72,P.sea));
+      tris.push(T(92,72,118,60,160,72,P.sea)); tris.push(T(0,68,40,64,20,72,P.wXdk));
+      tris.push(T(0,72,160,70,160,88,P.navy)); tris.push(T(0,72,160,88,0,88,P.navy));
+      tris.push(T(0,80,84,76,68,100,P.nightDp)); tris.push(T(68,100,84,76,160,100,P.nightDp));
+      const mx=118,my=28,mr=9;
+      tris.push(T(mx,my,mx+mr,my,mx,my-mr,P.moon)); tris.push(T(mx,my,mx+mr,my,mx,my+mr,P.moonDk));
+      tris.push(T(mx,my,mx,my+mr,mx-mr,my,P.moon)); tris.push(T(mx,my,mx-mr,my,mx,my-mr,P.moonDk));
+      const stars=[[14,12],[28,8],[42,16],[56,10],[72,14],[84,6],[100,18],[136,10],[148,22],[26,28],[44,34],[10,40],[146,38],[78,30],[62,24],[96,34]];
+      for(const [sx,sy] of stars) tris.push(T(sx,sy-1.1,sx-0.9,sy+0.7,sx+0.9,sy+0.7,'#E8E0B8'));
+      const moreStars=[[32,44],[60,48],[80,40],[102,52],[120,46],[66,38],[92,46],[50,50],[6,6],[20,20],[38,2],[54,18],[76,4],[94,10],[110,20],[134,4],[6,30],[18,44],[4,52],[154,30],[152,50],[142,18],[134,40],[110,40],[22,48],[34,56],[48,40],[114,54],[128,44],[140,52],[72,54],[86,52]];
+      for(let i=0;i<moreStars.length;i++){
+        const [sx,sy]=moreStars[i],bright=i<8?'#E8E0B8':i<20?'#C9D3E0':'#8AA0BA',s=i<8?0.9:0.7;
+        tris.push(T(sx,sy-s,sx-s*0.9,sy+s*0.7,sx+s*0.9,sy+s*0.7,bright));
+      }
+      parts.push(Pu(28,8,1.0,'#F4E8C0',0.3,0)); parts.push(Pu(84,6,1.0,'#F4E8C0',0.25,0.4));
+      parts.push(Pu(136,10,1.0,'#F4E8C0',0.28,0.2)); parts.push(Pu(mx,my,10,'rgba(244,232,192,0.15)',0.15,0));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 2: Solar Pumping ---- */
+    function scene2(){
+      const tris=[],parts=[],sx=132,sy=20;
+      for(let i=0;i<8;i++){
+        const a=(i/8)*Math.PI*2,tx=sx+Math.sin(a)*16,ty=sy-Math.cos(a)*16;
+        const bx1=sx+Math.sin(a-0.10)*9,by1=sy-Math.cos(a-0.10)*9;
+        const bx2=sx+Math.sin(a+0.10)*9,by2=sy-Math.cos(a+0.10)*9;
+        tris.push(T(tx,ty,bx1,by1,bx2,by2,P.aMd));
+      }
+      const sr=6;
+      tris.push(T(sx,sy,sx+sr,sy,sx,sy-sr,P.aHi)); tris.push(T(sx,sy,sx+sr,sy,sx,sy+sr,P.aMd));
+      tris.push(T(sx,sy,sx,sy+sr,sx-sr,sy,P.aLo)); tris.push(T(sx,sy,sx-sr,sy,sx,sy-sr,P.aMd));
+      tris.push(T(0,74,44,60,78,76,'#C4D4C0')); tris.push(T(78,76,114,66,160,76,'#B4C4AC'));
+      tris.push(T(0,78,160,76,160,92,P.sLt)); tris.push(T(0,78,160,92,0,92,P.sMd));
+      const pX=52,pY=38,pW=48,pH=14,tilt=4;
+      tris.push(T(pX,pY,pX+pW,pY+tilt,pX+pW,pY+pH+tilt,P.navy)); tris.push(T(pX,pY,pX+pW,pY+pH+tilt,pX,pY+pH,P.ink));
+      const cellA=['#C0BEB4','#A0A097','#B8B6AE','#9B9990','#AEB8BE'],cellB=['#888780','#6E6D68','#7C7B74','#5F5E5A','#7A8890'];
+      for(let i=0;i<5;i++){
+        const u1=i/5,u2=(i+1)/5,x1=pX+u1*pW,y1=pY+u1*tilt,x2=pX+u2*pW,y2=pY+u2*tilt;
+        tris.push(T(x1,y1,x2,y2,x2,y2+pH,cellA[i])); tris.push(T(x1,y1,x2,y2+pH,x1,y1+pH,cellB[i]));
+      }
+      tris.push(T(74,53,78,54,77,78,P.cXdk)); tris.push(T(74,53,77,78,73,78,P.cBlk)); tris.push(T(66,78,84,78,75,70,P.cXdk));
+      tris.push(T(6,80,38,78,42,84,P.w)); tris.push(T(6,80,42,84,10,88,P.wDk)); tris.push(T(38,78,42,84,46,82,P.wLt));
+      tris.push(T(20,70,30,70,30,82,P.cMd)); tris.push(T(20,70,30,82,20,82,P.cDk));
+      tris.push(T(18,66,32,66,32,70,P.cDk)); tris.push(T(18,66,32,70,18,70,P.cXdk));
+      tris.push(T(23,62,27,62,27,66,P.cMd)); tris.push(T(23,62,27,66,23,66,P.cDk));
+      tris.push(T(23,64,160,64,160,68,P.cMd)); tris.push(T(23,64,160,68,23,68,P.cDk));
+      tris.push(T(21,60,29,60,29,70,P.cXdk)); tris.push(T(21,60,29,70,21,70,P.cBlk));
+      tris.push(T(108,76,112,72,114,78,'#6DA843')); tris.push(T(46,78,50,74,52,80,'#6DA843'));
+      tris.push(T(16,10,28,8,24,14,'#EEF3F8')); tris.push(T(24,14,36,12,30,16,'#E4ECF2')); tris.push(T(62,6,76,4,72,10,'#EEF3F8'));
+      tris.push(T(16,72,18,72,17,75,P.wHi)); tris.push(T(32,72,34,72,33,75,P.wHi));
+      tris.push(T(14,86,16,86,15,88,P.wHi)); tris.push(T(36,86,38,86,37,88,P.wHi));
+      tris.push(T(58,92,62,92,60,95,P.cMd)); tris.push(T(100,88,104,88,102,91,P.sDk));
+      tris.push(T(132,91,136,91,134,94,P.cDk)); tris.push(T(70,88,74,88,72,91,P.sMd));
+      tris.push(T(110,32,113,32,111,35,P.aHi)); tris.push(T(50,24,53,24,51,27,P.wHi)); tris.push(T(150,50,153,50,151,53,P.wHi));
+      for(let i=0;i<5;i++) parts.push(F([[25,66],[25,64],[160,66]],1.5,P.w,0.35,i/5));
+      parts.push(Pu(16,85,1.0,P.wHi,0.4,0)); parts.push(Pu(30,83,0.9,P.wHi,0.35,0.3)); parts.push(Pu(42,85,1.0,P.wLt,0.38,0.5));
+      parts.push(Pu(sx,sy,5,'rgba(255,224,102,0.25)',0.2,0));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 3: Buffer Tank ---- */
+    function scene3(){
+      const tris=[],parts=[],tx=58,ty=20,tw=44,th=62,cx2=tx+tw/2;
+      tris.push(T(tx,ty+4,tx+6,ty+4,tx+6,ty+th,P.cDk)); tris.push(T(tx,ty+4,tx+6,ty+th,tx,ty+th-4,P.cBlk));
+      tris.push(T(tx+tw-6,ty+4,tx+tw,ty+4,tx+tw,ty+th-4,P.cMd)); tris.push(T(tx+tw-6,ty+4,tx+tw,ty+th-4,tx+tw-6,ty+th,P.cHi));
+      tris.push(T(tx+6,ty+4,tx+tw-6,ty+4,tx+tw-6,ty+th,P.cHi)); tris.push(T(tx+6,ty+4,tx+tw-6,ty+th,tx+6,ty+th,P.cMd));
+      tris.push(T(tx,ty+4,cx2,ty-2,tx+tw,ty+4,P.cMd)); tris.push(T(tx,ty+4,tx+tw,ty+4,cx2,ty+8,P.cDk));
+      tris.push(T(tx,ty+th,cx2,ty+th-4,tx+tw,ty+th,P.cDk)); tris.push(T(tx,ty+th,tx+tw,ty+th,cx2,ty+th+4,P.cBlk));
+      const wLo=ty+20,wHi2=ty+th-5;
+      tris.push(T(tx+8,ty+6,tx+tw-8,ty+6,tx+tw-8,wLo-1,'#EEF3F8')); tris.push(T(tx+8,ty+6,tx+tw-8,wLo-1,tx+8,wLo-1,'#E4ECF2'));
+      tris.push(T(tx+8,wLo,tx+tw-8,wLo,tx+tw-8,wLo+2,P.wHi)); tris.push(T(tx+8,wLo,tx+tw-8,wLo+2,tx+8,wLo+2,P.w));
+      const midX=tx+tw/2,midY=(wLo+wHi2)/2;
+      tris.push(T(tx+8,wLo+2,tx+tw-8,wLo+2,midX,midY,P.w)); tris.push(T(tx+tw-8,wLo+2,tx+tw-8,wHi2,midX,midY,P.wDk));
+      tris.push(T(tx+tw-8,wHi2,tx+8,wHi2,midX,midY,P.wXdk)); tris.push(T(tx+8,wHi2,tx+8,wLo+2,midX,midY,P.wDk));
+      tris.push(T(40,ty+8,tx,ty+8,tx,ty+14,P.cMd)); tris.push(T(40,ty+8,tx,ty+14,40,ty+14,P.cDk)); tris.push(T(38,ty+6,42,ty+6,40,ty+16,P.cXdk));
+      tris.push(T(tx+tw,ty+th-12,128,ty+th-12,128,ty+th-8,P.cMd)); tris.push(T(tx+tw,ty+th-12,128,ty+th-8,tx+tw,ty+th-8,P.cDk)); tris.push(T(126,ty+th-14,130,ty+th-14,128,ty+th-6,P.cXdk));
+      tris.push(T(tx+10,ty+10,tx+12,ty+10,tx+11,ty+th-6,'#E6EAED')); tris.push(T(tx+22,ty+14,tx+23,ty+14,tx+22.5,ty+th-10,'#E6EAED')); tris.push(T(tx+tw-16,ty+12,tx+tw-15,ty+12,tx+tw-15.5,ty+th-8,'#D4DADE'));
+      tris.push(T(tx+8,ty+28,tx+10,ty+28,tx+9,ty+29,P.cDk)); tris.push(T(tx+8,ty+40,tx+10,ty+40,tx+9,ty+41,P.cDk));
+      tris.push(T(tx+8,ty+52,tx+10,ty+52,tx+9,ty+53,P.cDk)); tris.push(T(tx+8,ty+64,tx+10,ty+64,tx+9,ty+65,P.cDk));
+      tris.push(T(tx+14,ty+20,tx+15,ty+20,tx+14.5,ty+21.5,P.wHi)); tris.push(T(tx+28,ty+32,tx+29,ty+32,tx+28.5,ty+33.5,P.wHi));
+      tris.push(T(tx+36,ty+26,tx+37,ty+26,tx+36.5,ty+27.5,P.wLt)); tris.push(T(tx+20,ty+48,tx+21,ty+48,tx+20.5,ty+49.5,P.wHi));
+      tris.push(T(tx+34,ty+54,tx+35,ty+54,tx+34.5,ty+55.5,P.wLt)); tris.push(T(tx+16,ty+56,tx+17,ty+56,tx+16.5,ty+57.5,P.wHi));
+      tris.push(T(cx2-2,ty-6,cx2,ty-10,cx2+2,ty-6,'rgba(230,240,248,0.6)')); tris.push(T(cx2-4,ty-10,cx2-2,ty-14,cx2,ty-10,'rgba(230,240,248,0.4)'));
+      tris.push(T(cx2+2,ty-10,cx2+4,ty-14,cx2+6,ty-10,'rgba(230,240,248,0.4)')); tris.push(T(cx2-1,ty-14,cx2,ty-18,cx2+1,ty-14,'rgba(230,240,248,0.25)'));
+      tris.push(T(tx+12,wLo+1,tx+14,wLo+1,tx+13,wLo+2,P.wHi)); tris.push(T(tx+22,wLo+1,tx+24,wLo+1,tx+23,wLo+2,P.wHi));
+      tris.push(T(tx+32,wLo+1,tx+33,wLo+1,tx+32.5,wLo+2,P.wHi)); tris.push(T(tx+18,wLo+3,tx+20,wLo+3,tx+19,wLo+4,P.wLt)); tris.push(T(tx+28,wLo+3,tx+30,wLo+3,tx+29,wLo+4,P.wLt));
+      tris.push(T(tx-4,ty+th+4,tx+tw+4,ty+th+4,tx+tw,ty+th+7,'rgba(15,26,46,0.08)')); tris.push(T(tx-4,ty+th+4,tx+tw,ty+th+7,tx+4,ty+th+7,'rgba(15,26,46,0.06)'));
+      for(let i=0;i<6;i++){const dx=tx-2+i*(tw+4)/5,dy=ty+th+2+(i%2)*2;tris.push(T(dx,dy,dx+1,dy,dx+0.5,dy+1.5,P.wHi));}
+      tris.push(T(10,30,12,30,11,32,P.wHi)); tris.push(T(22,14,24,14,23,16,P.wHi));
+      tris.push(T(140,18,142,18,141,20,P.aHi)); tris.push(T(146,40,148,40,147,42,P.wHi));
+      tris.push(T(12,70,14,70,13,72,P.wLt)); tris.push(T(150,72,152,72,151,74,P.wLt));
+      for(let i=0;i<3;i++) parts.push(F([[40,ty+11],[tx+8,ty+11],[tx+12,wLo]],1.1,P.w,0.28,i/3));
+      for(let i=0;i<3;i++) parts.push(F([[tx+tw-12,wHi2-4],[tx+tw-4,ty+th-10],[128,ty+th-10]],1.1,P.wDk,0.28,i/3));
+      parts.push(B(cx2-2,ty-18,ty-4,0.6,'rgba(230,240,248,0.7)',0.3,0)); parts.push(B(cx2+2,ty-20,ty-4,0.5,'rgba(230,240,248,0.5)',0.25,0.4));
+      parts.push(Pu(tx+tw*0.35,wLo+1,0.9,P.wHi,0.6,0)); parts.push(Pu(tx+tw*0.65,wLo+1,0.9,P.wHi,0.55,0.4));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 4: Cascade Aeration ---- */
+    function scene4(){
+      const tris=[],parts=[];
+      const steps=[[18,22,50,4],[48,38,50,4],[78,54,50,4],[108,70,50,4]];
+      for(let i=0;i<steps.length;i++){
+        const [x,y,w,h]=steps[i];
+        tris.push(T(x,y-1,x+w,y-1,x+w,y+1,P.wLt)); tris.push(T(x,y-1,x+w,y+1,x,y+1,P.w));
+        tris.push(T(x,y,x+w,y,x+w,y+h,P.cHi)); tris.push(T(x,y,x+w,y+h,x,y+h,P.cMd));
+        tris.push(T(x,y+h,x+w,y+h,x+w-3,y+h+2,P.cDk)); tris.push(T(x,y+h,x+w-3,y+h+2,x+3,y+h+2,P.cXdk));
+      }
+      const falls=[];
+      for(let i=0;i<steps.length-1;i++){
+        const [x,y,w,h]=steps[i],[,ny]=steps[i+1],fx=x+w,fy1=y+h,fy2=ny;
+        falls.push({fx,fy1,fy2});
+        tris.push(T(fx-2,fy1,fx+2,fy1,fx+2,fy2,P.wLt)); tris.push(T(fx-2,fy1,fx+2,fy2,fx-2,fy2,P.w));
+      }
+      tris.push(T(0,18,18,18,18,22,P.cMd)); tris.push(T(0,18,18,22,0,22,P.cDk));
+      tris.push(T(158,72,140,72,140,76,P.cMd)); tris.push(T(158,72,140,76,158,76,P.cDk));
+      tris.push(T(140,72,158,72,158,78,P.wDk)); tris.push(T(140,72,158,78,140,78,P.wXdk));
+      tris.push(T(0,92,160,92,160,100,P.sLt)); tris.push(T(0,92,160,100,0,100,P.sMd));
+      tris.push(T(8,88,14,88,11,94,P.cDk)); tris.push(T(20,90,26,90,23,95,P.cMd));
+      tris.push(T(146,88,154,88,150,94,P.cDk)); tris.push(T(130,90,136,90,133,95,P.cMd));
+      const splashes=[];
+      for(const f of falls){
+        splashes.push([f.fx-5,f.fy2-1],[f.fx-3,f.fy2-2],[f.fx+3,f.fy2-2],[f.fx+5,f.fy2-1],[f.fx,f.fy2-3],[f.fx+6,f.fy2+1]);
+      }
+      for(let i=0;i<18;i++){
+        const [sxx,syy]=splashes[i]||[80,10],size=0.55+(i%3)*0.15;
+        tris.push(T(sxx,syy-size,sxx-size*0.8,syy+size*0.6,sxx+size*0.8,syy+size*0.6,i%3===0?P.wHi:i%3===1?P.wLt:P.w));
+      }
+      for(const f of falls){
+        for(let k=0;k<4;k++) parts.push(F([[f.fx,f.fy1],[f.fx,f.fy2]],1.0,P.w,0.8,k/4));
+        parts.push(B(f.fx-4,f.fy2-6,f.fy2+2,0.8,P.wHi,0.6,0));
+        parts.push(B(f.fx+4,f.fy2-8,f.fy2+2,0.7,P.wLt,0.55,0.3));
+        parts.push(B(f.fx,f.fy2-10,f.fy2+2,0.6,P.wHi,0.5,0.6));
+        parts.push(D(f.fx-8,f.fx+8,f.fy2-12,f.fy2-4,0.5,'rgba(230,240,248,0.7)',0.25,0));
+      }
+      for(let i=0;i<3;i++) parts.push(F([[0,20],[18,20]],1.2,P.w,0.45,i/3));
+      for(let i=0;i<3;i++) parts.push(F([[140,74],[158,74]],1.2,P.wDk,0.45,i/3));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 5: Settling Tank ---- */
+    function scene5(){
+      const tris=[],parts=[],x1=16,x2=144,yT=20,yB=84;
+      tris.push(T(x2,yT,x2+6,yT+4,x2+6,yB-4,P.cDk)); tris.push(T(x2,yT,x2+6,yB-4,x2,yB,P.cBlk));
+      tris.push(T(x1,yT-3,x2,yT-3,x2,yT,P.cHi)); tris.push(T(x1,yT-3,x2,yT,x1,yT,P.cMd));
+      tris.push(T(x1,yB,x2,yB,x2,yB+3,P.cDk)); tris.push(T(x1,yB,x2,yB+3,x1,yB+3,P.cXdk));
+      tris.push(T(x1-3,yT,x1,yT,x1,yB,P.cMd)); tris.push(T(x1-3,yT,x1,yB,x1-3,yB,P.cDk));
+      const clrBot=yT+16;
+      for(let i=0;i<6;i++){
+        const u1=i/6,u2=(i+1)/6,xA=lerp(x1,x2,u1),xB=lerp(x1,x2,u2);
+        tris.push(T(xA,yT,xB,yT,xB,clrBot,i%2?P.wLt:P.wHi)); tris.push(T(xA,yT,xB,clrBot,xA,clrBot,i%2?P.w:P.wLt));
+      }
+      const mudTop=yT+42;
+      for(let i=0;i<6;i++){
+        const u1=i/6,u2=(i+1)/6,xA=lerp(x1,x2,u1),xB=lerp(x1,x2,u2);
+        tris.push(T(xA,clrBot,xB,clrBot,xB,mudTop,i%2?P.mud:P.sMd)); tris.push(T(xA,clrBot,xB,mudTop,xA,mudTop,i%2?P.sDk:P.mud));
+      }
+      const cxMid=(x1+x2)/2;
+      tris.push(T(x1,mudTop,cxMid,mudTop,x1,yB,P.mudDk)); tris.push(T(cxMid,mudTop,cxMid,yB,x1,yB,P.mudXdk));
+      tris.push(T(cxMid,mudTop,x2,mudTop,x2,yB,P.mudDk)); tris.push(T(cxMid,mudTop,x2,yB,cxMid,yB,P.mudXdk));
+      tris.push(T(x1+8,yB-6,x2-8,yB-6,x2-14,yB,'#2A1808')); tris.push(T(x1+8,yB-6,x2-14,yB,x1+14,yB,'#1A0804'));
+      tris.push(T(x1+12,yT,x1+15,yT,x1+15,mudTop+4,P.sea)); tris.push(T(x1+12,yT,x1+15,mudTop+4,x1+12,mudTop+4,P.navy));
+      tris.push(T(x2,yT+4,160,yT+4,160,yT+10,P.cMd)); tris.push(T(x2,yT+4,160,yT+10,x2,yT+10,P.cDk));
+      tris.push(T(0,clrBot-4,x1,clrBot-4,x1,clrBot+2,P.cMd)); tris.push(T(0,clrBot-4,x1,clrBot+2,0,clrBot+2,P.cDk));
+      tris.push(T(x1+12,yT+2,x1+14,yT+2,x1+13,yT+4,P.wHi)); tris.push(T(x1+40,yT+2,x1+42,yT+2,x1+41,yT+4,P.wHi));
+      tris.push(T(x1+70,yT+2,x1+72,yT+2,x1+71,yT+4,P.wLt)); tris.push(T(x1+100,yT+2,x1+102,yT+2,x1+101,yT+4,P.wHi));
+      tris.push(T(x1+22,clrBot+8,x1+26,clrBot+6,x1+24,clrBot+12,P.mudDk)); tris.push(T(x1+48,clrBot+4,x1+52,clrBot+6,x1+50,clrBot+10,P.mud));
+      tris.push(T(x1+74,clrBot+10,x1+78,clrBot+8,x1+76,clrBot+14,P.mudDk)); tris.push(T(x1+98,clrBot+6,x1+102,clrBot+8,x1+100,clrBot+12,P.mud));
+      tris.push(T(x1+60,clrBot+16,x1+64,clrBot+14,x1+62,clrBot+20,P.sDk)); tris.push(T(x1+84,clrBot+18,x1+88,clrBot+16,x1+86,clrBot+22,P.mudDk));
+      tris.push(T(x1+30,yB-12,x1+33,yB-14,x1+32,yB-8,P.mudXdk)); tris.push(T(x1+52,yB-8,x1+55,yB-10,x1+54,yB-4,'#2A1808'));
+      tris.push(T(x1+82,yB-10,x1+85,yB-12,x1+84,yB-6,P.mudXdk)); tris.push(T(x1+104,yB-14,x1+107,yB-16,x1+106,yB-10,'#2A1808'));
+      tris.push(T(x1+16,yT+6,x1+18,yT+6,x1+17,mudTop,'rgba(15,26,46,0.3)')); tris.push(T(x1+60,yB-2,x1+70,yB-2,x1+65,yB,'rgba(15,8,4,0.5)'));
+      for(let i=0;i<3;i++){
+        parts.push(F([[160,yT+7],[x2,yT+7],[x2-8,clrBot+4]],1.2,P.mud,0.25,i/3));
+        parts.push(F([[x1+20,clrBot-2],[x1,clrBot-1],[0,clrBot-1]],1.1,P.wHi,0.28,i/3));
+      }
+      for(let i=0;i<8;i++) parts.push(D(x1+20+i*12,x1+28+i*12,clrBot+4,mudTop-2,0.9,P.mudDk,0.08,i*0.12));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 6: Roughing Filter ---- */
+    function scene6(){
+      const tris=[],parts=[],x1=60,x2=100,yT=12,yB=88;
+      tris.push(T(x1-4,yT,x1,yT,x1,yB,P.cDk)); tris.push(T(x1-4,yT,x1,yB,x1-4,yB,P.cXdk));
+      tris.push(T(x2,yT,x2+4,yT,x2+4,yB,P.cDk)); tris.push(T(x2,yT,x2+4,yB,x2,yB,P.cMd));
+      tris.push(T(x1-4,yT-3,x2+4,yT-3,x2+4,yT,P.cHi)); tris.push(T(x1-4,yT-3,x2+4,yT,x1-4,yT,P.cMd));
+      tris.push(T(x1-4,yB,x2+4,yB,x2+4,yB+3,P.cDk)); tris.push(T(x1-4,yB,x2+4,yB+3,x1-4,yB+3,P.cXdk));
+      const layers=[[yT,yT+14,P.wHi,P.w],[yT+14,yT+34,'#D8D6CE',P.cHi],[yT+34,yT+54,P.cMd,'#9B9990'],[yT+54,yB,P.cDk,P.cXdk]];
+      for(const [yA,yB2,c1,c2] of layers){
+        for(let i=0;i<3;i++){
+          const u1=i/3,u2=(i+1)/3,xA=lerp(x1,x2,u1),xB2=lerp(x1,x2,u2);
+          tris.push(T(xA,yA,xB2,yA,xB2,yB2,i%2?c1:c2)); tris.push(T(xA,yA,xB2,yB2,xA,yB2,i%2?c2:c1));
+        }
+      }
+      for(const y of [yT+14,yT+34,yT+54]){
+        tris.push(T(x1,y-0.5,x2,y-0.5,x2,y+0.5,P.cBlk)); tris.push(T(x1,y-0.5,x2,y+0.5,x1,y+0.5,P.cBlk));
+      }
+      tris.push(T(36,yB-6,x1-4,yB-6,x1-4,yB-2,P.cMd)); tris.push(T(36,yB-6,x1-4,yB-2,36,yB-2,P.cDk));
+      tris.push(T(x2+4,yT+4,124,yT+4,124,yT+10,P.cMd)); tris.push(T(x2+4,yT+4,124,yT+10,x2+4,yT+10,P.cDk));
+      tris.push(T(34,yB-8,38,yB-8,36,yB,P.cXdk)); tris.push(T(34,yB-8,36,yB,34,yB,P.cBlk));
+      tris.push(T(122,yT+2,126,yT+2,124,yT+12,P.cXdk)); tris.push(T(122,yT+2,124,yT+12,122,yT+12,P.cBlk));
+      tris.push(T(x1+4,yT+15,x1+6,yT+15,x1+5,yT+13,'#8B6914')); tris.push(T(x1+20,yT+15,x1+22,yT+15,x1+21,yT+13,'#9B7828'));
+      tris.push(T(x1+12,yT+35,x1+14,yT+35,x1+13,yT+33,P.mud)); tris.push(T(x1+26,yT+35,x1+28,yT+35,x1+27,yT+33,P.mudDk));
+      tris.push(T(x1+10,yT+55,x1+12,yT+55,x1+11,yT+53,P.mudXdk)); tris.push(T(x1+24,yT+55,x1+26,yT+55,x1+25,yT+53,'#3A2810'));
+      tris.push(T(x1+8,yT+2,x1+9,yT+2,x1+8.5,yT+3,P.wHi)); tris.push(T(x1+16,yT+2,x1+17,yT+2,x1+16.5,yT+3,P.wHi));
+      tris.push(T(x1+26,yT+2,x1+27,yT+2,x1+26.5,yT+3,P.wLt)); tris.push(T(x1+34,yT+2,x1+35,yT+2,x1+34.5,yT+3,P.wHi));
+      tris.push(T(x1-4,yT-3,x1,yT-3,x1,yT,P.cBlk)); tris.push(T(x2,yT-3,x2+4,yT-3,x2+4,yT,P.cBlk));
+      tris.push(T(x1-4,yB,x1,yB,x1,yB+3,P.cBlk)); tris.push(T(x2,yB,x2+4,yB,x2+4,yB+3,P.cBlk));
+      for(let i=0;i<3;i++) parts.push(F([[36,yB-4],[x1+2,yB-4],[x1+2,yB-10]],1.1,P.mud,0.3,i/3));
+      for(let col=0;col<3;col++){
+        const xc=lerp(x1+4,x2-4,(col+0.5)/3);
+        for(let i=0;i<3;i++) parts.push(B(xc,yT+8,yB-8,0.8-col*0.05,col===0?P.wLt:P.wHi,0.15+col*0.03,i/3+col*0.1));
+      }
+      for(let i=0;i<3;i++) parts.push(F([[x2-4,yT+8],[x2+4,yT+7],[124,yT+7]],1.1,P.wHi,0.3,i/3));
+      parts.push(Pu(70,yT+22,0.7,'#8B6914',0.4,0)); parts.push(Pu(84,yT+28,0.7,'#9B7828',0.35,0.3));
+      parts.push(Pu(76,yT+44,0.8,P.mudDk,0.3,0.1)); parts.push(Pu(90,yT+62,0.9,P.mudXdk,0.25,0.5));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 7: Slow Sand Filter ---- */
+    function scene7(){
+      const tris=[],parts=[],x1=12,x2=148,yT=14,yB=86;
+      tris.push(T(x1-4,yT-4,x2+4,yT-4,x2+4,yT,P.cHi)); tris.push(T(x1-4,yT-4,x2+4,yT,x1-4,yT,P.cMd));
+      tris.push(T(x1-4,yB,x2+4,yB,x2+4,yB+4,P.cDk)); tris.push(T(x1-4,yB,x2+4,yB+4,x1-4,yB+4,P.cXdk));
+      tris.push(T(x1-4,yT,x1,yT,x1,yB,P.cMd)); tris.push(T(x1-4,yT,x1,yB,x1-4,yB,P.cDk));
+      tris.push(T(x2,yT,x2+4,yT,x2+4,yB,P.cMd)); tris.push(T(x2,yT,x2+4,yB,x2,yB,P.cDk));
+      const wBot=yT+14;
+      for(let i=0;i<5;i++){
+        const u1=i/5,u2=(i+1)/5,xA=lerp(x1,x2,u1),xB=lerp(x1,x2,u2);
+        tris.push(T(xA,yT,xB,yT,xB,wBot,i%2?P.wLt:P.wHi)); tris.push(T(xA,yT,xB,wBot,xA,wBot,i%2?P.w:P.wLt));
+      }
+      const sBot=wBot+4;
+      for(let i=0;i<5;i++){
+        const u1=i/5,u2=(i+1)/5,xA=lerp(x1,x2,u1),xB=lerp(x1,x2,u2);
+        tris.push(T(xA,wBot,xB,wBot,xB,sBot,i%2?P.grDk:P.grXdk)); tris.push(T(xA,wBot,xB,sBot,xA,sBot,i%2?P.grMd:P.grDk));
+      }
+      const sdBot=yB-10;
+      for(let i=0;i<5;i++){
+        const u1=i/5,u2=(i+1)/5,xA=lerp(x1,x2,u1),xB=lerp(x1,x2,u2);
+        tris.push(T(xA,sBot,xB,sBot,xB,sdBot,i%2?P.sLt:P.sHi)); tris.push(T(xA,sBot,xB,sdBot,xA,sdBot,i%2?P.sMd:P.sLt));
+      }
+      const gBot=yB-3;
+      for(let i=0;i<4;i++){
+        const u1=i/4,u2=(i+1)/4,xA=lerp(x1,x2,u1),xB=lerp(x1,x2,u2);
+        tris.push(T(xA,sdBot,xB,sdBot,xB,gBot,i%2?P.cDk:P.cXdk)); tris.push(T(xA,sdBot,xB,gBot,xA,gBot,i%2?P.cXdk:P.cBlk));
+      }
+      tris.push(T(x1,gBot,x2,gBot,x2,yB,P.wDk)); tris.push(T(x1,gBot,x2,yB,x1,yB,P.wXdk));
+      tris.push(T(0,yT+4,x1-4,yT+4,x1-4,yT+10,P.cMd)); tris.push(T(0,yT+4,x1-4,yT+10,0,yT+10,P.cDk));
+      tris.push(T(x2+4,yB-2,160,yB-2,160,yB+2,P.cMd)); tris.push(T(x2+4,yB-2,160,yB+2,x2+4,yB+2,P.cDk));
+      tris.push(T(30,sBot+8,32,sBot+8,31,sBot+10,P.sMd)); tris.push(T(60,sBot+14,62,sBot+14,61,sBot+16,P.sDk));
+      tris.push(T(92,sBot+10,94,sBot+10,93,sBot+12,P.sMd)); tris.push(T(124,sBot+16,126,sBot+16,125,sBot+18,P.sDk));
+      tris.push(T(40,wBot+1,43,wBot+1,41.5,wBot+3,'#1A3A05')); tris.push(T(110,wBot+1,113,wBot+1,111.5,wBot+3,'#1A3A05'));
+      tris.push(T(x1-6,yT+2,x1-2,yT+2,x1-4,yT+12,P.cBlk)); tris.push(T(x2+2,yB-4,x2+6,yB-4,x2+4,yB+4,P.cBlk));
+      for(let i=0;i<3;i++) parts.push(F([[0,yT+7],[x1,yT+7],[x1+6,yT+10]],1.1,P.mud,0.3,i/3));
+      for(let col=0;col<4;col++){
+        const xc=lerp(x1+10,x2-10,(col+0.5)/4);
+        parts.push(D(xc-1,xc+1,wBot+2,gBot-1,0.7,P.wLt,0.08,col*0.25));
+        parts.push(D(xc-1,xc+1,wBot+2,gBot-1,0.65,P.w,0.09,col*0.25+0.5));
+      }
+      for(let i=0;i<7;i++){
+        const xc=lerp(x1+8,x2-8,(i+0.5)/7);
+        parts.push(Pu(xc,wBot+2,0.8,'#27500A',0.5+(i%3)*0.1,i*0.13));
+      }
+      for(let i=0;i<3;i++) parts.push(F([[x2-6,yB-2],[x2,yB-1],[160,yB]],1.0,P.wHi,0.3,i/3));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 8: Biochar Polishing ---- */
+    function scene8(){
+      const tris=[],parts=[],x1=58,x2=102,yT=10,yB=86;
+      tris.push(T(x1-4,yT,x1,yT,x1,yB,P.cDk)); tris.push(T(x1-4,yT,x1,yB,x1-4,yB,P.cXdk));
+      tris.push(T(x2,yT,x2+4,yT,x2+4,yB,P.cDk)); tris.push(T(x2,yT,x2+4,yB,x2,yB,P.cMd));
+      tris.push(T(x1-4,yT-3,x2+4,yT-3,x2+4,yT,P.cHi)); tris.push(T(x1-4,yT-3,x2+4,yT,x1-4,yT,P.cMd));
+      tris.push(T(x1-4,yB,x2+4,yB,x2+4,yB+3,P.cDk)); tris.push(T(x1-4,yB,x2+4,yB+3,x1-4,yB+3,P.cXdk));
+      const wBot=yT+8;
+      tris.push(T(x1,yT,x2,yT,x2,wBot,P.w)); tris.push(T(x1,yT,x2,wBot,x1,wBot,P.wDk));
+      const bcBot=yB-8;
+      tris.push(T(x1,wBot,x2,wBot,x2,bcBot,P.cBlk)); tris.push(T(x1,wBot,x2,bcBot,x1,bcBot,'#1A1A18'));
+      const pieces=[[62,14],[74,15],[84,13],[92,16],[65,26],[77,28],[92,30],[68,40],[84,38],[66,54]];
+      for(const [px,py] of pieces){
+        tris.push(T(px,py,px+8,py,px+4,py+7,'#3A3A38'));
+        tris.push(T(px+1.5,py+1,px+6.5,py+1,px+4,py+5.5,'#2C2C2A'));
+        tris.push(T(px+3,py+2,px+5,py+2,px+4,py+4,'#F5E6C8'));
+      }
+      tris.push(T(x1,bcBot,x2,bcBot,x2,yB-3,P.cDk)); tris.push(T(x1,bcBot,x2,yB-3,x1,yB-3,P.cXdk));
+      tris.push(T(x1,yB-3,x2,yB-3,x2,yB,P.wDk)); tris.push(T(x1,yB-3,x2,yB,x1,yB,P.wXdk));
+      tris.push(T(36,yT+2,x1-4,yT+2,x1-4,yT+8,P.cMd)); tris.push(T(36,yT+2,x1-4,yT+8,36,yT+8,P.cDk));
+      tris.push(T(x2+4,yB-6,130,yB-6,130,yB-2,P.cMd)); tris.push(T(x2+4,yB-6,130,yB-2,x2+4,yB-2,P.cDk));
+      const gx=132,gy=yB-14,gw=16,gh=18;
+      tris.push(T(gx,gy,gx+gw,gy,gx+gw-1,gy+gh,P.wLt)); tris.push(T(gx,gy,gx+gw-1,gy+gh,gx+1,gy+gh,P.w));
+      tris.push(T(gx+2,gy+6,gx+gw-2,gy+6,gx+gw-3,gy+gh-2,P.wHi)); tris.push(T(gx+2,gy+6,gx+gw-3,gy+gh-2,gx+3,gy+gh-2,P.w));
+      tris.push(T(gx,gy,gx+gw,gy,gx+gw,gy+1.5,P.wHi)); tris.push(T(gx,gy,gx+gw,gy+1.5,gx,gy+1.5,P.wLt));
+      tris.push(T(gx+gw*0.4,gy-4,gx+gw*0.4+1.2,gy-4,gx+gw*0.4+0.6,gy-2,P.wHi));
+      tris.push(T(gx+gw*0.55,gy-2,gx+gw*0.55+1.2,gy-2,gx+gw*0.55+0.6,gy,P.wHi));
+      tris.push(T(gx-2,gy+gh+1,gx+gw+2,gy+gh+1,gx+gw,gy+gh+3,'rgba(15,26,46,0.1)'));
+      tris.push(T(gx+4,gy+7,gx+10,gy+7,gx+7,gy+9,P.wHi));
+      for(let i=0;i<3;i++) parts.push(F([[36,yT+5],[x1,yT+5],[x1+4,wBot+2]],1.1,'#8B6914',0.3,i/3));
+      for(let col=0;col<3;col++){
+        const xc=lerp(x1+6,x2-6,(col+0.5)/3);
+        for(let i=0;i<2;i++) parts.push(D(xc-1,xc+1,wBot+2,bcBot-1,0.7,col===1?P.wLt:P.w,0.1,i/2+col*0.15));
+      }
+      for(let i=0;i<3;i++) parts.push(F([[x2-4,yB-4],[x2+4,yB-4],[130,yB-4],[136,gy+8]],1.0,P.wHi,0.28,i/3));
+      parts.push(Pu(gx+gw*0.35,gy+10,0.8,P.wHi,0.5,0)); parts.push(Pu(gx+gw*0.65,gy+14,0.8,P.wHi,0.45,0.3));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 9: Clean Glass ---- */
+    function scene9(){
+      const tris=[],parts=[],gx=56,gy=18,gw=48,gh=72,cx3=gx+gw/2;
+      tris.push(T(gx-3,gy+4,gx,gy+2,gx,gy+gh-2,'#B8CED6')); tris.push(T(gx-3,gy+4,gx,gy+gh-2,gx-3,gy+gh-6,'#9BBDD4'));
+      tris.push(T(gx+gw,gy+2,gx+gw+3,gy+4,gx+gw+3,gy+gh-6,'#E4F0F7')); tris.push(T(gx+gw,gy+2,gx+gw+3,gy+gh-6,gx+gw,gy+gh-2,P.wHi));
+      const strips=4;
+      for(let i=0;i<strips;i++){
+        const u1=i/strips,u2=(i+1)/strips,sx=gx+u1*gw,sx2=gx+u2*gw;
+        const c1=i%2?'#D0E4EC':'#E4F0F7',c2=i%2?'#A8C4D4':'#C0D8E4';
+        tris.push(T(sx,gy+2,sx2,gy+2,sx2,gy+gh-2,c1)); tris.push(T(sx,gy+2,sx2,gy+gh-2,sx,gy+gh-2,c2));
+      }
+      const wTop=gy+18;
+      tris.push(T(gx+4,wTop,gx+gw-4,wTop,gx+gw-4,wTop+2,P.wHi)); tris.push(T(gx+4,wTop,gx+gw-4,wTop+2,gx+4,wTop+2,P.w));
+      const midX2=cx3,midY2=(wTop+gy+gh-4)/2;
+      tris.push(T(gx+4,wTop+2,gx+gw-4,wTop+2,midX2,midY2,P.w)); tris.push(T(gx+gw-4,wTop+2,gx+gw-4,gy+gh-6,midX2,midY2,P.wDk));
+      tris.push(T(gx+gw-4,gy+gh-6,gx+4,gy+gh-6,midX2,midY2,P.wXdk)); tris.push(T(gx+4,gy+gh-6,gx+4,wTop+2,midX2,midY2,P.wDk));
+      tris.push(T(gx+4,wTop+10,gx+gw/2,wTop+18,gx+4,wTop+26,P.wXdk)); tris.push(T(gx+gw-4,wTop+10,gx+gw-4,wTop+26,gx+gw/2,wTop+18,P.sea));
+      tris.push(T(gx+6,gy+gh-10,gx+gw-6,gy+gh-10,cx3,gy+gh-6,P.sea)); tris.push(T(gx+6,gy+gh-10,cx3,gy+gh-6,gx+10,gy+gh-4,P.wXdk));
+      tris.push(T(gx,gy,gx+gw,gy,gx+gw,gy+2,P.wHi)); tris.push(T(gx,gy,gx+gw,gy+2,gx,gy+2,P.wLt));
+      tris.push(T(gx,gy+gh-2,cx3,gy+gh-5,gx+gw,gy+gh-2,P.wLt)); tris.push(T(gx,gy+gh-2,gx+gw,gy+gh-2,cx3,gy+gh+1,P.w));
+      tris.push(T(gx+8,wTop-1,gx+14,wTop-3,gx+16,wTop+3,'#F0F8FC')); tris.push(T(gx+8,wTop-1,gx+16,wTop+3,gx+10,wTop+5,'#C8DCE6')); tris.push(T(gx+14,wTop-3,gx+16,wTop+3,gx+18,wTop-1,'#E0EEF4'));
+      tris.push(T(cx3-4,wTop-2,cx3+2,wTop-4,cx3+4,wTop+2,'#F0F8FC')); tris.push(T(cx3-4,wTop-2,cx3+4,wTop+2,cx3-2,wTop+4,'#C8DCE6'));
+      tris.push(T(gx+gw-18,wTop-1,gx+gw-12,wTop-3,gx+gw-10,wTop+3,'#F0F8FC')); tris.push(T(gx+gw-18,wTop-1,gx+gw-10,wTop+3,gx+gw-14,wTop+5,'#C8DCE6'));
+      tris.push(T(gx+6,gy+8,gx+7,gy+8,gx+6.5,gy+9.5,P.wHi)); tris.push(T(gx+gw-8,gy+12,gx+gw-7,gy+12,gx+gw-7.5,gy+13.5,P.wHi));
+      tris.push(T(gx+12,gy+24,gx+13,gy+24,gx+12.5,gy+25.5,P.wLt)); tris.push(T(gx+gw-14,gy+32,gx+gw-13,gy+32,gx+gw-13.5,gy+33.5,P.wHi));
+      tris.push(T(gx+8,gy+42,gx+9,gy+42,gx+8.5,gy+43.5,P.wLt)); tris.push(T(gx+gw-10,gy+52,gx+gw-9,gy+52,gx+gw-9.5,gy+53.5,P.wHi));
+      tris.push(T(gx-6,gy+gh+2,gx+gw+6,gy+gh+2,gx+gw+2,gy+gh+6,'rgba(15,26,46,0.12)')); tris.push(T(gx-6,gy+gh+2,gx+gw+2,gy+gh+6,gx-2,gy+gh+6,'rgba(15,26,46,0.08)'));
+      tris.push(T(gx+14,wTop+14,gx+15,wTop+14,gx+14.5,wTop+15.5,P.wHi)); tris.push(T(cx3+6,wTop+20,cx3+7,wTop+20,cx3+6.5,wTop+21.5,P.wHi));
+      tris.push(T(gx+gw-16,wTop+22,gx+gw-15,wTop+22,gx+gw-15.5,wTop+23.5,P.wLt)); tris.push(T(gx+18,wTop+32,gx+19,wTop+32,gx+18.5,wTop+33.5,P.wHi));
+      tris.push(T(cx3-6,wTop+40,cx3-5,wTop+40,cx3-5.5,wTop+41.5,P.wLt)); tris.push(T(gx+gw-20,wTop+36,gx+gw-19,wTop+36,gx+gw-19.5,wTop+37.5,P.wHi));
+      tris.push(T(cx3-12,gy-6,cx3-11,gy-6,cx3-11.5,gy-4,P.wHi)); tris.push(T(cx3+12,gy-8,cx3+13,gy-8,cx3+12.5,gy-6,P.aHi));
+      tris.push(T(cx3,gy-10,cx3+1,gy-10,cx3+0.5,gy-8,P.wHi)); tris.push(T(gx-10,gy+20,gx-9,gy+20,gx-9.5,gy+22,P.wHi));
+      tris.push(T(gx+gw+8,gy+24,gx+gw+9,gy+24,gx+gw+8.5,gy+26,P.wHi)); tris.push(T(20,40,22,40,21,42,P.wHi));
+      tris.push(T(140,44,142,44,141,46,P.aHi)); tris.push(T(30,72,32,72,31,74,P.wLt));
+      for(let i=0;i<6;i++){const bx=gx+8+(i*6.2)%(gw-16);parts.push(B(bx,wTop+4,gy+gh-6,0.7,P.wHi,0.3+(i%3)*0.05,i*0.17));}
+      parts.push(Pu(gx+14,wTop-2,1.0,P.wHi,0.5,0)); parts.push(Pu(cx3,wTop-3,1.0,P.wHi,0.4,0.3)); parts.push(Pu(gx+gw-14,wTop-2,1.0,P.wHi,0.45,0.6));
+      parts.push(F([[cx3,gy-12],[cx3,wTop]],1.2,P.wHi,0.35,0)); parts.push(F([[cx3-3,gy-10],[cx3-3,wTop]],1.0,P.wLt,0.3,0.5));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Scene 10: Overview ---- */
+    function sceneOverview(){
+      const tris=[],parts=[],sunX=152,sunY=12;
+      tris.push(T(0,0,160,0,160,62,'#BCD6EA')); tris.push(T(0,0,160,62,0,62,'#9CCAE4'));
+      tris.push(T(0,60,44,50,80,62,'#B0C4A8')); tris.push(T(80,62,128,52,160,62,'#C0CEB8'));
+      tris.push(T(0,72,160,72,160,84,P.sLt)); tris.push(T(0,72,160,84,0,84,P.sMd));
+      for(let i=0;i<4;i++){
+        const a=(i/4)*Math.PI*2+Math.PI/8;
+        tris.push(T(sunX+Math.sin(a)*9,sunY-Math.cos(a)*9,sunX+Math.sin(a-0.16)*5.5,sunY-Math.cos(a-0.16)*5.5,sunX+Math.sin(a+0.16)*5.5,sunY-Math.cos(a+0.16)*5.5,P.aMd));
+      }
+      tris.push(T(sunX,sunY-4,sunX+4,sunY,sunX,sunY+4,P.aHi)); tris.push(T(sunX,sunY-4,sunX-4,sunY,sunX,sunY+4,P.aMd));
+      tris.push(T(2,60,20,58,20,72,P.w)); tris.push(T(2,60,20,72,2,72,P.wDk));
+      tris.push(T(2,10,18,14,18,18,P.cHi)); tris.push(T(2,10,18,18,2,14,P.cMd));
+      tris.push(T(8,34,12,34,10,68,P.cDk));
+      tris.push(T(8,31,29,31,29,36,P.cMd)); tris.push(T(8,31,29,36,8,36,P.cDk));
+      tris.push(T(29,42,37,42,37,72,P.cHi)); tris.push(T(29,42,37,72,29,72,P.cMd)); tris.push(T(30,46,36,46,36,68,P.w));
+      tris.push(T(37,42,40,42,40,46,P.cMd));
+      const cascadeSteps=[[40,42],[47,50],[54,58],[61,66]];
+      for(const [csx,topY] of cascadeSteps){tris.push(T(csx,topY,csx+7,topY,csx+7,topY+4,P.cHi));tris.push(T(csx,topY,csx+7,topY+4,csx,topY+4,P.cMd));}
+      tris.push(T(46,46,48,46,47,50,P.wLt)); tris.push(T(53,54,55,54,54,58,P.wLt)); tris.push(T(60,62,62,62,61,66,P.wLt));
+      tris.push(T(68,68,71,68,71,72,P.cMd));
+      tris.push(T(71,52,89,52,89,72,P.cHi)); tris.push(T(71,52,89,72,71,72,P.cMd)); tris.push(T(72,57,88,57,88,68,'#C8A870'));
+      tris.push(T(89,58,92,58,92,62,P.cMd));
+      tris.push(T(92,36,100,36,100,72,P.cHi)); tris.push(T(92,36,100,72,92,72,P.cMd)); tris.push(T(93,40,99,40,99,68,'#A8A89E'));
+      tris.push(T(100,58,103,58,103,62,P.cMd));
+      tris.push(T(103,42,119,42,119,72,P.cHi)); tris.push(T(103,42,119,72,103,72,P.cMd)); tris.push(T(104,46,118,46,118,68,P.sLt));
+      tris.push(T(119,58,122,58,122,62,P.cMd));
+      tris.push(T(122,32,130,32,130,72,P.cHi)); tris.push(T(122,32,130,72,122,72,P.cMd)); tris.push(T(123,36,129,36,129,68,P.cBlk));
+      tris.push(T(130,58,133,58,133,63,P.cMd));
+      tris.push(T(133,56,145,56,145,74,'#C8E0EC')); tris.push(T(133,56,145,74,133,74,'#A0C4D8')); tris.push(T(134,60,144,60,144,72,P.wHi));
+      tris.push(T(3,57,19,57,19,60,P.wHi)); tris.push(T(21,32,23,32,22,36,P.wHi));
+      tris.push(T(40,41,47,41,43.5,43,P.w)); tris.push(T(72,55,87,55,87,58,P.wHi));
+      tris.push(T(104,45,117,45,117,47,P.wHi)); tris.push(T(134,59,144,59,144,61,P.wHi));
+      for(let i=0;i<3;i++) parts.push(F([[10,64],[10,34],[28,34]],0.9,P.w,0.28,i/3));
+      for(let i=0;i<4;i++) parts.push(F([[37,44],[47,44],[47,52],[54,52],[54,60],[61,60],[61,68],[68,68]],0.9,P.wLt,0.18,i/4));
+      for(let i=0;i<3;i++) parts.push(F([[89,59],[92,59],[100,59],[103,59],[119,59],[122,59],[130,59],[133,63]],1.0,P.w,0.14,i/3));
+      parts.push(Pu(sunX,sunY,6,'rgba(255,224,102,0.22)',0.15,0));
+      return { tris:fill60(tris), parts };
+    }
+
+    /* ---- Build all scenes ---- */
+    const SCENES_BUILD=[scene0,scene1,scene2,scene3,scene4,scene5,scene6,scene7,scene8,scene9,sceneOverview];
+    const SCENE_DATA=SCENES_BUILD.map(fn=>{
+      const {tris,parts}=fn();
+      return { tris:tris.map(t=>({p:t.p,rgba:parseColor(t.f)})), parts };
+    });
+
+    /* ---- DOM refs ---- */
+    const svgEl     = document.getElementById('procScene');
+    const procSlide = document.getElementById('slide3');
+    const hscrollEl = document.getElementById('procHScroll');
+    const hdotsEl   = document.getElementById('procHDots');
+    const prevBtn   = document.getElementById('procPrev');
+    const nextBtn   = document.getElementById('procNext');
+    const TOTAL     = 11;
+
+    /* ---- Create morphing polygons ---- */
+    const morphGroup=document.createElementNS(NS,'g');
+    morphGroup.setAttribute('class','morph');
+    svgEl.appendChild(morphGroup);
+    const polys=[];
+    for(let i=0;i<N;i++){
+      const poly=document.createElementNS(NS,'polygon');
+      poly.setAttribute('class','tri');
+      morphGroup.appendChild(poly);
+      polys.push(poly);
+    }
+
+    /* ---- Per-scene particle layers ---- */
+    const partLayers=SCENE_DATA.map((sd)=>{
+      const g=document.createElementNS(NS,'g');
+      g.setAttribute('class','parts-layer');
+      const nodes=[];
+      for(const part of sd.parts){
+        const poly=document.createElementNS(NS,'polygon');
+        poly.setAttribute('fill',part.f);
+        g.appendChild(poly);
+        nodes.push(poly);
+      }
+      svgEl.appendChild(g);
+      return {g,parts:sd.parts,nodes};
+    });
+
+    /* ---- Morph state ---- */
+    let currentTri=SCENE_DATA[0].tris.map(t=>({p:t.p.map(pt=>pt.slice()),rgba:t.rgba.slice()}));
+    let tweenFrom=null,tweenTo=null,tweenStart=0,tweenActive=false;
+
+    function snapCurrentToDOM(){
+      for(let i=0;i<N;i++){
+        const c=currentTri[i];
+        polys[i].setAttribute('points',`${c.p[0][0]},${c.p[0][1]} ${c.p[1][0]},${c.p[1][1]} ${c.p[2][0]},${c.p[2][1]}`);
+        polys[i].setAttribute('fill',rgbaStr(c.rgba));
+      }
+    }
+    snapCurrentToDOM();
+
+    function applyScene(idx){
+      const target=SCENE_DATA[idx].tris;
+      tweenFrom=currentTri.map(t=>({p:t.p.map(pt=>pt.slice()),rgba:t.rgba.slice()}));
+      tweenTo=target.map(t=>({p:t.p.map(pt=>pt.slice()),rgba:t.rgba.slice()}));
+      tweenStart=performance.now();
+      tweenActive=true;
+    }
+
+    /* ---- Render loop ---- */
+    function updateParticle(part,node,now,visible){
+      if(!visible){node.setAttribute('opacity','0');return;}
+      const tm=now/1000;
+      let cx4,cy4,scale=1,alpha=1;
+      if(part.type==='bubble'){
+        const t=((tm*part.speed+part.phase)%1+1)%1;
+        cx4=part.x; cy4=lerp(part.yBot,part.yTop,t);
+        scale=1-t*0.4; alpha=t<0.85?1:(1-t)/0.15;
+      } else if(part.type==='drift'){
+        const t=((tm*part.speed+part.phase)%1+1)%1;
+        cy4=lerp(part.yTop,part.yBot,t);
+        cx4=(part.xMin+part.xMax)/2+Math.sin(tm*1.4+part.phase*6)*1.4;
+        alpha=t<0.9?1:(1-t)/0.1;
+      } else if(part.type==='pulse'){
+        const t=((tm*part.speed+part.phase)%1+1)%1;
+        cx4=part.x; cy4=part.y;
+        scale=0.6+0.8*Math.sin(t*Math.PI); alpha=0.4+0.6*Math.sin(t*Math.PI);
+      } else {
+        const t=((tm*part.speed+part.phase)%1+1)%1;
+        [cx4,cy4]=samplePath(part.path,t);
+      }
+      const pts=triAt(cx4,cy4,part.size*scale,tm*0.5);
+      node.setAttribute('points',`${pts[0][0].toFixed(2)},${pts[0][1].toFixed(2)} ${pts[1][0].toFixed(2)},${pts[1][1].toFixed(2)} ${pts[2][0].toFixed(2)},${pts[2][1].toFixed(2)}`);
+      node.setAttribute('opacity',alpha.toFixed(2));
+    }
+
+    let procCurrentStep=0;
+
+    function renderLoop(now){
+      if(tweenActive){
+        let allDone=true;
+        for(let i=0;i<N;i++){
+          const localStart=i*STAGGER;
+          const ti=Math.min(1,Math.max(0,(now-tweenStart-localStart)/DUR_MORPH));
+          if(ti<1) allDone=false;
+          const e=easeOut(ti),f=tweenFrom[i],tt=tweenTo[i];
+          currentTri[i].p[0][0]=lerp(f.p[0][0],tt.p[0][0],e); currentTri[i].p[0][1]=lerp(f.p[0][1],tt.p[0][1],e);
+          currentTri[i].p[1][0]=lerp(f.p[1][0],tt.p[1][0],e); currentTri[i].p[1][1]=lerp(f.p[1][1],tt.p[1][1],e);
+          currentTri[i].p[2][0]=lerp(f.p[2][0],tt.p[2][0],e); currentTri[i].p[2][1]=lerp(f.p[2][1],tt.p[2][1],e);
+          currentTri[i].rgba=lerpColor(f.rgba,tt.rgba,e);
+        }
+        snapCurrentToDOM();
+        if(allDone) tweenActive=false;
+      }
+      for(let si=0;si<partLayers.length;si++){
+        const vis=(si===procCurrentStep),layer=partLayers[si];
+        for(let k=0;k<layer.parts.length;k++) updateParticle(layer.parts[k],layer.nodes[k],now,vis);
+      }
+      requestAnimationFrame(renderLoop);
+    }
+    requestAnimationFrame(renderLoop);
+
+    /* ---- Contamination indicators ---- */
+    const LEVELS=[
+      {turb:100,gas:100,path:100,org:100},
+      {turb:100,gas:100,path:100,org:100},
+      {turb:100,gas:100,path:100,org:100},
+      {turb:100,gas:100,path:100,org:100},
+      {turb:100,gas:10, path:100,org:100},
+      {turb:40, gas:10, path:100,org:100},
+      {turb:5,  gas:5,  path:90, org:100},
+      {turb:0,  gas:0,  path:1,  org:70 },
+      {turb:0,  gas:0,  path:0,  org:0  },
+      {turb:0,  gas:0,  path:0,  org:0  },
+      {turb:0,  gas:0,  path:0,  org:0  }
+    ];
+    const indEls={turb:document.getElementById('pval-turb'),gas:document.getElementById('pval-gas'),path:document.getElementById('pval-path'),org:document.getElementById('pval-org')};
+    const barEls={turb:document.getElementById('pbar-turb'),gas:document.getElementById('pbar-gas'),path:document.getElementById('pbar-path'),org:document.getElementById('pbar-org')};
+    function updateIndicators(idx){
+      const L=LEVELS[Math.min(idx,LEVELS.length-1)];
+      for(const k of ['turb','gas','path','org']){indEls[k].textContent=L[k]+'%';barEls[k].style.width=L[k]+'%';}
+    }
+    updateIndicators(0);
+
+    /* ---- Progress dots ---- */
+    const dotEls=[];
+    for(let i=0;i<TOTAL;i++){
+      const d=document.createElement('span');
+      d.className='proc-hdot'+(i===0?' active':'');
+      hdotsEl.appendChild(d); dotEls.push(d);
+    }
+    function updateDots(idx){ dotEls.forEach((d,i)=>d.classList.toggle('active',i===idx)); }
+
+    /* ---- Arrow state ---- */
+    function updateArrows(idx){
+      prevBtn.classList.toggle('disabled',idx===0);
+      nextBtn.classList.toggle('disabled',idx===TOTAL-1);
+    }
+    updateArrows(0);
+    prevBtn.addEventListener('click',()=>scrollToStep(procCurrentStep-1));
+    nextBtn.addEventListener('click',()=>scrollToStep(procCurrentStep+1));
+
+    /* ---- Scroll engine (horizontal) ---- */
+    function scrollToStep(idx){
+      const clamped=Math.max(0,Math.min(TOTAL-1,idx));
+      const stepW=hscrollEl.clientWidth;
+      hscrollEl.scrollTo({left:clamped*stepW,behavior:'smooth'});
+    }
+
+    function setStep(idx){
+      if(idx===procCurrentStep) return;
+      const sceneIdx=Math.min(idx,SCENE_DATA.length-1);
+      const prevScene=Math.min(procCurrentStep,SCENE_DATA.length-1);
+      procCurrentStep=idx;
+      if(sceneIdx!==prevScene) applyScene(sceneIdx);
+      updateIndicators(sceneIdx);
+      updateDots(idx);
+      updateArrows(idx);
+    }
+
+    let _scrollTimer3,_lastNear3=0;
+    hscrollEl.addEventListener('scroll',()=>{
+      const stepW=hscrollEl.clientWidth;
+      if(stepW<1) return;
+      const nearest=Math.round(hscrollEl.scrollLeft/stepW);
+      if(nearest!==_lastNear3){_lastNear3=nearest;setStep(nearest);}
+      clearTimeout(_scrollTimer3);
+      _scrollTimer3=setTimeout(()=>setStep(Math.round(hscrollEl.scrollLeft/hscrollEl.clientWidth)),90);
+    },{passive:true});
+
+    /* ---- Keyboard: Left/Right when slide3 in view ---- */
+    document.addEventListener('keydown',e=>{
+      const rect=procSlide.getBoundingClientRect();
+      const inView=rect.top<window.innerHeight*0.6&&rect.bottom>window.innerHeight*0.4;
+      if(!inView) return;
+      if(e.key==='ArrowRight'){e.preventDefault();scrollToStep(procCurrentStep+1);}
+      if(e.key==='ArrowLeft') {e.preventDefault();scrollToStep(procCurrentStep-1);}
+    });
+
+    /* ---- Resize recalibrate ---- */
+    let _resizeTimer3;
+    window.addEventListener('resize',()=>{
+      clearTimeout(_resizeTimer3);
+      _resizeTimer3=setTimeout(()=>hscrollEl.scrollTo({left:procCurrentStep*hscrollEl.clientWidth,behavior:'instant'}),150);
+    },{passive:true});
+
+  })();
   </script>
 
 </body>

@@ -513,7 +513,7 @@
       scrollbar-width: none;
       -ms-overflow-style: none;
       z-index: 2;
-      pointer-events: none;
+      pointer-events: auto;
     }
     .proc-hscroll::-webkit-scrollbar { display: none; }
 
@@ -527,60 +527,32 @@
       scroll-snap-stop: always;
     }
 
-    /* ─── Navigation bar (prev / dots / next) ─── */
+    /* ─── Navigation bar (dots only, swipe to navigate) ─── */
     .proc-nav-bar {
-      height: 60px;
+      height: 48px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      justify-content: center;
+      gap: 10px;
       padding: 0 clamp(14px, 3vw, 36px);
-      background: rgba(7, 16, 30, 0.82);
+      background: rgba(7, 16, 30, 0.88);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border-top: 1px solid rgba(79, 179, 217, 0.14);
       flex-shrink: 0;
       z-index: 3;
-      pointer-events: auto;
-    }
-
-    .proc-nav-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 9px clamp(12px, 2vw, 20px);
-      border-radius: 999px;
-      border: 1px solid rgba(79, 179, 217, 0.28);
-      background: rgba(79, 179, 217, 0.07);
-      color: var(--cy);
-      cursor: pointer;
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: clamp(0.72rem, 1.1vw, 0.84rem);
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-      transition: background 200ms ease, border-color 200ms ease, color 200ms ease, opacity 200ms ease, transform 180ms var(--ease);
-      flex-shrink: 0;
-    }
-    .proc-nav-btn:hover {
-      background: rgba(79, 179, 217, 0.16);
-      border-color: rgba(79, 179, 217, 0.52);
-      transform: translateY(-1px);
-    }
-    .proc-nav-btn:active { transform: translateY(0); }
-    .proc-nav-btn.disabled {
-      opacity: 0.22;
       pointer-events: none;
     }
-    .proc-nav-btn .btn-label { display: inline; }
+
+    /* Buttons kept in DOM for JS compatibility but hidden */
+    .proc-nav-btn { display: none; }
 
     .proc-nav-center {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 5px;
-      flex: 1;
-      min-width: 0;
+      pointer-events: none;
     }
 
     .proc-step-label {
@@ -597,20 +569,23 @@
     .proc-hdots {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 7px;
+      padding: 6px 14px;
+      background: rgba(255,255,255,.06);
+      border-radius: 999px;
+      border: 1px solid rgba(79,179,217,.13);
     }
     .proc-hdot {
-      width: 5px; height: 5px;
+      width: 6px; height: 6px;
       border-radius: 50%;
-      background: rgba(163, 208, 227, 0.2);
-      border: 1px solid rgba(163, 208, 227, 0.18);
-      transition: background 250ms ease, width 250ms var(--ease), border-radius 250ms var(--ease), border-color 250ms ease;
+      background: rgba(163, 208, 227, 0.3);
+      border: none;
+      transition: background 250ms ease, width 250ms var(--ease), border-radius 250ms var(--ease);
       flex-shrink: 0;
     }
     .proc-hdot.active {
       background: var(--cy);
-      border-color: var(--cy);
-      width: 14px;
+      width: 20px;
       border-radius: 3px;
     }
 
@@ -618,12 +593,10 @@
       .proc-indicators { gap: 8px; padding: 8px 12px; height: 60px; }
       .proc-ind-label { font-size: 0.52rem; }
       .proc-ind-value { font-size: 0.95rem; }
-      .proc-nav-bar { height: 52px; padding: 0 10px; gap: 8px; }
-      .proc-nav-btn { padding: 8px 12px; }
-      .proc-nav-btn .btn-label { display: none; }
+      .proc-nav-bar { height: 42px; }
       .proc-step-label { display: none; }
-      .proc-hdot { width: 4px; height: 4px; }
-      .proc-hdot.active { width: 10px; }
+      .proc-hdot { width: 5px; height: 5px; }
+      .proc-hdot.active { width: 14px; }
     }
 
     /* =========================================================
@@ -2105,12 +2078,12 @@
 
     /* ---- Arrow state ---- */
     function updateArrows(idx){
-      prevBtn.classList.toggle('disabled',idx===0);
-      nextBtn.classList.toggle('disabled',idx===TOTAL-1);
+      if(prevBtn) prevBtn.classList.toggle('disabled',idx===0);
+      if(nextBtn) nextBtn.classList.toggle('disabled',idx===TOTAL-1);
     }
     updateArrows(0);
-    prevBtn.addEventListener('click',()=>scrollToStep(procCurrentStep-1));
-    nextBtn.addEventListener('click',()=>scrollToStep(procCurrentStep+1));
+    if(prevBtn) prevBtn.addEventListener('click',()=>scrollToStep(procCurrentStep-1));
+    if(nextBtn) nextBtn.addEventListener('click',()=>scrollToStep(procCurrentStep+1));
 
     /* ---- Step engine ---- */
     function getStepW(){ return hscrollEl.clientWidth || hscrollEl.offsetWidth || window.innerWidth; }

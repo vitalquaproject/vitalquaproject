@@ -463,64 +463,103 @@
       scroll-snap-stop: always;
     }
 
-    .proc-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(calc(-50% - 36px));
-      z-index: 3;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 1px solid rgba(79,179,217,0.3);
-      background: rgba(7,16,30,0.7);
-      backdrop-filter: blur(8px);
-      color: var(--cy);
-      cursor: pointer;
+    /* ─── Navigation bar (prev / dots / next) ─── */
+    .proc-nav-bar {
+      height: 60px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      transition: background 200ms ease, border-color 200ms ease, opacity 200ms ease;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 clamp(14px, 3vw, 36px);
+      background: rgba(7, 16, 30, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(79, 179, 217, 0.14);
+      flex-shrink: 0;
+      z-index: 3;
       pointer-events: auto;
     }
-    .proc-arrow:hover { background: rgba(79,179,217,0.15); border-color: rgba(79,179,217,0.5); }
-    .proc-arrow.disabled { opacity: 0.18; pointer-events: none; }
-    #procPrev { left: clamp(12px, 2vw, 28px); }
-    #procNext { right: clamp(12px, 2vw, 28px); }
+
+    .proc-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px clamp(12px, 2vw, 20px);
+      border-radius: 999px;
+      border: 1px solid rgba(79, 179, 217, 0.28);
+      background: rgba(79, 179, 217, 0.07);
+      color: var(--cy);
+      cursor: pointer;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: clamp(0.72rem, 1.1vw, 0.84rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      transition: background 200ms ease, border-color 200ms ease, color 200ms ease, opacity 200ms ease, transform 180ms var(--ease);
+      flex-shrink: 0;
+    }
+    .proc-nav-btn:hover {
+      background: rgba(79, 179, 217, 0.16);
+      border-color: rgba(79, 179, 217, 0.52);
+      transform: translateY(-1px);
+    }
+    .proc-nav-btn:active { transform: translateY(0); }
+    .proc-nav-btn.disabled {
+      opacity: 0.22;
+      pointer-events: none;
+    }
+    .proc-nav-btn .btn-label { display: inline; }
+
+    .proc-nav-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .proc-step-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .proc-step-label span { color: var(--cy-lt); font-variant-numeric: tabular-nums; }
 
     .proc-hdots {
-      position: absolute;
-      bottom: 84px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
       display: flex;
       align-items: center;
       gap: 4px;
-      padding: 6px 10px;
-      background: rgba(7,16,30,0.5);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(79,179,217,0.12);
-      border-radius: 999px;
-      pointer-events: none;
     }
     .proc-hdot {
       width: 5px; height: 5px;
       border-radius: 50%;
-      background: rgba(163,208,227,0.22);
-      transition: background 250ms ease, width 250ms var(--ease), border-radius 250ms var(--ease);
+      background: rgba(163, 208, 227, 0.2);
+      border: 1px solid rgba(163, 208, 227, 0.18);
+      transition: background 250ms ease, width 250ms var(--ease), border-radius 250ms var(--ease), border-color 250ms ease;
+      flex-shrink: 0;
     }
     .proc-hdot.active {
       background: var(--cy);
-      width: 12px;
+      border-color: var(--cy);
+      width: 14px;
       border-radius: 3px;
     }
 
     @media (max-width: 600px) {
-      .proc-indicators { gap: 8px; padding: 8px 12px; height: 64px; }
+      .proc-indicators { gap: 8px; padding: 8px 12px; height: 60px; }
       .proc-ind-label { font-size: 0.52rem; }
       .proc-ind-value { font-size: 0.95rem; }
-      .proc-arrow { width: 38px; height: 38px; }
-      .proc-hdots { display: none; }
+      .proc-nav-bar { height: 52px; padding: 0 10px; gap: 8px; }
+      .proc-nav-btn { padding: 8px 12px; }
+      .proc-nav-btn .btn-label { display: none; }
+      .proc-step-label { display: none; }
+      .proc-hdot { width: 4px; height: 4px; }
+      .proc-hdot.active { width: 10px; }
     }
 
     /* =========================================================
@@ -999,6 +1038,29 @@
     <div class="proc-scene-fixed">
       <svg id="procScene" viewBox="0 0 160 100" preserveAspectRatio="xMidYMid meet"
            role="img" aria-label="Water purification plant visualization"></svg>
+
+      <!-- Navigation bar: prev / step dots / next -->
+      <div class="proc-nav-bar">
+        <button class="proc-nav-btn disabled" id="procPrev" aria-label="Etapa anterior">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="btn-label">Anterior</span>
+        </button>
+
+        <div class="proc-nav-center">
+          <div class="proc-step-label">Pas <span id="procStepNum">1</span> de 11</div>
+          <div class="proc-hdots" id="procHDots"></div>
+        </div>
+
+        <button class="proc-nav-btn" id="procNext" aria-label="Etapa següent">
+          <span class="btn-label">Següent</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
       <div class="proc-indicators" aria-label="Contamination levels">
         <div class="proc-indicator">
           <span class="proc-ind-label">Turbidity</span>
@@ -1039,21 +1101,6 @@
         <div class="proc-hstep" data-step="10"></div>
       </div>
     </div>
-
-    <!-- Navigation arrows -->
-    <button class="proc-arrow disabled" id="procPrev" aria-label="Etapa anterior">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-    <button class="proc-arrow" id="procNext" aria-label="Etapa següent">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-
-    <!-- Horizontal progress dots -->
-    <div class="proc-hdots" id="procHDots"></div>
 
   </section>
 
@@ -1960,6 +2007,10 @@
     }
     function updateDots(idx){ dotEls.forEach((d,i)=>d.classList.toggle('active',i===idx)); }
 
+    /* ---- Step counter ---- */
+    const stepNumEl = document.getElementById('procStepNum');
+    function updateStepCounter(idx){ if(stepNumEl) stepNumEl.textContent = idx + 1; }
+
     /* ---- Arrow state ---- */
     function updateArrows(idx){
       prevBtn.classList.toggle('disabled',idx===0);
@@ -1981,6 +2032,7 @@
       updateIndicators(sceneIdx);
       updateDots(idx);
       updateArrows(idx);
+      updateStepCounter(idx);
     }
 
     /* scrollToStep: always updates visuals immediately; also syncs scroll container */

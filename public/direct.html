@@ -31,7 +31,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html {
       scroll-behavior: smooth;
-      scroll-snap-type: y mandatory;
+      scroll-snap-type: y proximity;
       height: 100%;
     }
     body {
@@ -59,47 +59,13 @@
       padding: clamp(48px, 8vw, 100px) clamp(24px, 6vw, 80px);
       position: relative;
       overflow: hidden;
+      background-color: var(--navy);
     }
 
     /* =========================================================
-       PROGRESS BAR
+       SLIDE GENERIC STYLES — placeholder removed (progress bar
+       and dots nav eliminated per feedback)
        ========================================================= */
-    .progress-bar {
-      position: fixed;
-      top: 0; left: 0;
-      height: 3px;
-      width: 0%;
-      background: linear-gradient(to right, var(--cy-dk), var(--cy));
-      z-index: 999;
-      transition: width 200ms var(--ease);
-    }
-
-    /* =========================================================
-       DOTS NAVIGATION
-       ========================================================= */
-    .dots {
-      position: fixed;
-      right: clamp(14px, 3vw, 28px);
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 100;
-    }
-    .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: rgba(163, 208, 227, 0.25);
-      border: 1px solid rgba(163, 208, 227, 0.35);
-      cursor: pointer;
-      transition: background 240ms ease, transform 240ms ease;
-    }
-    .dot.active {
-      background: var(--cy);
-      transform: scale(1.45);
-      border-color: var(--cy);
-    }
 
     /* =========================================================
        PORTADA
@@ -552,16 +518,16 @@
     .proc-nav-btn {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 9px clamp(12px, 2vw, 20px);
+      gap: 10px;
+      padding: 14px clamp(20px, 3vw, 36px);
       border-radius: 999px;
       border: 1px solid rgba(79, 179, 217, 0.28);
       background: rgba(79, 179, 217, 0.07);
       color: var(--cy);
       cursor: pointer;
       font-family: 'Inter', system-ui, sans-serif;
-      font-size: clamp(0.72rem, 1.1vw, 0.84rem);
-      font-weight: 600;
+      font-size: clamp(0.82rem, 1.3vw, 1rem);
+      font-weight: 700;
       letter-spacing: 0.04em;
       white-space: nowrap;
       transition: background 200ms ease, border-color 200ms ease, color 200ms ease, opacity 200ms ease, transform 180ms var(--ease);
@@ -642,7 +608,7 @@
     #slide4 {
       background:
         radial-gradient(ellipse 60% 60% at 50% 50%, rgba(200,148,100,.07) 0%, transparent 70%),
-        linear-gradient(170deg, var(--navy-3) 0%, var(--navy) 100%);
+        var(--navy);
     }
 
     .vote-desc {
@@ -728,7 +694,7 @@
     #slide5 {
       background:
         radial-gradient(ellipse 70% 50% at 10% 50%, rgba(42,133,179,.08) 0%, transparent 60%),
-        linear-gradient(180deg, var(--navy) 0%, var(--navy-3) 100%);
+        var(--navy);
     }
 
     .sponsors-desc {
@@ -801,6 +767,16 @@
       background: #fff;
       border-radius: 10px;
       padding: 8px 14px;
+    }
+
+    /* =========================================================
+       SLIDE STATS — DADES DE L'EQUIP
+       ========================================================= */
+    #slideStats {
+      background:
+        radial-gradient(ellipse 70% 60% at 80% 30%, rgba(200,148,100,.1) 0%, transparent 65%),
+        var(--navy);
+      text-align: center;
     }
 
     /* =========================================================
@@ -951,19 +927,6 @@
 </head>
 <body>
 
-  <!-- Progress bar -->
-  <div class="progress-bar" id="progressBar"></div>
-
-  <!-- Dots nav -->
-  <nav class="dots" id="dotsNav" aria-label="Navegació de seccions">
-    <button class="dot active" data-slide="portada" aria-label="Portada"></button>
-    <button class="dot" data-slide="slide1" aria-label="Fotos"></button>
-    <button class="dot" data-slide="slide3" aria-label="La solució"></button>
-    <button class="dot" data-slide="slide4" aria-label="Diners i votació"></button>
-    <button class="dot" data-slide="slide5" aria-label="Patrocinadors"></button>
-    <button class="dot" data-slide="slide6" aria-label="Donacions"></button>
-  </nav>
-
   <!-- =========================================================
        PORTADA
        ========================================================= -->
@@ -1009,6 +972,42 @@
   </section>
 
   <!-- =========================================================
+       SLIDE STATS — DADES DE L'EQUIP
+       ========================================================= -->
+  <section class="slide" id="slideStats">
+
+    <div class="tri-bg">
+      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <polygon points="10,8 0,24 20,24"    fill="rgba(200,148,100,.06)"/>
+        <polygon points="190,72 180,90 200,90" fill="rgba(79,179,217,.05)"/>
+      </svg>
+    </div>
+
+    <div class="slide-body" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="slide-eyebrow rev">L'escola d'Emorogi · Kènia</div>
+      <h2 class="slide-title rev rev-d1">La realitat<br/>sobre el <span class="accent">terreny</span></h2>
+
+      <div class="context-stats rev rev-d2">
+        <div class="stat-item">
+          <div class="stat-num">500</div>
+          <div class="stat-label">estudiants a l'escola d'Emorogi</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num">80%</div>
+          <div class="stat-label">de malalties infantils per mala qualitat de l'aigua</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num warm">2 km</div>
+          <div class="stat-label">fins al llac i pou, caminant cada dia</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =========================================================
        SLIDE 1 — GALERIA DE FOTOS
        ========================================================= -->
   <section class="slide" id="slide1">
@@ -1038,23 +1037,9 @@
       </figure>
     </div>
 
-    <div class="gallery-stats-panel">
-      <div class="gallery-dots-bar" id="gDots" aria-label="Fotos"></div>
-      <div class="gallery-stats-row">
-        <div class="gallery-stat">
-          <div class="gallery-stat-num">500</div>
-          <div class="gallery-stat-label">estudiants a l'escola d'Emorogi</div>
-        </div>
-        <div class="gallery-stat">
-          <div class="gallery-stat-num warm">2 km</div>
-          <div class="gallery-stat-label">fins al llac i pou, caminant cada dia</div>
-        </div>
-        <div class="gallery-stat">
-          <div class="gallery-stat-num">80%</div>
-          <div class="gallery-stat-label">de malalties infantils per mala qualitat de l'aigua</div>
-        </div>
-      </div>
-    </div>
+    <!-- Dots bar positioned at bottom -->
+    <div class="gallery-dots-bar" id="gDots" aria-label="Fotos"
+         style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;"></div>
 
   </section>
 
@@ -1070,24 +1055,21 @@
            role="img" aria-label="Water purification plant visualization"></svg>
     </div>
 
-      <!-- Navigation bar: prev / step dots / next -->
+      <!-- Navigation bar: prev / next -->
       <div class="proc-nav-bar">
         <button class="proc-nav-btn disabled" id="procPrev" aria-label="Etapa anterior">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <span class="btn-label">Anterior</span>
         </button>
 
-        <div class="proc-nav-center">
-          <div class="proc-step-label">Pas <span id="procStepNum">1</span> de 11</div>
-          <div class="proc-hdots" id="procHDots"></div>
-        </div>
+        <div style="flex:1"></div>
 
         <button class="proc-nav-btn" id="procNext" aria-label="Etapa següent">
           <span class="btn-label">Següent</span>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
       </div>
@@ -1106,7 +1088,7 @@
         <div class="proc-indicator">
           <span class="proc-ind-label">Pathogens</span>
           <div class="proc-ind-row"><span id="pval-path" class="proc-ind-value">100%</span></div>
-          <span class="proc-ind-bar"><span class="proc-ind-bar-fill" id="pbar-path" style="width:100%;background:#27500A;"></span></span>
+          <span class="proc-ind-bar"><span class="proc-ind-bar-fill" id="pbar-path" style="width:100%;background:#8A8A8A;"></span></span>
         </div>
         <div class="proc-indicator">
           <span class="proc-ind-label">Organics</span>
@@ -1151,44 +1133,31 @@
       <div class="slide-eyebrow rev">La pregunta clau</div>
       <h2 class="slide-title rev rev-d1">Quant <span class="warm">costa</span><br/>tot això?</h2>
 
-      <p class="vote-desc rev rev-d2">Aixeca la mà quan sentis la resposta correcta</p>
-
       <div class="vote-grid">
         <div class="vote-card rev rev-d2">
           <div class="vote-letter">A</div>
           <div>
             <div class="vote-range">100 – 1.000 €</div>
-            <div class="vote-hint">Menys del que costa un cotxe de 2a mà</div>
           </div>
         </div>
         <div class="vote-card rev rev-d3">
           <div class="vote-letter">B</div>
           <div>
             <div class="vote-range">1.000 – 5.000 €</div>
-            <div class="vote-hint">L'equivalent a unes vacances familiars</div>
           </div>
         </div>
         <div class="vote-card rev rev-d3">
           <div class="vote-letter">C</div>
           <div>
             <div class="vote-range">5.000 – 25.000 €</div>
-            <div class="vote-hint">Com un cotxe nou de gamma mitja</div>
           </div>
         </div>
         <div class="vote-card rev rev-d4">
           <div class="vote-letter">D</div>
           <div>
             <div class="vote-range">25.000 – 100.000 €</div>
-            <div class="vote-hint">Com reformar un pis a Barcelona</div>
           </div>
         </div>
-      </div>
-
-      <div class="vote-instruction rev rev-d4">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0">
-          <path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm0 3.5v5m0 2.5v.5" stroke="#4FB3D9" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-        <p>La votació es fa <strong>aixecant la mà</strong> — res de mòbils. El presentador comptarà els vots en directe.</p>
       </div>
     </div>
 
@@ -1261,49 +1230,17 @@
        ========================================================= -->
   <section class="slide" id="slide6">
 
-    <div class="tri-bg">
-      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
-        <polygon points="15,8 5,26 25,26"    fill="rgba(79,179,217,.06)"/>
-        <polygon points="185,10 175,28 195,28" fill="rgba(79,179,217,.05)"/>
-        <polygon points="100,5 88,26 112,26"  fill="rgba(79,179,217,.04)"/>
-        <polygon points="50,82 40,98 60,98"   fill="rgba(79,179,217,.05)"/>
-        <polygon points="150,78 140,95 160,95" fill="rgba(200,148,100,.05)"/>
+    <a
+      href="https://www.migranodearena.org/reto/agua-y-educacion-para-kenia-construyendo-el-futuro-de-emorogi"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="dona-btn"
+    >
+      <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
+        <path d="M10 17s-7-4.5-7-9a4 4 0 017-2.65A4 4 0 0117 8c0 4.5-7 9-7 9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" fill="rgba(255,255,255,.2)"/>
       </svg>
-    </div>
-
-    <div class="slide-eyebrow rev">Ara és el teu torn</div>
-    <h2 class="slide-title rev rev-d1">
-      Confia en<br/>la teva <span class="accent">gota d'aigua</span>
-    </h2>
-
-    <p class="dona-tagline rev rev-d2">
-      A part de les empreses…<br/>
-      <em>confiem en la vostra ajuda personal.</em><br/>
-      Qualsevol aportació fa la diferència — des d'1&nbsp;€ fins al que puguis.
-    </p>
-
-    <div class="dona-amount rev rev-d3">
-      <span class="amount-chip">5 € · Un dia d'aigua neta</span>
-      <span class="amount-chip">20 € · Una setmana</span>
-      <span class="amount-chip">50 € · Un mes</span>
-    </div>
-
-    <div class="dona-cta-wrap rev rev-d4">
-      <a
-        href="https://www.migranodearena.org/reto/agua-y-educacion-para-kenia-construyendo-el-futuro-de-emorogi"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="dona-btn"
-      >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M10 17s-7-4.5-7-9a4 4 0 017-2.65A4 4 0 0117 8c0 4.5-7 9-7 9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" fill="rgba(255,255,255,.2)"/>
-        </svg>
-        Fes la teva aportació
-      </a>
-      <span class="dona-platform">Via <strong>migranodearena.org</strong> · plataforma segura · a favor de l'ONG ADESCI</span>
-    </div>
-
-    <p class="dona-heart">Vitalqua Project · Kènia 2026 · <a href="/index.html" style="color:var(--cy-dk)">vitalquaproject.com</a></p>
+      Fes la teva donació
+    </a>
 
   </section>
 
@@ -1311,10 +1248,8 @@
     (function () {
 
       // ─── Slides list ───────────────────────────────────────────
-      const slideIds = ['portada','slide1','slide3','slide4','slide5','slide6'];
+      const slideIds = ['portada','slideStats','slide1','slide3','slide4','slide5','slide6'];
       const slides   = slideIds.map(id => document.getElementById(id));
-      const dots     = document.querySelectorAll('.dot');
-      const progress = document.getElementById('progressBar');
 
       // ─── Reveal on scroll ──────────────────────────────────────
       const revObs = new IntersectionObserver(entries => {
@@ -1327,16 +1262,12 @@
       }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
       document.querySelectorAll('.rev').forEach(el => revObs.observe(el));
 
-      // ─── Active dot tracking ───────────────────────────────────
+      // ─── Active slide tracking ─────────────────────────────────
       let currentSlide = 0;
 
       function setActive(idx) {
         if (idx === currentSlide) return;
         currentSlide = idx;
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-        // progress bar
-        const pct = slides.length > 1 ? (idx / (slides.length - 1)) * 100 : 0;
-        progress.style.width = pct + '%';
       }
 
       const slideObs = new IntersectionObserver(entries => {
@@ -1349,15 +1280,8 @@
       }, { threshold: 0.5 });
       slides.forEach(s => slideObs.observe(s));
 
-      // ─── Dot click → scroll ────────────────────────────────────
-      dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => {
-          slides[i].scrollIntoView({ behavior: 'smooth' });
-        });
-      });
-
       // ─── Keyboard navigation ───────────────────────────────────
-      // slide3 (index 3) has an inner horizontal process; delegate to it first.
+      // slide3 has an inner horizontal process; delegate to it first.
       const PROC_SLIDE_IDX = slideIds.indexOf('slide3');
       document.addEventListener('keydown', e => {
         if (e.key === 'ArrowDown' || e.key === 'PageDown') {
@@ -1971,7 +1895,6 @@
     const svgEl     = document.getElementById('procScene');
     const procSlide = document.getElementById('slide3');
     const hscrollEl = document.getElementById('procHScroll');
-    const hdotsEl   = document.getElementById('procHDots');
     const prevBtn   = document.getElementById('procPrev');
     const nextBtn   = document.getElementById('procNext');
     const TOTAL     = 11;
@@ -2099,19 +2022,6 @@
     }
     updateIndicators(0);
 
-    /* ---- Progress dots ---- */
-    const dotEls=[];
-    for(let i=0;i<TOTAL;i++){
-      const d=document.createElement('span');
-      d.className='proc-hdot'+(i===0?' active':'');
-      hdotsEl.appendChild(d); dotEls.push(d);
-    }
-    function updateDots(idx){ dotEls.forEach((d,i)=>d.classList.toggle('active',i===idx)); }
-
-    /* ---- Step counter ---- */
-    const stepNumEl = document.getElementById('procStepNum');
-    function updateStepCounter(idx){ if(stepNumEl) stepNumEl.textContent = idx + 1; }
-
     /* ---- Arrow state ---- */
     function updateArrows(idx){
       if(prevBtn) prevBtn.classList.toggle('disabled',idx===0);
@@ -2131,9 +2041,7 @@
       procCurrentStep=idx;
       if(sceneIdx!==prevScene) applyScene(sceneIdx);
       updateIndicators(sceneIdx);
-      updateDots(idx);
       updateArrows(idx);
-      updateStepCounter(idx);
     }
 
     /* scrollToStep: always updates visuals immediately; also syncs scroll container */

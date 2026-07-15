@@ -1282,14 +1282,24 @@
       });
 
       // ─── Keyboard navigation ───────────────────────────────────
+      // slide3 (index 3) has an inner horizontal process; delegate to it first.
+      const PROC_SLIDE_IDX = slideIds.indexOf('slide3');
       document.addEventListener('keydown', e => {
         if (e.key === 'ArrowDown' || e.key === 'PageDown') {
           e.preventDefault();
+          if (currentSlide === PROC_SLIDE_IDX && window._procNav && window._procNav.step() < window._procNav.total - 1) {
+            window._procNav.go(window._procNav.step() + 1);
+            return;
+          }
           const next = Math.min(currentSlide + 1, slides.length - 1);
           slides[next].scrollIntoView({ behavior: 'smooth' });
         }
         if (e.key === 'ArrowUp' || e.key === 'PageUp') {
           e.preventDefault();
+          if (currentSlide === PROC_SLIDE_IDX && window._procNav && window._procNav.step() > 0) {
+            window._procNav.go(window._procNav.step() - 1);
+            return;
+          }
           const prev = Math.max(currentSlide - 1, 0);
           slides[prev].scrollIntoView({ behavior: 'smooth' });
         }
@@ -2023,6 +2033,9 @@
       clearTimeout(_resizeTimer3);
       _resizeTimer3=setTimeout(()=>hscrollEl.scrollTo({left:procCurrentStep*getStepW(),behavior:'instant'}),150);
     },{passive:true});
+
+    /* ---- Expose to outer keyboard handler ---- */
+    window._procNav = { step: ()=>procCurrentStep, total: TOTAL, go: scrollToStep };
 
   })();
   </script>

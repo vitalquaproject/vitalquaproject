@@ -255,31 +255,32 @@
       align-items: stretch;
       overflow: hidden;
       background: var(--navy);
+      height: 100dvh;         /* prevent slide from growing beyond viewport */
+      max-height: 100dvh;
     }
 
-    /* The photo strip grows to fill all remaining space */
+    /* The photo strip fills all space above the stats bar */
     .gallery-scroll {
       flex: 1;
-      min-height: 0;          /* allow flex shrink below content size */
-      position: relative;     /* anchor for arrow buttons */
+      min-height: 0;
       display: flex;
       overflow-x: auto;
       overflow-y: hidden;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      cursor: grab;
     }
-    .gallery-scroll:active { cursor: grabbing; }
     .gallery-scroll::-webkit-scrollbar { display: none; }
 
+    /* Each photo: full snap unit width, padded on sides for the margin effect */
     .gallery-photo {
       flex-shrink: 0;
       width: 100vw;
-      height: 100%;           /* fills gallery-scroll height */
+      box-sizing: border-box;
+      padding: clamp(8px, 3vw, 20px) clamp(10px, 4vw, 28px);
+      height: 100%;
       scroll-snap-align: start;
       scroll-snap-stop: always;
-      margin: 0; padding: 0;
     }
 
     .gallery-photo img {
@@ -287,40 +288,8 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      border-radius: 16px;
     }
-
-    /* Navigation arrows — relative to .gallery-scroll */
-    .gallery-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 10;
-      width: clamp(44px, 5vw, 56px);
-      height: clamp(44px, 5vw, 56px);
-      border-radius: 50%;
-      border: 1px solid rgba(79,179,217,.35);
-      background: rgba(7,16,30,.65);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      color: var(--cy);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 200ms ease, border-color 200ms ease, transform 200ms var(--ease), opacity 200ms ease;
-    }
-    .gallery-btn:hover {
-      background: rgba(79,179,217,.22);
-      border-color: rgba(79,179,217,.65);
-      transform: translateY(-50%) scale(1.1);
-    }
-    .gallery-btn:active { transform: translateY(-50%) scale(0.96); }
-    .gallery-btn.disabled {
-      opacity: 0.18;
-      pointer-events: none;
-    }
-    .gallery-btn-prev { left: clamp(14px, 3vw, 32px); }
-    .gallery-btn-next { right: clamp(14px, 3vw, 32px); }
 
     /* Stats + dots panel — in normal flow, directly below the photos */
     .gallery-stats-panel {
@@ -1060,17 +1029,6 @@
         <img src="/img/e7.jpeg" alt="L'equip al terreny — foto 7" loading="lazy" />
       </figure>
 
-      <!-- Arrows inside the scroll container so they anchor to the photo area -->
-      <button class="gallery-btn gallery-btn-prev disabled" id="gPrev" aria-label="Foto anterior">
-        <svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <button class="gallery-btn gallery-btn-next" id="gNext" aria-label="Foto següent">
-        <svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
     </div>
 
     <div class="gallery-stats-panel">
@@ -1423,10 +1381,8 @@
   <script>
   (function () {
     const scrollEl = document.getElementById('gallery1');
-    const prevBtn  = document.getElementById('gPrev');
-    const nextBtn  = document.getElementById('gNext');
     const dotsBar  = document.getElementById('gDots');
-    if (!scrollEl || !prevBtn || !nextBtn || !dotsBar) return;
+    if (!scrollEl || !dotsBar) return;
 
     const TOTAL = scrollEl.querySelectorAll('.gallery-photo').length;
     let current = 0;
@@ -1447,22 +1403,15 @@
     function setActive(idx) {
       current = idx;
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      prevBtn.classList.toggle('disabled', idx === 0);
-      nextBtn.classList.toggle('disabled', idx === TOTAL - 1);
     }
 
     function goTo(idx) {
       const c = Math.max(0, Math.min(TOTAL - 1, idx));
-      /* instant snap for large jumps, smooth for ±1 */
-      const behaviour = Math.abs(c - current) > 1 ? 'instant' : 'smooth';
-      scrollEl.scrollTo({ left: c * getW(), behavior: behaviour });
+      scrollEl.scrollTo({ left: c * getW(), behavior: 'smooth' });
       setActive(c);
     }
 
-    prevBtn.addEventListener('click', () => goTo(current - 1));
-    nextBtn.addEventListener('click', () => goTo(current + 1));
-
-    /* Sync active state while user drags/swipes */
+    /* Sync dots while user swipes */
     let scrollTimer;
     scrollEl.addEventListener('scroll', () => {
       const w = getW();
@@ -1471,8 +1420,7 @@
       if (idx !== current) setActive(idx);
       clearTimeout(scrollTimer);
       scrollTimer = setTimeout(() => {
-        const snap = Math.round(scrollEl.scrollLeft / getW());
-        if (snap !== current) setActive(snap);
+        setActive(Math.round(scrollEl.scrollLeft / getW()));
       }, 80);
     }, { passive: true });
 
@@ -1494,13 +1442,6 @@
         scrollEl.scrollTo({ left: current * getW(), behavior: 'instant' });
       }, 150);
     }, { passive: true });
-
-    /* Preload next image on nav */
-    function preload(idx) {
-      const photos = scrollEl.querySelectorAll('.gallery-photo img');
-      if (photos[idx]) photos[idx].loading = 'eager';
-    }
-    preload(1);
   })();
   </script>
 

@@ -247,65 +247,115 @@
     }
 
     /* =========================================================
-       SLIDE 1 — PUNTS CLAU
+       SLIDE 1 — GALERIA DE FOTOS
        ========================================================= */
     #slide1 {
-      background:
-        radial-gradient(ellipse 60% 50% at 20% 50%, rgba(42,133,179,.12) 0%, transparent 65%),
-        linear-gradient(180deg, var(--navy) 0%, var(--navy-3) 100%);
+      padding: 0;
+      justify-content: stretch;
+      align-items: stretch;
+      overflow: hidden;
+      background: var(--navy);
     }
 
-    .keys-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: clamp(16px, 2.5vw, 28px);
-      margin-top: clamp(36px, 5vw, 56px);
+    .gallery-scroll {
+      flex: 1;
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      min-height: 100dvh;
+      cursor: grab;
+    }
+    .gallery-scroll:active { cursor: grabbing; }
+    .gallery-scroll::-webkit-scrollbar { display: none; }
+
+    .gallery-photo {
+      flex-shrink: 0;
+      width: 100vw;
+      height: 100%;
+      min-height: 100dvh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    .gallery-photo img {
       width: 100%;
-      max-width: 840px;
-    }
-    @media (max-width: 600px) { .keys-grid { grid-template-columns: 1fr; } }
-
-    .key-card {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(79,179,217,.14);
-      border-radius: 18px;
-      padding: clamp(22px, 3vw, 36px);
-      text-align: left;
-      transition: background 300ms ease, border-color 300ms ease;
-    }
-    .key-card:hover {
-      background: rgba(79,179,217,.06);
-      border-color: rgba(79,179,217,.28);
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
-    .key-icon {
-      font-size: 2rem;
-      margin-bottom: 14px;
-      line-height: 1;
+    /* Navigation arrows */
+    .gallery-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: clamp(44px, 5vw, 56px);
+      height: clamp(44px, 5vw, 56px);
+      border-radius: 50%;
+      border: 1px solid rgba(79,179,217,.35);
+      background: rgba(7,16,30,.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--cy);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 200ms ease, border-color 200ms ease, transform 200ms var(--ease), opacity 200ms ease;
     }
-    .key-card h3 {
-      font-family: 'Inter Tight', sans-serif;
-      font-size: clamp(1.1rem, 2vw, 1.4rem);
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 8px;
-      line-height: 1.2;
+    .gallery-btn:hover {
+      background: rgba(79,179,217,.22);
+      border-color: rgba(79,179,217,.65);
+      transform: translateY(-50%) scale(1.1);
     }
-    .key-card p {
-      font-size: clamp(0.82rem, 1.2vw, 0.95rem);
-      color: var(--faint);
-      line-height: 1.6;
+    .gallery-btn:active { transform: translateY(-50%) scale(0.96); }
+    .gallery-btn.disabled {
+      opacity: 0.18;
+      pointer-events: none;
     }
-    .key-card .tag {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 4px 12px;
-      background: rgba(79,179,217,.12);
+    .gallery-btn-prev { left: clamp(14px, 3vw, 32px); }
+    .gallery-btn-next { right: clamp(14px, 3vw, 32px); }
+
+    /* Dots bar */
+    .gallery-dots-bar {
+      position: absolute;
+      bottom: clamp(18px, 3vw, 28px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      z-index: 10;
+      padding: 9px 16px;
+      background: rgba(7,16,30,.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      color: var(--cy-lt);
+      border: 1px solid rgba(79,179,217,.14);
+    }
+
+    .gallery-dot-item {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(163,208,227,.3);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 240ms ease, width 240ms var(--ease), border-radius 240ms ease;
+      flex-shrink: 0;
+    }
+    .gallery-dot-item.active {
+      background: var(--cy);
+      width: 20px;
+      border-radius: 3px;
     }
 
     /* =========================================================
@@ -886,7 +936,7 @@
   <!-- Dots nav -->
   <nav class="dots" id="dotsNav" aria-label="Navegació de seccions">
     <button class="dot active" data-slide="portada" aria-label="Portada"></button>
-    <button class="dot" data-slide="slide1" aria-label="Punts clau"></button>
+    <button class="dot" data-slide="slide1" aria-label="Fotos"></button>
     <button class="dot" data-slide="slide2" aria-label="Context Kènia"></button>
     <button class="dot" data-slide="slide3" aria-label="La solució"></button>
     <button class="dot" data-slide="slide4" aria-label="Diners i votació"></button>
@@ -939,49 +989,46 @@
   </section>
 
   <!-- =========================================================
-       SLIDE 1 — PUNTS CLAU
+       SLIDE 1 — GALERIA DE FOTOS
        ========================================================= -->
   <section class="slide" id="slide1">
 
-    <div class="tri-bg">
-      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
-        <polygon points="5,10 0,25 15,25"  fill="rgba(79,179,217,.06)"/>
-        <polygon points="190,70 180,88 200,88" fill="rgba(79,179,217,.05)"/>
-        <polygon points="100,80 92,96 108,96" fill="rgba(79,179,217,.04)"/>
+    <div class="gallery-scroll" id="gallery1" role="region" aria-label="Galeria de fotos de l'equip">
+      <figure class="gallery-photo">
+        <img src="/img/e1.jpeg" alt="L'equip al terreny — foto 1" loading="lazy" />
+      </figure>
+      <figure class="gallery-photo">
+        <img src="/img/e2.jpeg" alt="L'equip al terreny — foto 2" loading="lazy" />
+      </figure>
+      <figure class="gallery-photo">
+        <img src="/img/e3.jpeg" alt="L'equip al terreny — foto 3" loading="lazy" />
+      </figure>
+      <figure class="gallery-photo">
+        <img src="/img/e4.jpeg" alt="L'equip al terreny — foto 4" loading="lazy" />
+      </figure>
+      <figure class="gallery-photo">
+        <img src="/img/e5.jpeg" alt="L'equip al terreny — foto 5" loading="lazy" />
+      </figure>
+      <figure class="gallery-photo">
+        <img src="/img/e6.jpeg" alt="L'equip al terreny — foto 6" loading="lazy" />
+      </figure>
+      <figure class="gallery-photo">
+        <img src="/img/e7.jpeg" alt="L'equip al terreny — foto 7" loading="lazy" />
+      </figure>
+    </div>
+
+    <button class="gallery-btn gallery-btn-prev disabled" id="gPrev" aria-label="Foto anterior">
+      <svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-    </div>
+    </button>
+    <button class="gallery-btn gallery-btn-next" id="gNext" aria-label="Foto següent">
+      <svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
 
-    <div class="slide-body" style="display:flex;flex-direction:column;align-items:center;">
-      <div class="slide-eyebrow rev">El projecte</div>
-      <h2 class="slide-title rev rev-d1">Punts clau</h2>
-
-      <div class="keys-grid">
-        <div class="key-card rev rev-d1">
-          <div class="key-icon">🎓</div>
-          <h3>TFG d'estudiants</h3>
-          <p>Projecte final de grau dissenyat i impulsat per estudiants d'enginyeria en col·laboració amb l'ONG ADESCI.</p>
-          <span class="tag">Enginyeria aplicada</span>
-        </div>
-        <div class="key-card rev rev-d2">
-          <div class="key-icon">📅</div>
-          <h3>Implantació en 2 anys</h3>
-          <p>Cronograma realista amb fases de disseny, prototipatge, transport i construcció sobre el terreny.</p>
-          <span class="tag">2025 – 2027</span>
-        </div>
-        <div class="key-card rev rev-d3">
-          <div class="key-icon">☀️</div>
-          <h3>Comencem aquest estiu</h3>
-          <p>La primera fase arrenca l'estiu del 2026. El compte enrere ha començat.</p>
-          <span class="tag">Estiu 2026</span>
-        </div>
-        <div class="key-card rev rev-d4">
-          <div class="key-icon">🤝</div>
-          <h3>ONG ADESCI</h3>
-          <p>Associació de Cooperació que porta dècades treballant per l'educació i el benestar a Àfrica Oriental.</p>
-          <span class="tag">Soci local</span>
-        </div>
-      </div>
-    </div>
+    <div class="gallery-dots-bar" id="gDots" aria-label="Fotos"></div>
 
   </section>
 
@@ -1352,6 +1399,93 @@
     })();
   </script>
 
+
+  <!-- =========================================================
+       GALLERY ENGINE — slide1
+       ========================================================= -->
+  <script>
+  (function () {
+    const scrollEl = document.getElementById('gallery1');
+    const prevBtn  = document.getElementById('gPrev');
+    const nextBtn  = document.getElementById('gNext');
+    const dotsBar  = document.getElementById('gDots');
+    if (!scrollEl || !prevBtn || !nextBtn || !dotsBar) return;
+
+    const TOTAL = scrollEl.querySelectorAll('.gallery-photo').length;
+    let current = 0;
+
+    /* Build dots */
+    const dots = [];
+    for (let i = 0; i < TOTAL; i++) {
+      const d = document.createElement('button');
+      d.className = 'gallery-dot-item' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Foto ' + (i + 1));
+      d.addEventListener('click', () => goTo(i));
+      dotsBar.appendChild(d);
+      dots.push(d);
+    }
+
+    function getW() { return scrollEl.clientWidth || window.innerWidth; }
+
+    function setActive(idx) {
+      current = idx;
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      prevBtn.classList.toggle('disabled', idx === 0);
+      nextBtn.classList.toggle('disabled', idx === TOTAL - 1);
+    }
+
+    function goTo(idx) {
+      const c = Math.max(0, Math.min(TOTAL - 1, idx));
+      /* instant snap for large jumps, smooth for ±1 */
+      const behaviour = Math.abs(c - current) > 1 ? 'instant' : 'smooth';
+      scrollEl.scrollTo({ left: c * getW(), behavior: behaviour });
+      setActive(c);
+    }
+
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+
+    /* Sync active state while user drags/swipes */
+    let scrollTimer;
+    scrollEl.addEventListener('scroll', () => {
+      const w = getW();
+      if (w < 1) return;
+      const idx = Math.round(scrollEl.scrollLeft / w);
+      if (idx !== current) setActive(idx);
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const snap = Math.round(scrollEl.scrollLeft / getW());
+        if (snap !== current) setActive(snap);
+      }, 80);
+    }, { passive: true });
+
+    /* Keyboard: ←/→ when slide1 is in view */
+    const slide1El = document.getElementById('slide1');
+    document.addEventListener('keydown', e => {
+      if (!slide1El) return;
+      const r = slide1El.getBoundingClientRect();
+      if (r.top > window.innerHeight * 0.5 || r.bottom < window.innerHeight * 0.5) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(current - 1); }
+    });
+
+    /* Re-snap on resize */
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        scrollEl.scrollTo({ left: current * getW(), behavior: 'instant' });
+      }, 150);
+    }, { passive: true });
+
+    /* Preload next image on nav */
+    function preload(idx) {
+      const photos = scrollEl.querySelectorAll('.gallery-photo img');
+      if (photos[idx]) photos[idx].loading = 'eager';
+    }
+    preload(1);
+  })();
+  </script>
 
   <!-- =========================================================
        PROCESS INLINE ENGINE

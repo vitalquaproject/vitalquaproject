@@ -449,10 +449,7 @@
       scrollbar-width: none;
       -ms-overflow-style: none;
       z-index: 2;
-      touch-action: pan-x;
-      overscroll-behavior: contain;
-      will-change: scroll-position;
-      -webkit-overflow-scrolling: touch;
+      pointer-events: none;
     }
     .proc-hscroll::-webkit-scrollbar { display: none; }
 
@@ -1972,14 +1969,8 @@
     prevBtn.addEventListener('click',()=>scrollToStep(procCurrentStep-1));
     nextBtn.addEventListener('click',()=>scrollToStep(procCurrentStep+1));
 
-    /* ---- Scroll engine (horizontal) ---- */
+    /* ---- Step engine ---- */
     function getStepW(){ return hscrollEl.clientWidth || hscrollEl.offsetWidth || window.innerWidth; }
-
-    function scrollToStep(idx){
-      const clamped=Math.max(0,Math.min(TOTAL-1,idx));
-      const stepW=getStepW();
-      hscrollEl.scrollTo({left:clamped*stepW,behavior:'smooth'});
-    }
 
     function setStep(idx){
       if(idx===procCurrentStep) return;
@@ -1992,6 +1983,16 @@
       updateArrows(idx);
     }
 
+    /* scrollToStep: always updates visuals immediately; also syncs scroll container */
+    function scrollToStep(idx){
+      const clamped=Math.max(0,Math.min(TOTAL-1,idx));
+      setStep(clamped);                                          // visual update NOW
+      try{
+        const stepW=getStepW();
+        if(stepW>0) hscrollEl.scrollTo({left:clamped*stepW,behavior:'instant'});
+      }catch(e){}
+    }
+
     let _scrollTimer3,_lastNear3=0;
     hscrollEl.addEventListener('scroll',()=>{
       const stepW=getStepW();
@@ -2001,22 +2002,6 @@
       clearTimeout(_scrollTimer3);
       _scrollTimer3=setTimeout(()=>setStep(Math.round(hscrollEl.scrollLeft/getStepW())),90);
     },{passive:true});
-
-    /* ---- Wheel: redirect vertical wheel to step navigation when slide3 is active ---- */
-    let _wheelCooldown=false;
-    procSlide.addEventListener('wheel',(e)=>{
-      const rect=procSlide.getBoundingClientRect();
-      const fullyVisible=rect.top>=-10&&rect.top<=10;
-      if(!fullyVisible) return;
-      const delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
-      if(Math.abs(delta)<5) return;
-      e.preventDefault();
-      if(_wheelCooldown) return;
-      _wheelCooldown=true;
-      setTimeout(()=>{ _wheelCooldown=false; },600);
-      if(delta>0) scrollToStep(procCurrentStep+1);
-      else        scrollToStep(procCurrentStep-1);
-    },{passive:false});
 
     /* ---- Keyboard: Left/Right when slide3 in view ---- */
     document.addEventListener('keydown',e=>{

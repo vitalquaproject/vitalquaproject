@@ -450,10 +450,15 @@
       z-index: 1;
     }
 
-    #procScene {
+    .proc-scene-wrap {
       flex: 1;
-      width: 100%;
       min-height: 0;
+      padding: clamp(8px, 3vw, 20px) clamp(10px, 4vw, 28px);
+    }
+
+    #procScene {
+      width: 100%;
+      height: 100%;
       display: block;
       pointer-events: none;
     }
@@ -463,10 +468,10 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
-      padding: 10px 20px;
-      background: rgba(7,16,30,0.88);
+      padding: 10px clamp(16px, 5vw, 64px);
+      background: rgba(7,16,30,0.95);
       backdrop-filter: blur(10px);
-      border-top: 1px solid rgba(79,179,217,0.15);
+      border-top: 1px solid rgba(79,179,217,0.08);
       flex-shrink: 0;
     }
 
@@ -513,7 +518,7 @@
       scrollbar-width: none;
       -ms-overflow-style: none;
       z-index: 2;
-      pointer-events: auto;
+      pointer-events: none;
     }
     .proc-hscroll::-webkit-scrollbar { display: none; }
 
@@ -527,32 +532,60 @@
       scroll-snap-stop: always;
     }
 
-    /* ─── Navigation bar (dots only, swipe to navigate) ─── */
+    /* ─── Navigation bar (prev / dots / next) ─── */
     .proc-nav-bar {
-      height: 48px;
+      height: 60px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 12px;
       padding: 0 clamp(14px, 3vw, 36px);
-      background: rgba(7, 16, 30, 0.88);
+      background: rgba(7, 16, 30, 0.95);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border-top: 1px solid rgba(79, 179, 217, 0.14);
+      border-top: 1px solid rgba(79, 179, 217, 0.16);
       flex-shrink: 0;
       z-index: 3;
-      pointer-events: none;
+      pointer-events: auto;
     }
 
-    /* Buttons kept in DOM for JS compatibility but hidden */
-    .proc-nav-btn { display: none; }
+    .proc-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px clamp(12px, 2vw, 20px);
+      border-radius: 999px;
+      border: 1px solid rgba(79, 179, 217, 0.28);
+      background: rgba(79, 179, 217, 0.07);
+      color: var(--cy);
+      cursor: pointer;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: clamp(0.72rem, 1.1vw, 0.84rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      transition: background 200ms ease, border-color 200ms ease, color 200ms ease, opacity 200ms ease, transform 180ms var(--ease);
+      flex-shrink: 0;
+    }
+    .proc-nav-btn:hover {
+      background: rgba(79, 179, 217, 0.16);
+      border-color: rgba(79, 179, 217, 0.52);
+      transform: translateY(-1px);
+    }
+    .proc-nav-btn:active { transform: translateY(0); }
+    .proc-nav-btn.disabled {
+      opacity: 0.22;
+      pointer-events: none;
+    }
+    .proc-nav-btn .btn-label { display: inline; }
 
     .proc-nav-center {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 5px;
-      pointer-events: none;
+      flex: 1;
+      min-width: 0;
     }
 
     .proc-step-label {
@@ -566,6 +599,7 @@
     }
     .proc-step-label span { color: var(--cy-lt); font-variant-numeric: tabular-nums; }
 
+    /* Pill dots — same style as gallery-dots-bar */
     .proc-hdots {
       display: flex;
       align-items: center;
@@ -580,6 +614,7 @@
       border-radius: 50%;
       background: rgba(163, 208, 227, 0.3);
       border: none;
+      cursor: pointer;
       transition: background 250ms ease, width 250ms var(--ease), border-radius 250ms var(--ease);
       flex-shrink: 0;
     }
@@ -593,7 +628,9 @@
       .proc-indicators { gap: 8px; padding: 8px 12px; height: 60px; }
       .proc-ind-label { font-size: 0.52rem; }
       .proc-ind-value { font-size: 0.95rem; }
-      .proc-nav-bar { height: 42px; }
+      .proc-nav-bar { height: 52px; padding: 0 10px; gap: 8px; }
+      .proc-nav-btn { padding: 8px 12px; }
+      .proc-nav-btn .btn-label { display: none; }
       .proc-step-label { display: none; }
       .proc-hdot { width: 5px; height: 5px; }
       .proc-hdot.active { width: 14px; }
@@ -1030,9 +1067,11 @@
   <section class="slide" id="slide3">
 
     <!-- SVG morphing scene (sits behind the scroll overlay) -->
-    <div class="proc-scene-fixed">
+  <div class="proc-scene-fixed">
+    <div class="proc-scene-wrap">
       <svg id="procScene" viewBox="0 0 160 100" preserveAspectRatio="xMidYMid meet"
            role="img" aria-label="Water purification plant visualization"></svg>
+    </div>
 
       <!-- Navigation bar: prev / step dots / next -->
       <div class="proc-nav-bar">

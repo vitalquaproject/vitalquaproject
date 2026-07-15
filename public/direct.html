@@ -31,7 +31,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html {
       scroll-behavior: smooth;
-      scroll-snap-type: y proximity;
       height: 100%;
     }
     body {
@@ -51,7 +50,6 @@
        ========================================================= */
     .slide {
       min-height: 100dvh;
-      scroll-snap-align: start;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -243,7 +241,7 @@
       flex-shrink: 0;
       width: 100vw;
       box-sizing: border-box;
-      padding: clamp(8px, 3vw, 20px) clamp(10px, 4vw, 28px);
+      padding: clamp(32px, 7vw, 72px) clamp(40px, 8vw, 80px);
       height: 100%;
       scroll-snap-align: start;
       scroll-snap-stop: always;
@@ -255,6 +253,32 @@
       object-fit: cover;
       display: block;
       border-radius: 16px;
+    }
+
+    /* Swipe-right hint */
+    .gallery-swipe-hint {
+      position: absolute;
+      right: clamp(16px, 4vw, 32px);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: rgba(7, 16, 30, 0.55);
+      border: 1px solid rgba(79, 179, 217, 0.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cy);
+      pointer-events: none;
+      z-index: 20;
+      animation: swipeHintPulse 1.8s ease-in-out infinite;
+      transition: opacity 400ms ease;
+    }
+    @keyframes swipeHintPulse {
+      0%, 100% { transform: translateY(-50%) translateX(0);   opacity: 0.85; }
+      50%       { transform: translateY(-50%) translateX(7px); opacity: 1;    }
     }
 
     /* Stats + dots panel — in normal flow, directly below the photos */
@@ -430,11 +454,10 @@
     }
 
     .proc-indicators {
-      height: 72px;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      padding: 10px clamp(16px, 5vw, 64px);
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px 28px;
+      padding: 12px clamp(20px, 5vw, 64px) 14px;
       background: rgba(7,16,30,0.95);
       backdrop-filter: blur(10px);
       border-top: 1px solid rgba(79,179,217,0.08);
@@ -591,15 +614,12 @@
     }
 
     @media (max-width: 600px) {
-      .proc-indicators { gap: 8px; padding: 8px 12px; height: 60px; }
+      .proc-indicators { gap: 6px 16px; padding: 10px 16px 12px; }
       .proc-ind-label { font-size: 0.52rem; }
       .proc-ind-value { font-size: 0.95rem; }
       .proc-nav-bar { height: 52px; padding: 0 10px; gap: 8px; }
       .proc-nav-btn { padding: 8px 12px; }
       .proc-nav-btn .btn-label { display: none; }
-      .proc-step-label { display: none; }
-      .proc-hdot { width: 5px; height: 5px; }
-      .proc-hdot.active { width: 14px; }
     }
 
     /* =========================================================
@@ -1037,6 +1057,13 @@
       </figure>
     </div>
 
+    <!-- Swipe right hint -->
+    <div class="gallery-swipe-hint" id="gallerySwipeHint" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
     <!-- Dots bar positioned at bottom -->
     <div class="gallery-dots-bar" id="gDots" aria-label="Fotos"
          style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;"></div>
@@ -1320,13 +1347,23 @@
     const TOTAL = scrollEl.querySelectorAll('.gallery-photo').length;
     let current = 0;
 
+    /* Swipe hint: hide after first real swipe */
+    const swipeHint = document.getElementById('gallerySwipeHint');
+    let hintDismissed = false;
+    function dismissHint() {
+      if (hintDismissed || !swipeHint) return;
+      hintDismissed = true;
+      swipeHint.style.opacity = '0';
+      setTimeout(() => { swipeHint.style.display = 'none'; }, 420);
+    }
+
     /* Build dots */
     const dots = [];
     for (let i = 0; i < TOTAL; i++) {
       const d = document.createElement('button');
       d.className = 'gallery-dot-item' + (i === 0 ? ' active' : '');
       d.setAttribute('aria-label', 'Foto ' + (i + 1));
-      d.addEventListener('click', () => goTo(i));
+      d.addEventListener('click', () => { goTo(i); dismissHint(); });
       dotsBar.appendChild(d);
       dots.push(d);
     }
@@ -1350,7 +1387,7 @@
       const w = getW();
       if (w < 1) return;
       const idx = Math.round(scrollEl.scrollLeft / w);
-      if (idx !== current) setActive(idx);
+      if (idx !== current) { setActive(idx); dismissHint(); }
       clearTimeout(scrollTimer);
       scrollTimer = setTimeout(() => {
         setActive(Math.round(scrollEl.scrollLeft / getW()));

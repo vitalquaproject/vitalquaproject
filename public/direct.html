@@ -323,22 +323,30 @@
     .gallery-btn-prev { left: clamp(14px, 3vw, 32px); }
     .gallery-btn-next { right: clamp(14px, 3vw, 32px); }
 
-    /* Dots bar */
-    .gallery-dots-bar {
+    /* Stats + dots panel at the bottom of slide1 */
+    .gallery-stats-panel {
       position: absolute;
-      bottom: clamp(18px, 3vw, 28px);
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 0; left: 0; right: 0;
+      z-index: 8;
+      background: rgba(7,16,30,.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-top: 1px solid rgba(79,179,217,.16);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 14px clamp(24px, 6vw, 80px) clamp(16px, 3vw, 22px);
+    }
+
+    .gallery-dots-bar {
       display: flex;
       align-items: center;
       gap: 7px;
-      z-index: 10;
-      padding: 9px 16px;
-      background: rgba(7,16,30,.55);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      padding: 6px 14px;
+      background: rgba(255,255,255,.06);
       border-radius: 999px;
-      border: 1px solid rgba(79,179,217,.14);
+      border: 1px solid rgba(79,179,217,.13);
     }
 
     .gallery-dot-item {
@@ -356,6 +364,48 @@
       background: var(--cy);
       width: 20px;
       border-radius: 3px;
+    }
+
+    .gallery-stats-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .gallery-stat {
+      flex: 1;
+      text-align: center;
+      padding: 0 clamp(10px, 2vw, 24px);
+    }
+    .gallery-stat + .gallery-stat {
+      border-left: 1px solid rgba(79,179,217,.14);
+    }
+
+    .gallery-stat-num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(1.7rem, 4.5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--cy);
+    }
+    .gallery-stat-num.warm { color: var(--sand-lt); }
+
+    .gallery-stat-label {
+      font-size: clamp(0.64rem, 1vw, 0.78rem);
+      color: var(--faint);
+      margin-top: 5px;
+      line-height: 1.4;
+      max-width: 160px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 480px) {
+      .gallery-stat-num { font-size: 1.5rem; }
+      .gallery-stat-label { font-size: 0.62rem; }
     }
 
     /* =========================================================
@@ -937,7 +987,6 @@
   <nav class="dots" id="dotsNav" aria-label="Navegació de seccions">
     <button class="dot active" data-slide="portada" aria-label="Portada"></button>
     <button class="dot" data-slide="slide1" aria-label="Fotos"></button>
-    <button class="dot" data-slide="slide2" aria-label="Context Kènia"></button>
     <button class="dot" data-slide="slide3" aria-label="La solució"></button>
     <button class="dot" data-slide="slide4" aria-label="Diners i votació"></button>
     <button class="dot" data-slide="slide5" aria-label="Patrocinadors"></button>
@@ -1028,50 +1077,22 @@
       </svg>
     </button>
 
-    <div class="gallery-dots-bar" id="gDots" aria-label="Fotos"></div>
-
-  </section>
-
-  <!-- =========================================================
-       SLIDE 2 — CONTEXT KÈNIA
-       ========================================================= -->
-  <section class="slide" id="slide2">
-
-    <div class="tri-bg">
-      <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
-        <polygon points="150,5 138,26 162,26"  fill="rgba(200,148,100,.06)"/>
-        <polygon points="10,55 2,70 18,70"    fill="rgba(200,148,100,.05)"/>
-        <polygon points="180,50 170,66 190,66" fill="rgba(79,179,217,.05)"/>
-      </svg>
-    </div>
-
-    <div class="slide-body" style="display:flex;flex-direction:column;align-items:center;">
-      <div class="slide-eyebrow rev">Kènia</div>
-      <h2 class="slide-title rev rev-d1">El context</h2>
-
-      <div class="context-stats">
-        <div class="stat-item rev rev-d1">
-          <div class="stat-num">500</div>
-          <div class="stat-label">estudiants a l'escola d'Emorogi</div>
+    <div class="gallery-stats-panel">
+      <div class="gallery-dots-bar" id="gDots" aria-label="Fotos"></div>
+      <div class="gallery-stats-row">
+        <div class="gallery-stat">
+          <div class="gallery-stat-num">500</div>
+          <div class="gallery-stat-label">estudiants a l'escola d'Emorogi</div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item rev rev-d2">
-          <div class="stat-num warm">2 km</div>
-          <div class="stat-label">fins al llac i pou, caminant cada dia</div>
+        <div class="gallery-stat">
+          <div class="gallery-stat-num warm">2 km</div>
+          <div class="gallery-stat-label">fins al llac i pou, caminant cada dia</div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item rev rev-d3">
-          <div class="stat-num">80%</div>
-          <div class="stat-label">de malalties infantils causades per mala qualitat de l'aigua</div>
+        <div class="gallery-stat">
+          <div class="gallery-stat-num">80%</div>
+          <div class="gallery-stat-label">de malalties infantils per mala qualitat de l'aigua</div>
         </div>
       </div>
-
-      <p class="context-desc rev rev-d4">
-        L'escola no té accés a aigua potable. Nens i famílies beuen d'un llac i un pou
-        a 2&nbsp;km de distància — sense tractament, amb risc de malalties.
-        <br/><br/>
-        El nostre sistema canviarà això.
-      </p>
     </div>
 
   </section>
@@ -1327,7 +1348,7 @@
     (function () {
 
       // ─── Slides list ───────────────────────────────────────────
-      const slideIds = ['portada','slide1','slide2','slide3','slide4','slide5','slide6'];
+      const slideIds = ['portada','slide1','slide3','slide4','slide5','slide6'];
       const slides   = slideIds.map(id => document.getElementById(id));
       const dots     = document.querySelectorAll('.dot');
       const progress = document.getElementById('progressBar');

@@ -375,6 +375,7 @@
       padding: 0;
       background: var(--navy);
       overflow: hidden;
+      isolation: isolate;
     }
 
     .proc-scene-fixed {
@@ -449,6 +450,9 @@
       -ms-overflow-style: none;
       z-index: 2;
       touch-action: pan-x;
+      overscroll-behavior: contain;
+      will-change: scroll-position;
+      -webkit-overflow-scrolling: touch;
     }
     .proc-hscroll::-webkit-scrollbar { display: none; }
 
@@ -479,7 +483,7 @@
       align-items: center;
       justify-content: center;
       transition: background 200ms ease, border-color 200ms ease, opacity 200ms ease;
-      pointer-events: all;
+      pointer-events: auto;
     }
     .proc-arrow:hover { background: rgba(79,179,217,0.15); border-color: rgba(79,179,217,0.5); }
     .proc-arrow.disabled { opacity: 0.18; pointer-events: none; }
@@ -1959,9 +1963,11 @@
     nextBtn.addEventListener('click',()=>scrollToStep(procCurrentStep+1));
 
     /* ---- Scroll engine (horizontal) ---- */
+    function getStepW(){ return hscrollEl.clientWidth || hscrollEl.offsetWidth || window.innerWidth; }
+
     function scrollToStep(idx){
       const clamped=Math.max(0,Math.min(TOTAL-1,idx));
-      const stepW=hscrollEl.clientWidth;
+      const stepW=getStepW();
       hscrollEl.scrollTo({left:clamped*stepW,behavior:'smooth'});
     }
 
@@ -1978,13 +1984,29 @@
 
     let _scrollTimer3,_lastNear3=0;
     hscrollEl.addEventListener('scroll',()=>{
-      const stepW=hscrollEl.clientWidth;
+      const stepW=getStepW();
       if(stepW<1) return;
       const nearest=Math.round(hscrollEl.scrollLeft/stepW);
       if(nearest!==_lastNear3){_lastNear3=nearest;setStep(nearest);}
       clearTimeout(_scrollTimer3);
-      _scrollTimer3=setTimeout(()=>setStep(Math.round(hscrollEl.scrollLeft/hscrollEl.clientWidth)),90);
+      _scrollTimer3=setTimeout(()=>setStep(Math.round(hscrollEl.scrollLeft/getStepW())),90);
     },{passive:true});
+
+    /* ---- Wheel: redirect vertical wheel to step navigation when slide3 is active ---- */
+    let _wheelCooldown=false;
+    procSlide.addEventListener('wheel',(e)=>{
+      const rect=procSlide.getBoundingClientRect();
+      const fullyVisible=rect.top>=-10&&rect.top<=10;
+      if(!fullyVisible) return;
+      const delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
+      if(Math.abs(delta)<5) return;
+      e.preventDefault();
+      if(_wheelCooldown) return;
+      _wheelCooldown=true;
+      setTimeout(()=>{ _wheelCooldown=false; },600);
+      if(delta>0) scrollToStep(procCurrentStep+1);
+      else        scrollToStep(procCurrentStep-1);
+    },{passive:false});
 
     /* ---- Keyboard: Left/Right when slide3 in view ---- */
     document.addEventListener('keydown',e=>{
@@ -1999,7 +2021,7 @@
     let _resizeTimer3;
     window.addEventListener('resize',()=>{
       clearTimeout(_resizeTimer3);
-      _resizeTimer3=setTimeout(()=>hscrollEl.scrollTo({left:procCurrentStep*hscrollEl.clientWidth,behavior:'instant'}),150);
+      _resizeTimer3=setTimeout(()=>hscrollEl.scrollTo({left:procCurrentStep*getStepW(),behavior:'instant'}),150);
     },{passive:true});
 
   })();

@@ -8,6 +8,10 @@
     "api/create-checkout-session.js": {
       "memory": 512,
       "maxDuration": 10
+    },
+    "api/send-bulk-show-email.js": {
+      "memory": 512,
+      "maxDuration": 60
     }
   },
   "headers": [

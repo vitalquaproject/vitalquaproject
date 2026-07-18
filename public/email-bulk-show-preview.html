@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preview · Email agraïment titulars · Vitalqua Show</title>
+  <style>
+    body {
+      margin: 0;
+      background: #D6E8F5;
+      font-family: Arial, Helvetica, sans-serif;
+      padding: 40px 20px;
+    }
+    .preview-bar {
+      max-width: 580px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .preview-bar span {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #1B5F85;
+    }
+    .preview-bar .badge {
+      background: #1B5F85;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .subject {
+      max-width: 580px;
+      margin: 0 auto 20px;
+      padding: 12px 16px;
+      background: #fff;
+      border: 1px solid #D6EEF6;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #3F4F6B;
+    }
+    .subject strong { color: #0F1A2E; }
+  </style>
+</head>
+<body>
+
+  <div class="preview-bar">
+    <span>Preview — Email agraïment (bulk titulars)</span>
+    <span class="badge">Sense enviar</span>
+  </div>
+
+  <div class="subject">
+    <strong>Assumpte:</strong> Gràcies per venir 💙 · Vitalqua Show
+  </div>
+
+  <!-- Mirall de buildBulkEmailHtml a api/send-bulk-show-email.js -->
+  <div id="email-body" style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:0 auto;background:#F5F9FC">
+    <div style="background:linear-gradient(135deg,#0D1E38 0%,#1B5F85 100%);padding:28px 32px 24px;border-radius:16px 16px 0 0">
+      <h1 style="margin:0 0 6px;font-size:22px;font-weight:800;color:#ffffff;line-height:1.2">Quina nit! &#128149;</h1>
+      <p style="margin:0;font-size:13px;color:rgba(163,208,227,.85)">Vitalqua Show</p>
+    </div>
+    <div style="background:#ffffff;padding:28px 32px;border:1px solid #D6EEF6;border-top:none">
+      <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#3F4F6B">
+        Hola <strong style="color:#0F1A2E">Nom Cognoms</strong>,
+      </p>
+      <p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:#3F4F6B">
+        Gr&agrave;cies per venir al <strong style="color:#0F1A2E">Vitalqua Show</strong>.
+        Vam passar una nit genial &mdash; i vosaltres en vau ser una part molt important. &#10024;
+      </p>
+      <div style="background:#EBF4FA;border:1px solid #D6EEF6;border-radius:14px;padding:18px 16px;margin:0 0 22px;text-align:center">
+        <p style="margin:0 0 6px;font-size:22px;line-height:1">&#128247;</p>
+        <p style="margin:0 0 14px;font-size:14px;line-height:1.5;color:#3F4F6B">
+          Les fotos de la festa ja estan aqu&iacute;. Vine a buscar-te!
+        </p>
+        <a href="/fotos-show.html" style="display:inline-block;padding:13px 24px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;background:#1B5F85;color:#ffffff">&#128247;&nbsp; Veure les fotos</a>
+      </div>
+      <div style="background:#FFF8F0;border:1px solid #F0E0CC;border-radius:14px;padding:18px 16px;margin:0 0 8px;text-align:center">
+        <p style="margin:0 0 6px;font-size:22px;line-height:1">&#127757;</p>
+        <p style="margin:0 0 14px;font-size:14px;line-height:1.5;color:#3F4F6B">
+          Si et ve de gust, pots seguir sumant amb una donaci&oacute; petita (o no tan petita &#128521;) a Kenya:
+        </p>
+        <a href="https://www.migranodearena.org/reto/agua-y-educacion-para-kenia-construyendo-el-futuro-de-emorogi" style="display:inline-block;padding:13px 24px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;background:#ffffff;color:#1B5F85;border:2px solid #1B5F85">&#10084;&#65039;&nbsp; Donar a migranodearena</a>
+      </div>
+      <p style="margin:22px 0 0;font-size:14px;line-height:1.65;color:#6B7890">
+        Una abra&ccedil;ada gran,<br><strong style="color:#0F1A2E">L'equip Vitalqua</strong> &#128153;
+      </p>
+    </div>
+    <div style="padding:14px 32px;border:1px solid #D6EEF6;border-top:none;border-radius:0 0 16px 16px;background:#F5F9FC">
+      <p style="margin:0;font-size:12px;color:#A3B5CD">
+        Vitalqua Project &middot; <a href="mailto:vitalquaproject@gmail.com" style="color:#A3B5CD;text-decoration:none">vitalquaproject@gmail.com</a>
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

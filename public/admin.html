@@ -329,6 +329,22 @@
     }
     .btn-qr-scan:hover { background: rgba(42,133,179,.14); color: var(--cy-xdk); }
 
+    .btn-bulk-email {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px; border-radius: 999px;
+      border: 1.5px solid rgba(15,26,46,.18); color: var(--ink-soft);
+      background: rgba(15,26,46,.04);
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      transition: background 150ms ease, color 150ms ease, border-color 150ms;
+      white-space: nowrap;
+    }
+    .btn-bulk-email:hover {
+      border-color: var(--cy-dk); color: var(--cy-xdk);
+      background: rgba(42,133,179,.08);
+    }
+    .btn-bulk-email:disabled { opacity: 0.55; cursor: default; }
+    .btn-bulk-email.hidden { display: none; }
+
     /* QR Scanner modal */
     .qr-modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 200;
@@ -356,6 +372,54 @@
       cursor: pointer; transition: border-color 150ms, color 150ms;
     }
     .qr-modal-close:hover { border-color: var(--navy); color: var(--navy); }
+
+    /* Bulk email preview modal */
+    .bulk-email-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(7,16,30,.75); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .bulk-email-overlay.open { display: flex; }
+    .bulk-email-modal {
+      background: var(--surface); border-radius: var(--radius-lg);
+      padding: 28px 28px 24px; max-width: 520px; width: 100%;
+      box-shadow: var(--shadow-lg); text-align: left;
+      max-height: min(86vh, 640px); display: flex; flex-direction: column;
+    }
+    .bulk-email-modal h2 {
+      font-size: 1.1rem; font-weight: 700; color: var(--navy);
+      margin: 0 0 6px;
+    }
+    .bulk-email-modal .bulk-email-lead {
+      font-size: 0.85rem; color: var(--muted); margin: 0 0 14px; line-height: 1.55;
+    }
+    .bulk-email-note {
+      font-size: 0.8rem; color: var(--cy-xdk); background: rgba(42,133,179,.08);
+      border: 1px solid rgba(42,133,179,.18); border-radius: 10px;
+      padding: 10px 12px; margin: 0 0 14px; line-height: 1.45;
+    }
+    .bulk-email-list {
+      flex: 1; overflow: auto; border: 1px solid rgba(15,26,46,.08);
+      border-radius: 10px; margin-bottom: 16px; max-height: 280px;
+    }
+    .bulk-email-list table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .bulk-email-list th, .bulk-email-list td {
+      padding: 8px 10px; text-align: left; border-bottom: 1px solid rgba(15,26,46,.06);
+    }
+    .bulk-email-list th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: .06em; }
+    .bulk-email-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+    .btn-bulk-secondary {
+      padding: 8px 18px; border-radius: 999px; border: 1.5px solid rgba(15,26,46,.15);
+      background: transparent; color: var(--muted); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-bulk-secondary:hover { border-color: var(--navy); color: var(--navy); }
+    .btn-bulk-primary {
+      padding: 8px 18px; border-radius: 999px; border: none;
+      background: rgba(15,26,46,.18); color: rgba(15,26,46,.45);
+      font-size: 0.85rem; font-weight: 600; cursor: not-allowed;
+    }
 
     /* Toast */
     .toast-area {
@@ -453,6 +517,12 @@
           <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre, apellidos, teléfono o ID…" aria-label="Buscar" />
         </div>
+        <button class="btn-bulk-email" id="btnBulkEmail" aria-label="Previsualitzar email als titulars del show">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/>
+          </svg>
+          Email titulars
+        </button>
         <button class="btn-qr-scan" id="btnOpenQrScanner" aria-label="Escanear QR de entrada">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
@@ -461,6 +531,24 @@
           </svg>
           Escanear QR
         </button>
+      </div>
+
+      <!-- Bulk email preview modal (show only; no send yet) -->
+      <div class="bulk-email-overlay" id="bulkEmailOverlay" role="dialog" aria-modal="true" aria-label="Previsualització email titulars">
+        <div class="bulk-email-modal">
+          <h2>Email als titulars</h2>
+          <p class="bulk-email-lead" id="bulkEmailLead">Carregant destinataris…</p>
+          <p class="bulk-email-note" id="bulkEmailNote">
+            Mode previsualització: encara no s’envia res. Quan tinguem la plantilla, activarem l’enviament.
+          </p>
+          <div class="bulk-email-list" id="bulkEmailList"></div>
+          <div class="bulk-email-actions">
+            <button type="button" class="btn-bulk-secondary" id="btnCloseBulkEmail">Tancar</button>
+            <button type="button" class="btn-bulk-primary" id="btnSendBulkEmail" disabled title="Enviament encara no habilitat">
+              Enviar (pendent)
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- QR scanner modal -->
@@ -607,6 +695,7 @@
        ---------------------------------------------------------------- */
     let allTickets = [];
     let unsubscribe = null;
+    let sessionAdminPassword = '';
 
     /* ----------------------------------------------------------------
        Helpers
@@ -774,10 +863,12 @@
       const err = document.getElementById('loginError');
       if (pwd !== ADMIN_PASSWORD) { err.classList.add('show'); document.getElementById('adminPwd').value = ''; return; }
       err.classList.remove('show');
+      sessionAdminPassword = pwd;
       try {
         await auth.signInAnonymously();
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('dashboard').classList.add('show');
+        updateShowOnlyControls();
         startListener();
       } catch (ex) {
         err.textContent = 'Error al conectar con Firebase. Revisa la configuración.';
@@ -792,6 +883,7 @@
       document.getElementById('dashboard').classList.remove('show');
       document.getElementById('loginOverlay').style.display = 'flex';
       document.getElementById('adminPwd').value = '';
+      sessionAdminPassword = '';
       allTickets = [];
     });
 
@@ -801,6 +893,12 @@
     /* ----------------------------------------------------------------
        Event tab switching
        ---------------------------------------------------------------- */
+    function updateShowOnlyControls() {
+      const btn = document.getElementById('btnBulkEmail');
+      if (!btn) return;
+      btn.classList.toggle('hidden', currentEvent !== 'show');
+    }
+
     function switchEvent(eventKey) {
       if (eventKey === currentEvent) return;
       currentEvent = eventKey;
@@ -813,6 +911,8 @@
       /* Update topbar title */
       document.getElementById('topbarTitle').textContent =
         `Vitalqua · ${EVENTS[eventKey].label}`;
+
+      updateShowOnlyControls();
 
       /* Clear search */
       document.getElementById('searchInput').value = '';
@@ -832,6 +932,88 @@
     document.querySelectorAll('.event-tab').forEach(btn => {
       btn.addEventListener('click', () => switchEvent(btn.dataset.event));
     });
+
+    /* ----------------------------------------------------------------
+       Bulk email preview (titulars del show — sense enviar encara)
+       ---------------------------------------------------------------- */
+    function closeBulkEmailModal() {
+      document.getElementById('bulkEmailOverlay').classList.remove('open');
+    }
+
+    function renderBulkEmailPreview(data) {
+      const lead = document.getElementById('bulkEmailLead');
+      const list = document.getElementById('bulkEmailList');
+      const note = document.getElementById('bulkEmailNote');
+      const recipients = data.recipients || [];
+
+      lead.textContent = recipients.length
+        ? `${recipients.length} titular${recipients.length === 1 ? '' : 's'} amb email (pagaments confirmats).`
+        : 'No s\'han trobat titulars amb email i status paid.';
+
+      note.textContent = data.sendEnabled
+        ? 'L\'enviament està habilitat al servidor, però aquesta pantalla només previsualitza.'
+        : 'Mode previsualització: encara no s\'envia res. Quan tinguem la plantilla, activarem l\'enviament.';
+
+      if (!recipients.length) {
+        list.innerHTML = '<p style="padding:16px;margin:0;color:var(--muted);font-size:0.85rem">Cap destinatari.</p>';
+        return;
+      }
+
+      list.innerHTML =
+        '<table><thead><tr><th>Nom</th><th>Email</th></tr></thead><tbody>' +
+        recipients.map(r =>
+          `<tr><td>${esc([r.nom, r.cognoms].filter(Boolean).join(' ') || '—')}</td><td>${esc(r.email)}</td></tr>`
+        ).join('') +
+        '</tbody></table>';
+    }
+
+    async function openBulkEmailPreview() {
+      if (currentEvent !== 'show') return;
+      if (!sessionAdminPassword) {
+        toast('Torna a iniciar sessió per previsualitzar emails.');
+        return;
+      }
+
+      const overlay = document.getElementById('bulkEmailOverlay');
+      const lead = document.getElementById('bulkEmailLead');
+      const list = document.getElementById('bulkEmailList');
+      lead.textContent = 'Carregant destinataris…';
+      list.innerHTML = '<div class="table-placeholder" style="padding:28px"><div class="spinner-sm"></div></div>';
+      overlay.classList.add('open');
+
+      const btn = document.getElementById('btnBulkEmail');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/send-bulk-show-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: sessionAdminPassword, send: false }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          lead.textContent = data.error || 'Error carregant destinataris.';
+          list.innerHTML = '';
+          toast(data.error || 'Error a l\'API d\'email.');
+          return;
+        }
+        renderBulkEmailPreview(data);
+      } catch (err) {
+        console.error('[bulk-email]', err);
+        lead.textContent = 'No s\'ha pogut contactar amb l\'API.';
+        list.innerHTML = '';
+        toast('Error de xarxa amb /api/send-bulk-show-email');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById('btnBulkEmail').addEventListener('click', openBulkEmailPreview);
+    document.getElementById('btnCloseBulkEmail').addEventListener('click', closeBulkEmailModal);
+    document.getElementById('bulkEmailOverlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('bulkEmailOverlay')) closeBulkEmailModal();
+    });
+    updateShowOnlyControls();
 
     /* ----------------------------------------------------------------
        QR Scanner

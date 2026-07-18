@@ -25,13 +25,13 @@ const ICON_DONACIO_URL = SITE_BASE.replace(/\/$/, '') + '/img/icon-migranodearen
 const DONACIO_URL =
   'https://www.migranodearena.org/reto/agua-y-educacion-para-kenia-construyendo-el-futuro-de-emorogi';
 
-const DEFAULT_SUBJECT = 'Gràcies per venir 💙 · Vitalqua Show';
+const DEFAULT_SUBJECT = 'Gràcies per venir 💙 · Concert Solidari';
 
 // ---------------------------------------------------------------------------
 // Bulk thank-you email (titulars)
 // ---------------------------------------------------------------------------
-function buildBulkEmailHtml({ nom, cognoms }) {
-  const name = [nom, cognoms].filter(Boolean).join(' ').trim() || 'hola';
+function buildBulkEmailHtml({ nom }) {
+  const name = (nom || '').trim() || 'hola';
   const sans = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;";
 
   const button = (href, label, icon, opts) => {
@@ -70,7 +70,7 @@ function buildBulkEmailHtml({ nom, cognoms }) {
         'Hola <strong style="color:#0F1A2E;font-weight:600">' + escapeHtml(name) + '</strong>,' +
       '</p>' +
       '<p style="margin:0 0 24px;font-size:15px;line-height:1.65;color:#3F4F6B">' +
-        'Encara no ens creiem tot el que vam viure dijous al Vitalqua Show. ' +
+        'Encara no ens creiem tot el que vam viure dijous al Concert Solidari. ' +
         'Va ser una nit m&agrave;gica per a nosaltres, i vol&iacute;em donar-te les gr&agrave;cies ' +
         'per acompanyar-nos. Sentir el vostre suport ens anima a seguir endavant!' +
       '</p>' +
@@ -199,10 +199,10 @@ module.exports = async function handler(req, res) {
       });
 
       await transporter.sendMail({
-        from: `Vitalqua Show <${gmailUser}>`,
+        from: `Concert Solidari <${gmailUser}>`,
         to: testEmail,
         subject: '[PROVA] ' + DEFAULT_SUBJECT,
-        html: buildBulkEmailHtml({ nom: 'Prova', cognoms: '' }),
+        html: buildBulkEmailHtml({ nom: 'Prova' }),
       });
 
       return res.json({ testSent: true, to: testEmail, message: `Email de prova enviat a ${testEmail}.` });
@@ -228,7 +228,7 @@ module.exports = async function handler(req, res) {
       })),
       sampleHtml: recipients.length
         ? buildBulkEmailHtml(recipients[0])
-        : buildBulkEmailHtml({ nom: 'Nom', cognoms: 'Cognom' }),
+        : buildBulkEmailHtml({ nom: 'Nom' }),
     };
 
     if (!wantSend) {
@@ -267,7 +267,7 @@ module.exports = async function handler(req, res) {
     for (const r of recipients) {
       try {
         await transporter.sendMail({
-          from: `Vitalqua Show <${gmailUser}>`,
+          from: `Concert Solidari <${gmailUser}>`,
           to: r.email,
           subject: DEFAULT_SUBJECT,
           html: buildBulkEmailHtml(r),

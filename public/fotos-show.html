@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fotos · Vitalqua Show</title>
-  <meta name="description" content="Fotografies del Vitalqua Show — Concert Benèfic Vitalqua Project." />
-  <meta property="og:title" content="Fotos · Vitalqua Show" />
-  <meta property="og:description" content="Galeria de fotografies de la festa benèfica Vitalqua Show." />
+  <title>Fotos · Concert Solidari</title>
+  <meta name="description" content="Fotografies del Concert Solidari — Concert Benèfic Vitalqua Project." />
+  <meta property="og:title" content="Fotos · Concert Solidari" />
+  <meta property="og:description" content="Galeria de fotografies de la festa benèfica Concert Solidari." />
   <meta property="og:url" content="https://vitalquaproject.vercel.app/fotos-show.html" />
   <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -239,7 +239,7 @@
 <body>
   <div class="wrap">
     <header>
-      <p class="eyebrow">Vitalqua Show</p>
+      <p class="eyebrow">Concert Solidari</p>
       <h1>Fotos de la festa</h1>
       <p class="lead">
         Una selecció d’imatges de la jornada. Gràcies per haver-hi estat i per donar suport al projecte.
@@ -325,7 +325,7 @@
 
     function renderBatch(urls, startIndex) {
       const html = urls.map((url, i) =>
-        `<figure class="photo" data-index="${startIndex + i}"><img src="${url}" alt="Foto ${startIndex + i + 1} del Vitalqua Show" loading="lazy" decoding="async" /></figure>`
+        `<figure class="photo" data-index="${startIndex + i}"><img src="${url}" alt="Foto ${startIndex + i + 1} del Concert Solidari" loading="lazy" decoding="async" /></figure>`
       ).join('');
       galleryEl.insertAdjacentHTML('beforeend', html);
       shownUrls = shownUrls.concat(urls);

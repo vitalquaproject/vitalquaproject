@@ -87,27 +87,88 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Masonry: horitzontals i verticals sense forçar retall */
+    /* Graella de miniatures — mida fixa i petita, clic per ampliar */
     .grid {
-      column-count: 3;
-      column-gap: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
     }
-    @media (max-width: 900px) { .grid { column-count: 2; } }
-    @media (max-width: 520px) { .grid { column-count: 1; } }
+    @media (min-width: 520px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    }
 
     .photo {
-      margin: 0 0 14px;
-      break-inside: avoid;
+      margin: 0;
       background: var(--surface);
       border: 1px solid var(--cy-xlt);
-      border-radius: var(--radius);
+      border-radius: 10px;
       overflow: hidden;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      padding: 0;
     }
     .photo img {
       display: block;
       width: 100%;
-      height: auto;
-      vertical-align: middle;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 200ms ease;
+    }
+    .photo:hover img { transform: scale(1.06); }
+
+    /* Lightbox */
+    .lightbox-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(7,16,30,.92);
+      align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-overlay img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+    .lightbox-close {
+      position: absolute; top: 18px; right: 22px;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: none; background: rgba(255,255,255,.12);
+      color: #fff; font-size: 22px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 150ms ease;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,.22); }
+    .lightbox-download {
+      position: absolute; top: 18px; right: 70px;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: none; background: rgba(255,255,255,.12);
+      color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 150ms ease;
+    }
+    .lightbox-download:hover { background: rgba(255,255,255,.22); }
+    .lightbox-download svg { width: 18px; height: 18px; }
+    @media (max-width: 600px) {
+      .lightbox-close, .lightbox-download { width: 36px; height: 36px; }
+      .lightbox-download { right: 60px; }
+    }
+    .lightbox-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 44px; height: 44px; border-radius: 50%;
+      border: none; background: rgba(255,255,255,.12);
+      color: #fff; font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 150ms ease;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,.22); }
+    .lightbox-prev { left: 18px; }
+    .lightbox-next { right: 18px; }
+    @media (max-width: 600px) {
+      .lightbox-nav { width: 38px; height: 38px; }
+      .lightbox-prev { left: 8px; }
+      .lightbox-next { right: 8px; }
     }
 
     .load-more-wrap {
@@ -211,6 +272,19 @@
     </footer>
   </div>
 
+  <!-- Lightbox -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Foto ampliada">
+    <button type="button" class="lightbox-download" id="lightboxDownload" aria-label="Descarregar foto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+      </svg>
+    </button>
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Tancar">&times;</button>
+    <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Foto anterior">&#8249;</button>
+    <img id="lightboxImg" src="" alt="" />
+    <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Foto següent">&#8250;</button>
+  </div>
+
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
   <script>
@@ -238,9 +312,10 @@
     const btnLoadMore = document.getElementById('btnLoadMore');
 
     // Mostra les fotos en lots per no saturar la connexió (sobretot al mòbil).
-    const BATCH_SIZE = 9;
+    const BATCH_SIZE = 18;
     let allFiles = [];
     let shownCount = 0;
+    let shownUrls = [];
 
     function setStatus(html) {
       statusEl.hidden = false;
@@ -250,10 +325,73 @@
 
     function renderBatch(urls, startIndex) {
       const html = urls.map((url, i) =>
-        `<figure class="photo"><img src="${url}" alt="Foto ${startIndex + i + 1} del Vitalqua Show" loading="lazy" decoding="async" /></figure>`
+        `<figure class="photo" data-index="${startIndex + i}"><img src="${url}" alt="Foto ${startIndex + i + 1} del Vitalqua Show" loading="lazy" decoding="async" /></figure>`
       ).join('');
       galleryEl.insertAdjacentHTML('beforeend', html);
+      shownUrls = shownUrls.concat(urls);
     }
+
+    /* ------------------------------------------------------------
+       Lightbox
+       ------------------------------------------------------------ */
+    const lightboxOverlay = document.getElementById('lightboxOverlay');
+    const lightboxImg = document.getElementById('lightboxImg');
+    let lightboxIndex = -1;
+
+    function openLightbox(index) {
+      lightboxIndex = index;
+      lightboxImg.src = shownUrls[lightboxIndex];
+      lightboxOverlay.classList.add('open');
+    }
+    function closeLightbox() {
+      lightboxOverlay.classList.remove('open');
+      lightboxImg.src = '';
+    }
+    function showDelta(delta) {
+      if (!shownUrls.length) return;
+      lightboxIndex = (lightboxIndex + delta + shownUrls.length) % shownUrls.length;
+      lightboxImg.src = shownUrls[lightboxIndex];
+    }
+
+    galleryEl.addEventListener('click', (e) => {
+      const fig = e.target.closest('.photo');
+      if (!fig) return;
+      openLightbox(Number(fig.dataset.index));
+    });
+    async function downloadCurrentPhoto() {
+      if (lightboxIndex < 0) return;
+      const btn = document.getElementById('lightboxDownload');
+      const url = shownUrls[lightboxIndex];
+      try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = `vitalqua-show-foto-${lightboxIndex + 1}.jpg`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(objectUrl);
+      } catch (err) {
+        console.error('[fotos-show] download error', err);
+        window.open(url, '_blank');
+      }
+    }
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightboxDownload').addEventListener('click', downloadCurrentPhoto);
+    document.getElementById('lightboxPrev').addEventListener('click', () => showDelta(-1));
+    document.getElementById('lightboxNext').addEventListener('click', () => showDelta(1));
+    lightboxOverlay.addEventListener('click', (e) => {
+      if (e.target === lightboxOverlay) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (!lightboxOverlay.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showDelta(-1);
+      if (e.key === 'ArrowRight') showDelta(1);
+    });
 
     async function showNextBatch() {
       const nextFiles = allFiles.slice(shownCount, shownCount + BATCH_SIZE);

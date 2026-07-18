@@ -19,6 +19,7 @@ const SITE_BASE =
   process.env.PUBLIC_BASE_URL || 'https://vitalquaproject.vercel.app';
 
 const FOTOS_URL = SITE_BASE.replace(/\/$/, '') + '/fotos-show.html';
+const LOGO_URL = SITE_BASE.replace(/\/$/, '') + '/img/logo-full.svg';
 const DONACIO_URL =
   'https://www.migranodearena.org/reto/agua-y-educacion-para-kenia-construyendo-el-futuro-de-emorogi';
 
@@ -29,46 +30,67 @@ const DEFAULT_SUBJECT = 'Gràcies per venir 💙 · Vitalqua Show';
 // ---------------------------------------------------------------------------
 function buildBulkEmailHtml({ nom, cognoms }) {
   const name = [nom, cognoms].filter(Boolean).join(' ').trim() || 'hola';
-  const btn =
-    'display:inline-block;padding:13px 24px;border-radius:999px;' +
-    'font-size:14px;font-weight:700;text-decoration:none;';
+  const sans = 'font-family:Arial,Helvetica,sans-serif;';
+
+  const button = (href, label, opts) => {
+    const solid = opts && opts.solid;
+    const cellStyle = solid
+      ? 'background:#1E3A5C;border-radius:12px;box-shadow:0 6px 14px rgba(30,58,92,.28);'
+      : 'background:#ffffff;border:2px solid #1E3A5C;border-radius:12px;box-shadow:0 6px 14px rgba(30,58,92,.14);';
+    const textColor = solid ? '#ffffff' : '#1E3A5C';
+    const linkPad = solid ? '15px 22px' : '14px 22px';
+    return (
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 ' + (opts && opts.marginBottom || 28) + 'px;border-collapse:separate"><tr>' +
+        '<td style="' + cellStyle + '">' +
+          '<a href="' + href + '" style="display:block;text-decoration:none;padding:' + linkPad + '">' +
+            '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>' +
+              '<td style="font-size:15px;font-weight:700;color:' + textColor + ';' + sans + '">' + label + '</td>' +
+              '<td style="width:20px;text-align:right;font-size:16px;font-weight:700;color:' + textColor + '">&#8594;</td>' +
+            '</tr></table>' +
+          '</a>' +
+        '</td>' +
+      '</tr></table>'
+    );
+  };
 
   return (
-    '<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:0 auto;background:#F5F9FC">' +
-    '<div style="background:linear-gradient(135deg,#0D1E38 0%,#1B5F85 100%);padding:28px 32px 24px;border-radius:16px 16px 0 0">' +
-      '<h1 style="margin:0 0 6px;font-size:22px;font-weight:800;color:#ffffff;line-height:1.2">Quina nit! &#128149;</h1>' +
-      '<p style="margin:0;font-size:13px;color:rgba(163,208,227,.85)">Vitalqua Show</p>' +
+    '<div style="' + sans + 'max-width:600px;margin:0 auto;background:#F1EFE7;padding:34px 16px">' +
+    '<div style="background:#E7E2D2;border-radius:20px;overflow:hidden">' +
+    '<div style="padding:36px 36px 30px">' +
+
+      '<h1 style="margin:0 0 22px;font-size:24px;font-weight:800;color:#1E3A5C;letter-spacing:-.01em;line-height:1.3">Gr&agrave;cies per fer-ho possible! &#128149;</h1>' +
+
+      '<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#3F4A5C">' +
+        'Hola <strong style="color:#1E3A5C">' + escapeHtml(name) + '</strong>,' +
+      '</p>' +
+      '<p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#3F4A5C">' +
+        'Encara no ens creiem tot el que vam viure dijous al Vitalqua Show. ' +
+        'Va ser una nit m&agrave;gica per a nosaltres, i vol&iacute;em donar-te les gr&agrave;cies ' +
+        'per acompanyar-nos. Sentir el vostre suport ens anima a seguir endavant!' +
+      '</p>' +
+
+      '<p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:#3F4A5C">' +
+        'Perqu&egrave; puguis recordar la nit, aqu&iacute; tens el recull de fotos:' +
+      '</p>' +
+      button(FOTOS_URL, '&#128247;&nbsp; Reviure els moments en fotos', { solid: true, marginBottom: 28 }) +
+
+      '<p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:#3F4A5C">' +
+        'Volem aprofitar per agrair-te tot el que has aportat al projecte. ' +
+        'Com saps, el motiu que ens mou &eacute;s portar aigua i vida a Kenya. ' +
+        'Aqu&iacute; et deixem l\'enlla&ccedil; per si vols fer una aportaci&oacute; extra!' +
+      '</p>' +
+      button(DONACIO_URL, '&#10084;&#65039;&nbsp; Continuar ajudant amb migranodearena', { solid: false, marginBottom: 30 }) +
+
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>' +
+        '<td style="font-size:14px;line-height:1.7;color:#5B6472;vertical-align:middle">' +
+          'Una abra&ccedil;ada gran,<br><strong style="color:#1E3A5C">L\'equip Vitalqua</strong> &#128153;' +
+        '</td>' +
+        '<td style="text-align:right;vertical-align:middle;white-space:nowrap">' +
+          '<img src="' + LOGO_URL + '" alt="Vitalqua Project" width="120" height="26" style="display:inline-block;vertical-align:middle;border:0" />' +
+        '</td>' +
+      '</tr></table>' +
     '</div>' +
-    '<div style="background:#ffffff;padding:28px 32px;border:1px solid #D6EEF6;border-top:none">' +
-      '<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#3F4F6B">' +
-        'Hola <strong style="color:#0F1A2E">' + escapeHtml(name) + '</strong>,' +
-      '</p>' +
-      '<p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:#3F4F6B">' +
-        'Gr&agrave;cies per venir al <strong style="color:#0F1A2E">Vitalqua Show</strong>. ' +
-        'Vam passar una nit genial &mdash; i vosaltres en vau ser una part molt important. &#10024;' +
-      '</p>' +
-      '<div style="background:#EBF4FA;border:1px solid #D6EEF6;border-radius:14px;padding:18px 16px;margin:0 0 22px;text-align:center">' +
-        '<p style="margin:0 0 6px;font-size:22px;line-height:1">&#128247;</p>' +
-        '<p style="margin:0 0 14px;font-size:14px;line-height:1.5;color:#3F4F6B">' +
-          'Les fotos de la festa ja estan aqu&iacute;. Vine a buscar-te!' +
-        '</p>' +
-        '<a href="' + FOTOS_URL + '" style="' + btn + 'background:#1B5F85;color:#ffffff">&#128247;&nbsp; Veure les fotos</a>' +
-      '</div>' +
-      '<div style="background:#FFF8F0;border:1px solid #F0E0CC;border-radius:14px;padding:18px 16px;margin:0 0 8px;text-align:center">' +
-        '<p style="margin:0 0 6px;font-size:22px;line-height:1">&#127757;</p>' +
-        '<p style="margin:0 0 14px;font-size:14px;line-height:1.5;color:#3F4F6B">' +
-          'Si et ve de gust, pots seguir sumant amb una donaci&oacute; petita (o no tan petita &#128521;) a Kenya:' +
-        '</p>' +
-        '<a href="' + DONACIO_URL + '" style="' + btn + 'background:#ffffff;color:#1B5F85;border:2px solid #1B5F85">&#10084;&#65039;&nbsp; Donar a migranodearena</a>' +
-      '</div>' +
-      '<p style="margin:22px 0 0;font-size:14px;line-height:1.65;color:#6B7890">' +
-        'Una abra&ccedil;ada gran,<br><strong style="color:#0F1A2E">L\'equip Vitalqua</strong> &#128153;' +
-      '</p>' +
-    '</div>' +
-    '<div style="padding:14px 32px;border:1px solid #D6EEF6;border-top:none;border-radius:0 0 16px 16px;background:#F5F9FC">' +
-      '<p style="margin:0;font-size:12px;color:#A3B5CD">' +
-        'Vitalqua Project &middot; <a href="mailto:vitalquaproject@gmail.com" style="color:#A3B5CD;text-decoration:none">vitalquaproject@gmail.com</a>' +
-      '</p>' +
+    '<div style="height:24px;background:#93917F"></div>' +
     '</div>' +
     '</div>'
   );

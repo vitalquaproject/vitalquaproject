@@ -129,9 +129,48 @@ module.exports = async function handler(req, res) {
   const body = req.body || {};
   const password = body.password || '';
   const wantSend = body.send === true;
+  const testEmail = String(body.testEmail || '').trim().toLowerCase();
 
   if (password !== expectedAdminPassword()) {
     return res.status(401).json({ error: 'No autoritzat' });
+  }
+
+  // Test send: always allowed (even while SEND_ENABLED === false) because it
+  // only ever reaches the single address the admin typed in, never the
+  // real recipient list.
+  if (testEmail) {
+    if (!testEmail.includes('@')) {
+      return res.status(400).json({ error: 'Email de prova no vàlid' });
+    }
+
+    try {
+      const nodemailer = require('nodemailer');
+      const gmailUser = process.env.GMAIL_USER;
+      const gmailPass = process.env.GMAIL_APP_PASSWORD;
+
+      if (!gmailUser || !gmailPass) {
+        return res.status(500).json({ error: 'Gmail env vars not configured (GMAIL_USER, GMAIL_APP_PASSWORD)' });
+      }
+
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: { user: gmailUser, pass: gmailPass },
+      });
+
+      await transporter.sendMail({
+        from: `Vitalqua Show <${gmailUser}>`,
+        to: testEmail,
+        subject: '[PROVA] ' + DEFAULT_SUBJECT,
+        html: buildBulkEmailHtml({ nom: 'Prova', cognoms: '' }),
+      });
+
+      return res.json({ testSent: true, to: testEmail, message: `Email de prova enviat a ${testEmail}.` });
+    } catch (err) {
+      console.error('[send-bulk-show-email] Test send error:', err.message);
+      return res.status(500).json({ error: err.message });
+    }
   }
 
   try {

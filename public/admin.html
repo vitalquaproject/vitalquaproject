@@ -408,6 +408,16 @@
       padding: 8px 10px; text-align: left; border-bottom: 1px solid rgba(15,26,46,.06);
     }
     .bulk-email-list th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: .06em; }
+    .bulk-email-test-row {
+      display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .bulk-email-test-input {
+      flex: 1; min-width: 180px;
+      padding: 9px 12px; border-radius: 10px;
+      border: 1.5px solid rgba(15,26,46,.15);
+      font: inherit; font-size: 0.85rem; color: var(--ink);
+    }
+    .bulk-email-test-input:focus { outline: none; border-color: var(--cy-dk); }
     .bulk-email-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
     .btn-bulk-secondary {
       padding: 8px 18px; border-radius: 999px; border: 1.5px solid rgba(15,26,46,.15);
@@ -542,6 +552,12 @@
             Mode previsualització: encara no s’envia res. Quan tinguem la plantilla, activarem l’enviament.
           </p>
           <div class="bulk-email-list" id="bulkEmailList"></div>
+
+          <div class="bulk-email-test-row">
+            <input type="email" class="bulk-email-test-input" id="bulkEmailTestInput" placeholder="el-teu-email@gmail.com" aria-label="Email de prova" />
+            <button type="button" class="btn-bulk-secondary" id="btnSendTestEmail">Enviar prova</button>
+          </div>
+
           <div class="bulk-email-actions">
             <button type="button" class="btn-bulk-secondary" id="btnCloseBulkEmail">Tancar</button>
             <button type="button" class="btn-bulk-primary" id="btnSendBulkEmail" disabled title="Enviament encara no habilitat">
@@ -1008,7 +1024,46 @@
       }
     }
 
+    async function sendTestEmail() {
+      const input = document.getElementById('bulkEmailTestInput');
+      const testEmail = input.value.trim();
+      if (!testEmail) {
+        toast('Escriu un email de prova primer.');
+        return;
+      }
+      if (!sessionAdminPassword) {
+        toast('Torna a iniciar sessió per enviar la prova.');
+        return;
+      }
+
+      const btn = document.getElementById('btnSendTestEmail');
+      btn.disabled = true;
+      const originalLabel = btn.textContent;
+      btn.textContent = 'Enviant…';
+
+      try {
+        const res = await fetch('/api/send-bulk-show-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: sessionAdminPassword, testEmail }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          toast(data.error || 'Error enviant la prova.');
+          return;
+        }
+        toast(`✓ Email de prova enviat a ${testEmail}`);
+      } catch (err) {
+        console.error('[bulk-email-test]', err);
+        toast('Error de xarxa enviant la prova.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      }
+    }
+
     document.getElementById('btnBulkEmail').addEventListener('click', openBulkEmailPreview);
+    document.getElementById('btnSendTestEmail').addEventListener('click', sendTestEmail);
     document.getElementById('btnCloseBulkEmail').addEventListener('click', closeBulkEmailModal);
     document.getElementById('bulkEmailOverlay').addEventListener('click', e => {
       if (e.target === document.getElementById('bulkEmailOverlay')) closeBulkEmailModal();

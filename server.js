@@ -179,6 +179,10 @@ app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (re
 
 app.use(express.json());
 
+// Mount the Vercel serverless bulk-email endpoint for local testing
+// (firebase-admin is already initialized above, so its own init is skipped).
+app.post('/api/send-bulk-show-email', require('./api/send-bulk-show-email'));
+
 // Servir archivos estáticos desde /public
 app.use(express.static(path.join(__dirname, 'public')));
 

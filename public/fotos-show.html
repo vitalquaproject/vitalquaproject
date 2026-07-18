@@ -110,6 +110,28 @@
       vertical-align: middle;
     }
 
+    .load-more-wrap {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .btn-load-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(27,95,133,.35);
+      background: transparent;
+      color: var(--cy-xdk);
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms;
+    }
+    .btn-load-more:hover { background: rgba(42,133,179,.08); border-color: var(--cy-dk); }
+    .btn-load-more:disabled { opacity: 0.5; cursor: default; }
+
     .actions {
       margin-top: 40px;
       display: flex;
@@ -170,6 +192,10 @@
 
     <div class="grid" id="gallery" hidden></div>
 
+    <div class="load-more-wrap" id="loadMoreWrap" hidden>
+      <button type="button" class="btn-load-more" id="btnLoadMore">Carregar més fotos</button>
+    </div>
+
     <div class="actions">
       <a class="btn btn-primary"
          href="https://www.migranodearena.org/reto/agua-y-educacion-para-kenia-construyendo-el-futuro-de-emorogi"
@@ -208,6 +234,13 @@
 
     const statusEl = document.getElementById('status');
     const galleryEl = document.getElementById('gallery');
+    const loadMoreWrap = document.getElementById('loadMoreWrap');
+    const btnLoadMore = document.getElementById('btnLoadMore');
+
+    // Mostra les fotos en lots per no saturar la connexió (sobretot al mòbil).
+    const BATCH_SIZE = 9;
+    let allFiles = [];
+    let shownCount = 0;
 
     function setStatus(html) {
       statusEl.hidden = false;
@@ -215,25 +248,44 @@
       galleryEl.hidden = true;
     }
 
+    function renderBatch(urls, startIndex) {
+      const html = urls.map((url, i) =>
+        `<figure class="photo"><img src="${url}" alt="Foto ${startIndex + i + 1} del Vitalqua Show" loading="lazy" decoding="async" /></figure>`
+      ).join('');
+      galleryEl.insertAdjacentHTML('beforeend', html);
+    }
+
+    async function showNextBatch() {
+      const nextFiles = allFiles.slice(shownCount, shownCount + BATCH_SIZE);
+      if (!nextFiles.length) return;
+
+      btnLoadMore.disabled = true;
+      btnLoadMore.textContent = 'Carregant…';
+
+      const urls = await Promise.all(nextFiles.map((item) => item.getDownloadURL()));
+      renderBatch(urls, shownCount);
+      shownCount += nextFiles.length;
+
+      const remaining = allFiles.length - shownCount;
+      loadMoreWrap.hidden = remaining <= 0;
+      btnLoadMore.disabled = false;
+      btnLoadMore.textContent = `Carregar més fotos (${remaining} restants)`;
+    }
+
     async function loadPhotos() {
       try {
         const folderRef = storage.ref(STORAGE_FOLDER);
         const result = await folderRef.listAll();
-        const files = result.items.filter((item) => IMAGE_EXT.test(item.name));
+        allFiles = result.items.filter((item) => IMAGE_EXT.test(item.name));
 
-        if (!files.length) {
+        if (!allFiles.length) {
           setStatus('<p>Encara no hi ha fotografies publicades. Torna-ho a provar aviat.</p>');
           return;
         }
 
-        const urls = await Promise.all(files.map((item) => item.getDownloadURL()));
-
-        galleryEl.innerHTML = urls.map((url, i) =>
-          `<figure class="photo"><img src="${url}" alt="Foto ${i + 1} del Vitalqua Show" loading="lazy" decoding="async" /></figure>`
-        ).join('');
-
         statusEl.hidden = true;
         galleryEl.hidden = false;
+        await showNextBatch();
       } catch (err) {
         console.error('[fotos-show]', err);
         setStatus(
@@ -243,6 +295,7 @@
       }
     }
 
+    btnLoadMore.addEventListener('click', showNextBatch);
     loadPhotos();
   </script>
 </body>

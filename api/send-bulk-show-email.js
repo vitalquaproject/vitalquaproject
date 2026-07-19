@@ -82,8 +82,13 @@ function buildBulkEmailHtml({ nom }) {
         FOTOS_URL,
         'Reviure els moments en fotos',
         '<img src="' + ICON_CAMERA_URL + '" width="19" height="19" alt="" style="display:block;margin:7px auto;border:0" />',
-        { solid: true, marginBottom: 26 }
+        { solid: true, marginBottom: 16 }
       ) +
+
+      '<p style="margin:0 0 24px;font-size:14px;line-height:1.6;color:#6B7890">' +
+        'Durant el concert vam fer fotos per documentar el projecte. ' +
+        'Si no vols apar&egrave;ixer en alguna, digues-nos-ho i l\'eliminarem.' +
+      '</p>' +
 
       '<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#3F4F6B">' +
         'Volem aprofitar per agrair-te tot el que has aportat al projecte. ' +

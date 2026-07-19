@@ -360,22 +360,32 @@
     });
     async function downloadCurrentPhoto() {
       if (lightboxIndex < 0) return;
+      const fileRef = allFiles[lightboxIndex];
+      if (!fileRef) return;
+
       const btn = document.getElementById('lightboxDownload');
-      const url = shownUrls[lightboxIndex];
+      btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
+
       try {
-        const res = await fetch(url);
-        const blob = await res.blob();
+        // Via SDK (evita CORS de fetch() a la download URL de Storage).
+        const blob = await fileRef.getBlob(50 * 1024 * 1024);
         const objectUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = objectUrl;
-        a.download = `concert-solidari-foto-${lightboxIndex + 1}.jpg`;
+        a.download = fileRef.name || `concert-solidari-foto-${lightboxIndex + 1}.jpg`;
         document.body.appendChild(a);
         a.click();
         a.remove();
-        URL.revokeObjectURL(objectUrl);
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
       } catch (err) {
         console.error('[fotos-show] download error', err);
-        window.open(url, '_blank');
+        // Últim recurs: obrir la imatge (el navegador pot desar-la manualment).
+        const url = shownUrls[lightboxIndex];
+        if (url) window.open(url, '_blank', 'noopener');
+      } finally {
+        btn.disabled = false;
+        btn.removeAttribute('aria-busy');
       }
     }
 

@@ -1,6 +1,10 @@
 const admin      = require('firebase-admin');
 const nodemailer = require('nodemailer');
 
+// Concert acabat: posa a true per reactivar confirmacions d'entrades.
+// No afecta /api/send-bulk-show-email (fotos del concert).
+const CONFIRMATION_EMAIL_ENABLED = false;
+
 // ---------------------------------------------------------------------------
 // Firebase Admin SDK (singleton)
 // ---------------------------------------------------------------------------
@@ -102,6 +106,15 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  if (!CONFIRMATION_EMAIL_ENABLED) {
+    console.log('[send-email] Disabled — concert ended. No confirmation emails will be sent.');
+    return res.status(410).json({
+      sent: false,
+      reason: 'disabled',
+      message: "Confirmació d'entrades desactivada (concert acabat).",
+    });
+  }
 
   const { pagamentsId } = req.body || {};
   if (!pagamentsId) {

@@ -4,6 +4,10 @@ const getRawBody = require('raw-body');
 const nodemailer = require('nodemailer');
 const admin      = require('firebase-admin');
 
+// Concert acabat: posa a true per reactivar confirmacions d'entrades.
+// No afecta /api/send-bulk-show-email (fotos del concert).
+const CONFIRMATION_EMAIL_ENABLED = false;
+
 // ---------------------------------------------------------------------------
 // Firebase Admin SDK (singleton)
 // ---------------------------------------------------------------------------
@@ -205,33 +209,37 @@ module.exports = async function handler(req, res) {
       console.error('[Webhook] Error Firestore:', err.message);
     }
 
-    // Send confirmation email
-    const email =
-      meta.email ||
-      session.customer_email ||
-      session.customer_details?.email ||
-      '';
-
-    if (!email) {
-      console.warn('[Webhook] Sense adreça email — email no enviat.');
+    // Send confirmation email (desactivat després del concert)
+    if (!CONFIRMATION_EMAIL_ENABLED) {
+      console.log('[Webhook] Confirmation email skipped — disabled after concert.');
     } else {
-      let acompanyants = [];
-      try { acompanyants = JSON.parse(meta.acompanyants || '[]'); } catch { /* empty */ }
+      const email =
+        meta.email ||
+        session.customer_email ||
+        session.customer_details?.email ||
+        '';
 
-      try {
-        await sendConfirmationEmail({
-          nom:         meta.nom         || '',
-          cognoms:     meta.cognoms     || '',
-          email,
-          numPersones: meta.numPersones || '1',
-          totalEur:    meta.totalEur    || '0',
-          acompanyants,
-        });
-        // Marca emailSent perquè success-show.html no enviï un duplicat
-        await db.collection('pagaments-show').doc(pagamentsId).update({ emailSent: true });
-      } catch (err) {
-        console.error('[Webhook] Error enviant email:', err.message);
-        // No marquem emailSent → success-show.html activarà el backup
+      if (!email) {
+        console.warn('[Webhook] Sense adreça email — email no enviat.');
+      } else {
+        let acompanyants = [];
+        try { acompanyants = JSON.parse(meta.acompanyants || '[]'); } catch { /* empty */ }
+
+        try {
+          await sendConfirmationEmail({
+            nom:         meta.nom         || '',
+            cognoms:     meta.cognoms     || '',
+            email,
+            numPersones: meta.numPersones || '1',
+            totalEur:    meta.totalEur    || '0',
+            acompanyants,
+          });
+          // Marca emailSent perquè success-show.html no enviï un duplicat
+          await db.collection('pagaments-show').doc(pagamentsId).update({ emailSent: true });
+        } catch (err) {
+          console.error('[Webhook] Error enviant email:', err.message);
+          // No marquem emailSent → success-show.html activarà el backup
+        }
       }
     }
   }

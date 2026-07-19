@@ -70,6 +70,11 @@
       line-height: 1.65;
       color: var(--ink-soft);
     }
+    .lead-howto {
+      margin-top: 14px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
 
     .status {
       text-align: center;
@@ -244,6 +249,10 @@
       <p class="lead">
         Una selecció d’imatges de la jornada. Gràcies per haver-hi estat i per donar suport al projecte.
       </p>
+      <p class="lead lead-howto">
+        Per desar una foto, obre-la i toca descarregar: es desarà automàticament
+        (al mòbil pot sortir el menú de compartir → desar imatge).
+      </p>
     </header>
 
     <div id="status" class="status" aria-live="polite">
@@ -361,28 +370,40 @@
     async function downloadCurrentPhoto() {
       if (lightboxIndex < 0) return;
       const fileRef = allFiles[lightboxIndex];
-      if (!fileRef) return;
+      const url = shownUrls[lightboxIndex];
+      if (!fileRef || !url) return;
 
       const btn = document.getElementById('lightboxDownload');
       btn.disabled = true;
       btn.setAttribute('aria-busy', 'true');
 
+      const fileName = fileRef.name || `concert-solidari-foto-${lightboxIndex + 1}.jpg`;
+
       try {
-        // Via SDK (evita CORS de fetch() a la download URL de Storage).
+        // Descarrega via SDK (evita CORS de fetch() a la URL de Storage).
         const blob = await fileRef.getBlob(50 * 1024 * 1024);
+        const file = new File([blob], fileName, { type: blob.type || 'image/jpeg' });
+
+        // Al mòbil: full de compartir → «Desar imatge».
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: fileName });
+          return;
+        }
+
+        // Escriptori / navegadors sense share: descàrrega directa.
         const objectUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = objectUrl;
-        a.download = fileRef.name || `concert-solidari-foto-${lightboxIndex + 1}.jpg`;
+        a.download = fileName;
         document.body.appendChild(a);
         a.click();
         a.remove();
         setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
       } catch (err) {
+        // L’usuari pot cancel·lar el share: no cal tractar-ho com a error.
+        if (err && err.name === 'AbortError') return;
         console.error('[fotos-show] download error', err);
-        // Últim recurs: obrir la imatge (el navegador pot desar-la manualment).
-        const url = shownUrls[lightboxIndex];
-        if (url) window.open(url, '_blank', 'noopener');
+        window.open(url, '_blank', 'noopener');
       } finally {
         btn.disabled = false;
         btn.removeAttribute('aria-busy');

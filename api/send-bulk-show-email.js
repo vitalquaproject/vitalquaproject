@@ -27,6 +27,13 @@ const DONACIO_URL =
 
 const DEFAULT_SUBJECT = 'Gràcies per venir 💙 · Concert Solidari';
 
+// Campanya d'agraïment — serveix per no reenviar als ja enviats si es tallà el timeout.
+const BULK_CAMPAIGN_ID = 'concert-solidari-agraiment-v1';
+const BULK_SENT_COLLECTION = 'bulk-email-sent';
+// Deixa marge abans del maxDuration de Vercel (configurat a 300s a vercel.json).
+// Si el pla només permet 60s, pot tallar igual; aleshores cal tornar a clicar Enviar.
+const SEND_TIME_BUDGET_MS = Number(process.env.BULK_SEND_BUDGET_MS) || 250_000;
+
 // ---------------------------------------------------------------------------
 // Bulk thank-you email (titulars)
 // ---------------------------------------------------------------------------
@@ -159,6 +166,31 @@ async function loadTitularRecipients() {
   );
 }
 
+function sentDocId(email) {
+  return BULK_CAMPAIGN_ID + '__' + String(email).toLowerCase().replace(/[^a-z0-9@._+-]/g, '_');
+}
+
+async function loadAlreadySentEmails() {
+  const snap = await db.collection(BULK_SENT_COLLECTION)
+    .where('campaignId', '==', BULK_CAMPAIGN_ID)
+    .get();
+  const set = new Set();
+  snap.docs.forEach((doc) => {
+    const email = String((doc.data() || {}).email || '').trim().toLowerCase();
+    if (email) set.add(email);
+  });
+  return set;
+}
+
+async function markEmailSent(email) {
+  const normalized = String(email).trim().toLowerCase();
+  await db.collection(BULK_SENT_COLLECTION).doc(sentDocId(normalized)).set({
+    campaignId: BULK_CAMPAIGN_ID,
+    email: normalized,
+    sentAt: admin.firestore.FieldValue.serverTimestamp(),
+  }, { merge: true });
+}
+
 // ---------------------------------------------------------------------------
 // Serverless handler
 // ---------------------------------------------------------------------------
@@ -174,6 +206,8 @@ module.exports = async function handler(req, res) {
   const password = body.password || '';
   const wantSend = body.send === true;
   const testEmail = String(body.testEmail || '').trim().toLowerCase();
+  // Recuperació si el timeout va tallar a mig enviament (ordre alfabètic per email).
+  const startAfterEmail = String(body.startAfterEmail || '').trim().toLowerCase();
 
   if (password !== expectedAdminPassword()) {
     return res.status(401).json({ error: 'No autoritzat' });
@@ -217,17 +251,30 @@ module.exports = async function handler(req, res) {
 
   try {
     const recipients = await loadTitularRecipients();
+    const alreadySent = await loadAlreadySentEmails();
+
+    const pending = recipients.filter((r) => {
+      if (alreadySent.has(r.email)) return false;
+      if (startAfterEmail && r.email.localeCompare(startAfterEmail, 'ca') <= 0) return false;
+      return true;
+    });
 
     const preview = {
       dryRun: true,
       sendEnabled: SEND_ENABLED,
       subject: DEFAULT_SUBJECT,
+      campaignId: BULK_CAMPAIGN_ID,
       count: recipients.length,
+      alreadySentCount: recipients.filter((r) => alreadySent.has(r.email)).length,
+      pendingCount: pending.length,
+      startAfterEmail: startAfterEmail || null,
       recipients: recipients.map((r) => ({
         email: r.email,
         nom: r.nom,
         cognoms: r.cognoms,
         pagamentsIds: r.pagamentsIds,
+        alreadySent: alreadySent.has(r.email),
+        willSend: pending.some((p) => p.email === r.email),
       })),
       sampleHtml: recipients.length
         ? buildBulkEmailHtml(recipients[0])
@@ -249,6 +296,18 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    if (!pending.length) {
+      return res.json({
+        ...preview,
+        dryRun: false,
+        sent: 0,
+        skipped: recipients.length,
+        remaining: 0,
+        failed: [],
+        message: 'No queden titulars pendents d\'enviar.',
+      });
+    }
+
     const nodemailer = require('nodemailer');
     const gmailUser = process.env.GMAIL_USER;
     const gmailPass = process.env.GMAIL_APP_PASSWORD;
@@ -264,9 +323,15 @@ module.exports = async function handler(req, res) {
       auth: { user: gmailUser, pass: gmailPass },
     });
 
-    const results = { sent: 0, failed: [] };
+    const results = { sent: 0, failed: [], lastSentEmail: null };
+    const deadline = Date.now() + SEND_TIME_BUDGET_MS;
+    let stoppedEarly = false;
 
-    for (const r of recipients) {
+    for (const r of pending) {
+      if (Date.now() >= deadline) {
+        stoppedEarly = true;
+        break;
+      }
       try {
         await transporter.sendMail({
           from: `Concert Solidari <${gmailUser}>`,
@@ -274,19 +339,30 @@ module.exports = async function handler(req, res) {
           subject: DEFAULT_SUBJECT,
           html: buildBulkEmailHtml(r),
         });
+        await markEmailSent(r.email);
         results.sent += 1;
+        results.lastSentEmail = r.email;
       } catch (err) {
         results.failed.push({ email: r.email, error: err.message });
       }
     }
 
+    const remaining = pending.length - results.sent - results.failed.length;
+
     return res.json({
       dryRun: false,
       sendEnabled: true,
+      campaignId: BULK_CAMPAIGN_ID,
       count: recipients.length,
+      pendingAtStart: pending.length,
       sent: results.sent,
       failed: results.failed,
-      message: `Enviat a ${results.sent} de ${recipients.length} titulars.`,
+      remaining: Math.max(0, remaining),
+      stoppedEarly,
+      lastSentEmail: results.lastSentEmail,
+      message: stoppedEarly
+        ? `Enviat a ${results.sent} (timeout de Vercel). Tornau a clicar Enviar per continuar; resten ${remaining}.`
+        : `Enviat a ${results.sent} de ${pending.length} pendents.`,
     });
   } catch (err) {
     console.error('[send-bulk-show-email] Error:', err.message);

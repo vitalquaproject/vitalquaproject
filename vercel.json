@@ -10,8 +10,8 @@
       "maxDuration": 10
     },
     "api/send-bulk-show-email.js": {
-      "memory": 512,
-      "maxDuration": 60
+      "memory": 1024,
+      "maxDuration": 300
     }
   },
   "headers": [

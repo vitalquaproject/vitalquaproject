@@ -564,6 +564,10 @@
             <button type="button" class="btn-bulk-secondary" id="btnSendTestEmail">Enviar prova</button>
           </div>
 
+          <div class="bulk-email-test-row">
+            <input type="email" class="bulk-email-test-input" id="bulkEmailStartAfter" placeholder="Continuar després de (email ja enviat)" aria-label="Continuar després d'aquest email" />
+          </div>
+
           <div class="bulk-email-actions">
             <button type="button" class="btn-bulk-secondary" id="btnCloseBulkEmail">Tancar</button>
             <button type="button" class="btn-bulk-primary" id="btnSendBulkEmail" disabled>
@@ -970,24 +974,28 @@
       const note = document.getElementById('bulkEmailNote');
       const sendBtn = document.getElementById('btnSendBulkEmail');
       const recipients = data.recipients || [];
+      const pendingCount = data.pendingCount != null
+        ? data.pendingCount
+        : recipients.filter(r => r.willSend !== false && !r.alreadySent).length;
+      const alreadySentCount = data.alreadySentCount || 0;
       lastBulkPreview = data;
 
       lead.textContent = recipients.length
-        ? `${recipients.length} titular${recipients.length === 1 ? '' : 's'} amb email (pagaments confirmats).`
+        ? `${recipients.length} titulars · ${alreadySentCount} ja enviats · ${pendingCount} pendents.`
         : 'No s\'han trobat titulars amb email i status paid.';
 
       note.textContent = data.sendEnabled
-        ? 'Pots enviar una prova al teu correu i després l\'enviament massiu a tots els titulars.'
+        ? 'Si el timeout va tallar a mig enviament, posa l\'últim email enviat a «Continuar després de» i torna a enviar. Els ja registrats no es reenvien.'
         : 'L\'enviament massiu encara no està habilitat al servidor.';
 
-      const canSend = !!(data.sendEnabled && recipients.length);
+      const canSend = !!(data.sendEnabled && pendingCount > 0);
       sendBtn.disabled = !canSend;
       sendBtn.textContent = canSend
-        ? `Enviar a ${recipients.length}`
+        ? `Enviar als ${pendingCount} pendents`
         : 'Enviar a tots';
       sendBtn.title = canSend
-        ? 'Enviar l\'email d\'agraïment a tots els titulars'
-        : (data.sendEnabled ? 'No hi ha destinataris' : 'Enviament no habilitat');
+        ? 'Enviar l\'email d\'agraïment als titulars pendents'
+        : (data.sendEnabled ? 'No hi ha destinataris pendents' : 'Enviament no habilitat');
 
       if (!recipients.length) {
         list.innerHTML = '<p style="padding:16px;margin:0;color:var(--muted);font-size:0.85rem">Cap destinatari.</p>';
@@ -995,10 +1003,11 @@
       }
 
       list.innerHTML =
-        '<table><thead><tr><th>Nom</th><th>Email</th></tr></thead><tbody>' +
-        recipients.map(r =>
-          `<tr><td>${esc(r.nom || '—')}</td><td>${esc(r.email)}</td></tr>`
-        ).join('') +
+        '<table><thead><tr><th>Nom</th><th>Email</th><th>Estat</th></tr></thead><tbody>' +
+        recipients.map(r => {
+          const status = r.alreadySent ? 'Enviat' : (r.willSend === false ? 'Saltar' : 'Pendent');
+          return `<tr><td>${esc(r.nom || '—')}</td><td>${esc(r.email)}</td><td>${esc(status)}</td></tr>`;
+        }).join('') +
         '</tbody></table>';
     }
 
@@ -1013,6 +1022,8 @@
       const lead = document.getElementById('bulkEmailLead');
       const list = document.getElementById('bulkEmailList');
       const sendBtn = document.getElementById('btnSendBulkEmail');
+      const startAfterInput = document.getElementById('bulkEmailStartAfter');
+      const startAfterEmail = (startAfterInput && startAfterInput.value.trim()) || '';
       lead.textContent = 'Carregant destinataris…';
       list.innerHTML = '<div class="table-placeholder" style="padding:28px"><div class="spinner-sm"></div></div>';
       sendBtn.disabled = true;
@@ -1026,7 +1037,11 @@
         const res = await fetch('/api/send-bulk-show-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: sessionAdminPassword, send: false }),
+          body: JSON.stringify({
+            password: sessionAdminPassword,
+            send: false,
+            startAfterEmail: startAfterEmail || undefined,
+          }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
@@ -1089,9 +1104,9 @@
         toast('Torna a iniciar sessió per enviar.');
         return;
       }
-      const count = (lastBulkPreview && lastBulkPreview.count) || 0;
-      if (!count) {
-        toast('No hi ha destinataris per enviar.');
+      const pendingCount = (lastBulkPreview && lastBulkPreview.pendingCount) || 0;
+      if (!pendingCount) {
+        toast('No hi ha destinataris pendents.');
         return;
       }
       if (!lastBulkPreview.sendEnabled) {
@@ -1099,8 +1114,13 @@
         return;
       }
 
+      const startAfterInput = document.getElementById('bulkEmailStartAfter');
+      const startAfterEmail = (startAfterInput && startAfterInput.value.trim()) || '';
+
       const ok = window.confirm(
-        `Enviar l'email d'agraïment a ${count} titular${count === 1 ? '' : 's'}?\n\nAquesta acció no es pot desfer.`
+        `Enviar l'email d'agraïment a ${pendingCount} titular${pendingCount === 1 ? '' : 's'} pendents?` +
+        (startAfterEmail ? `\n\nContinuar després de: ${startAfterEmail}` : '') +
+        `\n\nSi es talla per timeout, torna a clicar Enviar: no reenviarà els ja registrats.`
       );
       if (!ok) return;
 
@@ -1115,7 +1135,11 @@
         const res = await fetch('/api/send-bulk-show-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: sessionAdminPassword, send: true }),
+          body: JSON.stringify({
+            password: sessionAdminPassword,
+            send: true,
+            startAfterEmail: startAfterEmail || undefined,
+          }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
@@ -1126,16 +1150,22 @@
         }
 
         const failed = (data.failed && data.failed.length) || 0;
-        if (failed) {
+        if (data.stoppedEarly || (data.remaining && data.remaining > 0)) {
+          toast(`Enviat ${data.sent || 0}. Resten ${data.remaining || 0}. Torna a clicar Enviar.`);
+          if (data.lastSentEmail && startAfterInput) {
+            startAfterInput.value = data.lastSentEmail;
+          }
+          await openBulkEmailPreview();
+        } else if (failed) {
           toast(`Enviat a ${data.sent || 0}. Fallits: ${failed}.`);
+          closeBulkEmailModal();
         } else {
           toast(`✓ Enviat a ${data.sent || 0} titulars.`);
+          closeBulkEmailModal();
         }
-        btn.textContent = 'Enviat';
-        closeBulkEmailModal();
       } catch (err) {
         console.error('[bulk-email-send]', err);
-        toast('Error de xarxa en l\'enviament massiu.');
+        toast('Error de xarxa (sovint timeout). Torna a obrir Email titulars i continua.');
         btn.disabled = false;
         btn.textContent = originalLabel;
       } finally {

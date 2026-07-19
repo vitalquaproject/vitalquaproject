@@ -427,8 +427,14 @@
     .btn-bulk-secondary:hover { border-color: var(--navy); color: var(--navy); }
     .btn-bulk-primary {
       padding: 8px 18px; border-radius: 999px; border: none;
+      background: var(--cy-dk); color: #fff;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      transition: background 150ms ease, opacity 150ms;
+    }
+    .btn-bulk-primary:hover { background: var(--cy-xdk); }
+    .btn-bulk-primary:disabled {
       background: rgba(15,26,46,.18); color: rgba(15,26,46,.45);
-      font-size: 0.85rem; font-weight: 600; cursor: not-allowed;
+      cursor: not-allowed;
     }
 
     /* Toast */
@@ -527,7 +533,7 @@
           <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre, apellidos, teléfono o ID…" aria-label="Buscar" />
         </div>
-        <button class="btn-bulk-email" id="btnBulkEmail" aria-label="Previsualitzar email als titulars del show">
+        <button class="btn-bulk-email" id="btnBulkEmail" aria-label="Enviar email als titulars del show">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/>
           </svg>
@@ -543,13 +549,13 @@
         </button>
       </div>
 
-      <!-- Bulk email preview modal (show only; no send yet) -->
-      <div class="bulk-email-overlay" id="bulkEmailOverlay" role="dialog" aria-modal="true" aria-label="Previsualització email titulars">
+      <!-- Bulk email modal (titulars del show) -->
+      <div class="bulk-email-overlay" id="bulkEmailOverlay" role="dialog" aria-modal="true" aria-label="Email als titulars">
         <div class="bulk-email-modal">
           <h2>Email als titulars</h2>
           <p class="bulk-email-lead" id="bulkEmailLead">Carregant destinataris…</p>
           <p class="bulk-email-note" id="bulkEmailNote">
-            Mode previsualització: encara no s’envia res. Quan tinguem la plantilla, activarem l’enviament.
+            Revisa la llista i envia una prova abans de l’enviament massiu.
           </p>
           <div class="bulk-email-list" id="bulkEmailList"></div>
 
@@ -560,8 +566,8 @@
 
           <div class="bulk-email-actions">
             <button type="button" class="btn-bulk-secondary" id="btnCloseBulkEmail">Tancar</button>
-            <button type="button" class="btn-bulk-primary" id="btnSendBulkEmail" disabled title="Enviament encara no habilitat">
-              Enviar (pendent)
+            <button type="button" class="btn-bulk-primary" id="btnSendBulkEmail" disabled>
+              Enviar a tots
             </button>
           </div>
         </div>
@@ -950,8 +956,10 @@
     });
 
     /* ----------------------------------------------------------------
-       Bulk email preview (titulars del show — sense enviar encara)
+       Bulk email (titulars del show)
        ---------------------------------------------------------------- */
+    let lastBulkPreview = null;
+
     function closeBulkEmailModal() {
       document.getElementById('bulkEmailOverlay').classList.remove('open');
     }
@@ -960,15 +968,26 @@
       const lead = document.getElementById('bulkEmailLead');
       const list = document.getElementById('bulkEmailList');
       const note = document.getElementById('bulkEmailNote');
+      const sendBtn = document.getElementById('btnSendBulkEmail');
       const recipients = data.recipients || [];
+      lastBulkPreview = data;
 
       lead.textContent = recipients.length
         ? `${recipients.length} titular${recipients.length === 1 ? '' : 's'} amb email (pagaments confirmats).`
         : 'No s\'han trobat titulars amb email i status paid.';
 
       note.textContent = data.sendEnabled
-        ? 'L\'enviament està habilitat al servidor, però aquesta pantalla només previsualitza.'
-        : 'Mode previsualització: encara no s\'envia res. Quan tinguem la plantilla, activarem l\'enviament.';
+        ? 'Pots enviar una prova al teu correu i després l\'enviament massiu a tots els titulars.'
+        : 'L\'enviament massiu encara no està habilitat al servidor.';
+
+      const canSend = !!(data.sendEnabled && recipients.length);
+      sendBtn.disabled = !canSend;
+      sendBtn.textContent = canSend
+        ? `Enviar a ${recipients.length}`
+        : 'Enviar a tots';
+      sendBtn.title = canSend
+        ? 'Enviar l\'email d\'agraïment a tots els titulars'
+        : (data.sendEnabled ? 'No hi ha destinataris' : 'Enviament no habilitat');
 
       if (!recipients.length) {
         list.innerHTML = '<p style="padding:16px;margin:0;color:var(--muted);font-size:0.85rem">Cap destinatari.</p>';
@@ -978,7 +997,7 @@
       list.innerHTML =
         '<table><thead><tr><th>Nom</th><th>Email</th></tr></thead><tbody>' +
         recipients.map(r =>
-          `<tr><td>${esc([r.nom, r.cognoms].filter(Boolean).join(' ') || '—')}</td><td>${esc(r.email)}</td></tr>`
+          `<tr><td>${esc(r.nom || '—')}</td><td>${esc(r.email)}</td></tr>`
         ).join('') +
         '</tbody></table>';
     }
@@ -986,15 +1005,18 @@
     async function openBulkEmailPreview() {
       if (currentEvent !== 'show') return;
       if (!sessionAdminPassword) {
-        toast('Torna a iniciar sessió per previsualitzar emails.');
+        toast('Torna a iniciar sessió per gestionar emails.');
         return;
       }
 
       const overlay = document.getElementById('bulkEmailOverlay');
       const lead = document.getElementById('bulkEmailLead');
       const list = document.getElementById('bulkEmailList');
+      const sendBtn = document.getElementById('btnSendBulkEmail');
       lead.textContent = 'Carregant destinataris…';
       list.innerHTML = '<div class="table-placeholder" style="padding:28px"><div class="spinner-sm"></div></div>';
+      sendBtn.disabled = true;
+      lastBulkPreview = null;
       overlay.classList.add('open');
 
       const btn = document.getElementById('btnBulkEmail');
@@ -1062,8 +1084,68 @@
       }
     }
 
+    async function sendBulkEmail() {
+      if (!sessionAdminPassword) {
+        toast('Torna a iniciar sessió per enviar.');
+        return;
+      }
+      const count = (lastBulkPreview && lastBulkPreview.count) || 0;
+      if (!count) {
+        toast('No hi ha destinataris per enviar.');
+        return;
+      }
+      if (!lastBulkPreview.sendEnabled) {
+        toast('L\'enviament no està habilitat al servidor.');
+        return;
+      }
+
+      const ok = window.confirm(
+        `Enviar l'email d'agraïment a ${count} titular${count === 1 ? '' : 's'}?\n\nAquesta acció no es pot desfer.`
+      );
+      if (!ok) return;
+
+      const btn = document.getElementById('btnSendBulkEmail');
+      const testBtn = document.getElementById('btnSendTestEmail');
+      btn.disabled = true;
+      testBtn.disabled = true;
+      const originalLabel = btn.textContent;
+      btn.textContent = 'Enviant…';
+
+      try {
+        const res = await fetch('/api/send-bulk-show-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: sessionAdminPassword, send: true }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          toast(data.error || 'Error en l\'enviament massiu.');
+          btn.disabled = false;
+          btn.textContent = originalLabel;
+          return;
+        }
+
+        const failed = (data.failed && data.failed.length) || 0;
+        if (failed) {
+          toast(`Enviat a ${data.sent || 0}. Fallits: ${failed}.`);
+        } else {
+          toast(`✓ Enviat a ${data.sent || 0} titulars.`);
+        }
+        btn.textContent = 'Enviat';
+        closeBulkEmailModal();
+      } catch (err) {
+        console.error('[bulk-email-send]', err);
+        toast('Error de xarxa en l\'enviament massiu.');
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      } finally {
+        testBtn.disabled = false;
+      }
+    }
+
     document.getElementById('btnBulkEmail').addEventListener('click', openBulkEmailPreview);
     document.getElementById('btnSendTestEmail').addEventListener('click', sendTestEmail);
+    document.getElementById('btnSendBulkEmail').addEventListener('click', sendBulkEmail);
     document.getElementById('btnCloseBulkEmail').addEventListener('click', closeBulkEmailModal);
     document.getElementById('bulkEmailOverlay').addEventListener('click', e => {
       if (e.target === document.getElementById('bulkEmailOverlay')) closeBulkEmailModal();

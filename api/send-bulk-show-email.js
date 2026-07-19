@@ -12,8 +12,8 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
-// Flip to true when the template is ready and we want real sends.
-const SEND_ENABLED = false;
+// Real bulk sends are enabled (admin UI + password required).
+const SEND_ENABLED = true;
 
 const SITE_BASE =
   process.env.PUBLIC_BASE_URL || 'https://vitalquaproject.vercel.app';
@@ -174,9 +174,7 @@ module.exports = async function handler(req, res) {
     return res.status(401).json({ error: 'No autoritzat' });
   }
 
-  // Test send: always allowed (even while SEND_ENABLED === false) because it
-  // only ever reaches the single address the admin typed in, never the
-  // real recipient list.
+  // Test send: only reaches the single address the admin typed in.
   if (testEmail) {
     if (!testEmail.includes('@')) {
       return res.status(400).json({ error: 'Email de prova no vàlid' });
@@ -246,7 +244,6 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Real send path — inactive while SEND_ENABLED === false
     const nodemailer = require('nodemailer');
     const gmailUser = process.env.GMAIL_USER;
     const gmailPass = process.env.GMAIL_APP_PASSWORD;

@@ -12,8 +12,8 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
-// Real bulk sends are enabled (admin UI + password required).
-const SEND_ENABLED = true;
+// Disabled: some recipient addresses are invalid and Gmail keeps retrying delivery.
+const SEND_ENABLED = false;
 
 const SITE_BASE =
   process.env.PUBLIC_BASE_URL || 'https://vitalquaproject.vercel.app';
